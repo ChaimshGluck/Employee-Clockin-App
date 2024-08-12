@@ -1,5 +1,5 @@
 import express from 'express';
-import { userLogin, userClockin, userClockout, getEmployeeRecords } from '../controllers/employee';
+import { userLogin, userClockin, userClockout, getEmployeeRecords } from '../controllers/employee.js';
 const router = express.Router();
 export default router;
 
