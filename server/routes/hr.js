@@ -1,24 +1,24 @@
 import express from 'express';
-import db from '../db.js'
+import { registerUser, updateEmployee, deleteEmployee, getAllRecords } from '../controllers/hr';
 const router = express.Router();
 export default router;
 
-router.get('/', (req, res) => {
-    res.json("Hello World!");
+router.post('/register', async (req, res) => {
+    const result = await registerUser(req.body);
+    res.json(result);
 })
 
-router.post('/register', (req, res) => {
-    db.one(`insert into public.employees (first_name) values ('Chaim')`)
+router.patch('/employee/:id', async (req, res) => {
+    const result = await updateEmployee(req.params.id);
+    res.json(result);
 })
 
-router.patch('/employee:id', (req, res) => {
-
+router.delete('/employee/:id', async (req, res) => {
+    const result = await deleteEmployee(req.params.id);
+    res.json(result);
 })
 
-router.delete('/employee:id', (req, res) => {
-
-})
-
-router.get('/employees', (req, res) => {
-
+router.get('/employees', async (req, res) => {
+    const result = await getAllRecords();
+    res.json(result);
 })
