@@ -1,0 +1,23 @@
+CREATE TABLE Roles (
+    role_id SERIAL PRIMARY KEY,
+    role_name VARCHAR(50) UNIQUE NOT NULL
+);
+
+CREATE TABLE Employees (
+    employee_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    department VARCHAR(50),
+    role_id INT REFERENCES Roles(role_id),
+    date_hired DATE NOT NULL
+);
+
+CREATE TABLE TimeEntries (
+    entry_id SERIAL PRIMARY KEY,
+    employee_id INT REFERENCES Employees(employee_id),
+    clock_in TIMESTAMP NOT NULL,
+    clock_out TIMESTAMP,
+    total_hours NUMERIC(5, 2) GENERATED ALWAYS AS (EXTRACT(EPOCH FROM (clock_out - clock_in))/3600) STORED,
+    entry_date DATE NOT NULL DEFAULT CURRENT_DATE
+);
