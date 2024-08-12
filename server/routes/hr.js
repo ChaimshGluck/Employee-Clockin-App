@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, updateEmployee, deleteEmployee, getAllRecords } from '../../controllers/hr';
+import { registerUser, updateEmployee, deleteEmployee, getAllRecords } from '../controllers/hr.js';
 const router = express.Router();
 export default router;
 
