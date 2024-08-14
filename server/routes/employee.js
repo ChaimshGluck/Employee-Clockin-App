@@ -9,7 +9,7 @@ router.post('/login', async (req, res) => {
 })
 
 router.post('/clockin', async (req, res) => {
-    const result = await userClockin();
+    const result = await userClockin(req.query.userId);
     res.json(result);
 })
 
