@@ -9,12 +9,12 @@ router.post('/login', async (req, res) => {
 })
 
 router.post('/clockin', async (req, res) => {
-    const result = await userClockin(req.query.userId);
+    const result = await userClockin(req.query.emplyeeId);
     res.json(result);
 })
 
 router.patch('/clockout', async (req, res) => {
-    const result = await userClockout();
+    const result = await userClockout(req.query.entryId);
     res.json(result);
 })
 
