@@ -13,7 +13,7 @@ router.patch('/employee/:id', async (req, res) => {
     res.json(result);
 })
 
-router.delete('/employee/:id', async (req, res) => {
+router.delete(`/employee/:id`, async (req, res) => {
     const result = await deleteEmployee(req.params.id);
     res.json(result);
 })

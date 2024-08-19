@@ -9,7 +9,7 @@ router.post('/login', async (req, res) => {
 })
 
 router.post('/clockin', async (req, res) => {
-    const result = await userClockin(req.query.emplyeeId);
+    const result = await userClockin(req.query.employeeId);
     res.json(result);
 })
 
@@ -19,6 +19,6 @@ router.patch('/clockout', async (req, res) => {
 })
 
 router.get('/records', async (req, res) => {
-    const result = await getEmployeeRecords();
+    const result = await getEmployeeRecords(req.query.employeeId);
     res.json(result);
 })
