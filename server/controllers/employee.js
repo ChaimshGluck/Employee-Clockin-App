@@ -1,42 +1,74 @@
 import db from '../db.js';
+import bcrypt from 'bcryptjs';
 
-export async function userLogin() {
+export async function userLogin(employee) {
+    try {
+        const query = 'SELECT employee_id, email, password FROM employees where email = $1';
+        const employeeRecord = await db.oneOrNone(query, [employee.email]);
+        if (!employeeRecord) { throw new Error('Invalid email or password') };
 
+        const isPasswordCorrect = await bcrypt.compare(employee.password, employeeRecord.password);
+
+        if (isPasswordCorrect) {
+            console.log(`employee ${employeeRecord.employee_id} logged in`);
+            return { ok: true, employeeId: employeeRecord.employee_id };
+        } else {
+            throw new Error('Invalid email or password')
+        }
+    } catch (error) {
+        console.error('Error logging in:', error);
+        return { ok: false, error: error.message };
+    }
 };
 
 export async function userClockin(employeeId) {
     try {
+        const queryCheck = 'SELECT entry_id FROM TimeEntries WHERE employee_id = $1 AND clock_out IS NULL';
+        const currentlyClockedIn = await db.oneOrNone(queryCheck, [employeeId]);
+        if (currentlyClockedIn) {
+            throw new Error('Employee is currently clocked in');
+        }
+
         const timestamp = new Date();
-        const query = 'INSERT INTO TimeEntries (employee_id, clock_in) VALUES ($1, $2) returning entry_id';
-        const entry = await db.one(query, [employeeId, timestamp]);
-        console.log(`User ${employeeId} clocked in at ${timestamp}`);
-        return { entry_id: entry.entry_id };
+        const query = 'INSERT INTO TimeEntries (employee_id, clock_in) VALUES ($1, $2)';
+        await db.none(query, [employeeId, timestamp]);
+        console.log(`employee ${employeeId} clocked in at ${timestamp}`);
+        return { ok: true };
+
     } catch (error) {
         console.error('Error clocking in:', error);
-        return {ok: false, error: error.message};
+        return { ok: false, error: error.message };
     }
 }
 
-export async function userClockout(entryId) {
+export async function userClockout(employeeId) {
     try {
+        const queryCheck = 'SELECT clock_out FROM TimeEntries WHERE employee_id = $1 AND clock_out IS NULL';
+        const entryExists = await db.oneOrNone(queryCheck, [employeeId]);
+        if (!entryExists) {
+            throw new Error('Employee is not clocked in')
+        }
+
         const timestamp = new Date();
-        const query = 'UPDATE TimeEntries SET clock_out = $1 where entry_id = $2 returning employee_id, clock_out'
-        const result = await db.one(query, [timestamp, entryId]);
-        console.log(`User ${result.employee_id} clocked out at ${result.clock_out}`);
-        return {ok: true};
+        const query = 'UPDATE TimeEntries SET clock_out = $1 WHERE clock_out IS NULL AND employee_id = $2 returning clock_out';
+        const result = await db.one(query, [timestamp, employeeId]);
+        console.log(`employee ${employeeId} clocked out at ${result.clock_out}`);
+        return { ok: true };
+
     } catch (error) {
         console.error('Error clocking out:', error);
-        return {ok: false, error: error.message};
+        return { ok: false, error: error.message };
     }
 };
 
 export async function getEmployeeRecords(employeeId) {
     try {
-        const query = 'SELECT entry_id, clock_in, clock_out, total_hours, entry_date FROM timeentries WHERE employee_id = $1';
+        const query = 'SELECT entry_id, clock_in, clock_out, total_hours, entry_date FROM timeentries WHERE employee_id = $1 ORDER BY entry_date DESC';
         const result = await db.manyOrNone(query, [employeeId]);
-        return {ok: true, employeeRecords: result};
+        return { ok: true, employeeRecords: result };
+
     } catch (error) {
         console.error('Error getting employee records', error);
-        return {ok: false, error: error.message};
+        return { ok: false, error: error.message };
     }
 };

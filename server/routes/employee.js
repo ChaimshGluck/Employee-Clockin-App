@@ -14,7 +14,7 @@ router.post('/clockin', async (req, res) => {
 })
 
 router.patch('/clockout', async (req, res) => {
-    const result = await userClockout(req.query.entryId);
+    const result = await userClockout(req.query.employeeId);
     res.json(result);
 })
 
