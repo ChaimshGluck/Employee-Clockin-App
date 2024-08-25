@@ -1,5 +1,7 @@
 import db from '../db.js';
 import bcrypt from 'bcryptjs';
+import { timeentries } from '../drizzle/schema.js';
+import { eq, desc } from 'drizzle-orm';
 
 export async function userLogin(employee) {
     try {
@@ -63,8 +65,14 @@ export async function userClockout(employeeId) {
 
 export async function getEmployeeRecords(employeeId) {
     try {
-        const query = 'SELECT entry_id, clock_in, clock_out, total_hours, entry_date FROM timeentries WHERE employee_id = $1 ORDER BY entry_date DESC';
-        const result = await db.manyOrNone(query, [employeeId]);
+        const result = await db.select({
+            entryId: timeentries.entryId,
+            clockIn: timeentries.clockIn,
+            clockOut: timeentries.clockOut,
+            totalHours: timeentries.totalHours,
+            entryDate: timeentries.entryDate
+        })
+            .from(timeentries).where(eq(timeentries.employeeId, employeeId)).orderBy(desc(timeentries.entryDate))
         return { ok: true, employeeRecords: result };
 
     } catch (error) {
