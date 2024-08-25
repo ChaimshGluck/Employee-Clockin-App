@@ -1,10 +1,10 @@
 import express from 'express';
-import { registerUser, updateEmployee, deleteEmployee, getAllRecords } from '../controllers/hr.js';
+import { registerEmployee, updateEmployee, deleteEmployee, getAllRecords } from '../controllers/hr.js';
 const router = express.Router();
 export default router;
 
 router.post('/register', async (req, res) => {
-    const result = await registerUser(req.body);
+    const result = await registerEmployee(req.body);
     res.json(result);
 })
 

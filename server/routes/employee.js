@@ -1,20 +1,20 @@
 import express from 'express';
-import { userLogin, userClockin, userClockout, getEmployeeRecords } from '../controllers/employee.js';
+import { employeeLogin, employeeClockin, employeeClockout, getEmployeeRecords } from '../controllers/employee.js';
 const router = express.Router();
 export default router;
 
 router.post('/login', async (req, res) => {
-    const result = await userLogin(req.query);
+    const result = await employeeLogin(req.query);
     res.json(result);
 })
 
 router.post('/clockin', async (req, res) => {
-    const result = await userClockin(req.query.employeeId);
+    const result = await employeeClockin(req.query.employeeId);
     res.json(result);
 })
 
 router.patch('/clockout', async (req, res) => {
-    const result = await userClockout(req.query.employeeId);
+    const result = await employeeClockout(req.query.employeeId);
     res.json(result);
 })
 
