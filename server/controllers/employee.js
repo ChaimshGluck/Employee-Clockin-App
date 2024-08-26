@@ -2,6 +2,7 @@ import db from '../db.js';
 import bcrypt from 'bcryptjs';
 import { employees, timeentries } from '../drizzle/schema.js';
 import { eq, desc, isNull, and } from 'drizzle-orm';
+import { handleError } from '../utils.js';
 
 export async function employeeLogin(employee) {
     try {
@@ -23,8 +24,7 @@ export async function employeeLogin(employee) {
             throw new Error('Invalid email or password')
         }
     } catch (error) {
-        console.error('Error logging in:', error);
-        return { ok: false, error: error.message };
+        return handleError('Error logging in:', error);
     }
 };
 
@@ -45,8 +45,7 @@ export async function employeeClockin(employeeId) {
         return { ok: true };
 
     } catch (error) {
-        console.error('Error clocking in:', error);
-        return { ok: false, error: error.message };
+        return handleError('Error clocking in:', error);
     }
 }
 
@@ -66,8 +65,7 @@ export async function employeeClockout(employeeId) {
         return { ok: true };
 
     } catch (error) {
-        console.error('Error clocking out:', error);
-        return { ok: false, error: error.message };
+        return handleError('Error clocking out:', error);
     }
 };
 
@@ -84,7 +82,6 @@ export async function getEmployeeRecords(employeeId) {
         return { ok: true, employeeRecords: result };
 
     } catch (error) {
-        console.error('Error getting employee records', error);
-        return { ok: false, error: error.message };
+        return handleError('Error getting employee records', error);
     }
 };

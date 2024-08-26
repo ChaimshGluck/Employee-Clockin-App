@@ -2,6 +2,7 @@ import db from '../db.js';
 import bcrypt from 'bcryptjs';
 import { employees, timeentries } from '../drizzle/schema.js';
 import { asc, desc, eq } from 'drizzle-orm';
+import { handleError } from '../utils.js';
 
 export async function registerEmployee(employee) {
     try {
@@ -22,12 +23,10 @@ export async function registerEmployee(employee) {
         return { ok: true, employeeId: result.employeeId }
 
     } catch (error) {
-        if(error.code === '23505'){
-            console.error('Error registering employee: Email already in use.');
-            return {ok: false, error: 'Email already in use'};
+        if (error.code === '23505') {
+            return handleError('Error registering employee:', 'Email already in use.')
         }
-        console.error('Error registering employee:', error);
-        return { ok: false, error: error.message };
+        return handleError('Error registering employee:', error);
     }
 };
 
@@ -41,8 +40,7 @@ export async function deleteEmployee(employeeId) {
         return { ok: true };
 
     } catch (error) {
-        console.error('Error deleting employee:', error);
-        return { ok: false, error: error.message };
+        return handleError('Error deleting employee:', error);
     }
 };
 
@@ -60,7 +58,6 @@ export async function getAllRecords() {
         return { ok: true, employeesRecords: result };
 
     } catch (error) {
-        console.error('Error getting all clockin records', error);
-        return { ok: false, error: error.message };
+        return handleError('Error getting all clockin records:', error);
     }
 };
