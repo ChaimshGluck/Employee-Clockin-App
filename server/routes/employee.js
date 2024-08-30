@@ -1,11 +1,30 @@
+import 'dotenv/config';
 import express from 'express';
-import { employeeLogin, employeeClockin, employeeClockout, getEmployeeRecords } from '../controllers/employee.js';
+import jwt from 'jsonwebtoken';
+import { employeeClockin, employeeClockout, getEmployeeRecords } from '../controllers/employee.js';
+import passport, { authenticateCookie } from '../auth/auth.js';
 const router = express.Router();
 export default router;
 
-router.post('/login', async (req, res) => {
-    const result = await employeeLogin(req.query);
-    res.json(result);
+router.use(authenticateCookie);
+
+router.post('/login', (req, res) => {
+
+    passport.authenticate('local', { session: false }, (err, user, info) => {
+        if (err) {
+            console.log('Error logging in:', err);
+            return res.status(400).json({ ok: false, error: err.message });
+        }
+
+        if (!user) {
+            console.log('Error logging in:', info.message);
+            return res.status(400).json({ ok: false, error: info.message });
+        }
+        const token = jwt.sign({ user: { id: user.employeeId, email: user.email } }, process.env.JWT_SECRET);
+        console.log('token:', token);
+        res.cookie('project2024-token', token, { httpOnly: true, secure: false, path: '/' });
+        return res.json({ ok: true, employeeId: user.employeeId });
+    })(req, res)
 })
 
 router.post('/clockin', async (req, res) => {
@@ -19,6 +38,7 @@ router.patch('/clockout', async (req, res) => {
 })
 
 router.get('/records', async (req, res) => {
-    const result = await getEmployeeRecords(req.query.employeeId);
+    console.log('Authenticated user:', req.user);
+    const result = await getEmployeeRecords(req.user.id);
     res.json(result);
-})
+});

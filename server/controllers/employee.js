@@ -1,32 +1,48 @@
-import db from '../db.js';
+import 'dotenv/config';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import db from '../db.js';
 import { employees, timeentries } from '../drizzle/schema.js';
 import { eq, desc, isNull, and } from 'drizzle-orm';
 import { handleError } from '../utils.js';
 
-export async function employeeLogin(employee) {
+export async function verify(username, password, cb) {
     try {
         const [employeeRecord] = await db.select({
             employeeId: employees.employeeId,
             email: employees.email,
             password: employees.password
         })
-            .from(employees).where(eq(employees.email, employee.email))
-        console.log(employeeRecord)
-        if (!employeeRecord) { throw new Error('Invalid email or password') };
+            .from(employees).where(eq(employees.email, username))
+        if (!employeeRecord) {
+            return cb(null, false, { message: 'Invalid email or password' })
+        };
 
-        const isPasswordCorrect = await bcrypt.compare(employee.password, employeeRecord.password);
-
+        const isPasswordCorrect = await bcrypt.compare(password, employeeRecord.password);
         if (isPasswordCorrect) {
             console.log(`employee ${employeeRecord.employeeId} logged in`);
-            return { ok: true, employeeId: employeeRecord.employeeId };
+            return cb(null, employeeRecord);
+
         } else {
-            throw new Error('Invalid email or password')
+            return cb(null, false, { message: 'Invalid email or password' })
         }
     } catch (error) {
-        return handleError('Error logging in:', error);
+        return cb(error);
     }
-};
+}
+
+export function verifyCookie(token, done) {
+    console.log('verifyCookie called with token:', token);
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log('Decoded token:', decoded);
+        return done(null, decoded.user);
+    } catch (error) {
+        console.error('Error verifying cookie:', error);
+        return done(null, false);
+    }
+}
 
 export async function employeeClockin(employeeId) {
     try {
