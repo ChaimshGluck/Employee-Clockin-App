@@ -33,6 +33,11 @@ export function authenticateCookie(req, res, next) {
             console.log('User not authenticated');
             return res.status(401).json({ message: 'Unauthorized' });
         }
+        if(user.id != req.query.employeeId) {
+            console.log('Token does not match user');
+            return res.status(401).json({ message: 'Unauthorized - Token does not match user' });
+        }
+
         req.user = user;
         next();
     })(req, res, next);

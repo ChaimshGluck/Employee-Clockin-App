@@ -20,7 +20,7 @@ router.post('/login', (req, res) => {
             console.log('Error logging in:', info.message);
             return res.status(400).json({ ok: false, error: info.message });
         }
-        const token = jwt.sign({ user: { id: user.employeeId, email: user.email } }, process.env.JWT_SECRET);
+        const token = jwt.sign({ user: { id: user.employeeId, email: user.email } }, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log('token:', token);
         res.cookie('project2024-token', token, { httpOnly: true, secure: false, path: '/' });
         return res.json({ ok: true, employeeId: user.employeeId });
