@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
+import LogIn from './components/Login';
+import Register from './components/Register';
 import ClockInOut from './components/ClockInOut';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('signIn'); // 'signIn', 'signUp', 'clockInOut'
+  const [currentPage, setCurrentPage] = useState('LogIn');
+  const [isHr, setIsHr] = useState(false);
 
   // Function to toggle between pages
   const handleToggle = (page) => {
@@ -13,9 +14,13 @@ function App() {
 
   return (
     <div className="container">
-      {currentPage === 'signIn' && <SignIn onToggle={() => handleToggle('clockInOut')} onSignUp={() => handleToggle('signUp')} />}
+      {currentPage === 'LogIn' && <LogIn onToggle={() => handleToggle('clockInOut')} setIsHr={setIsHr} />}
+      {currentPage === 'clockInOut' && <ClockInOut onToggle={isHr ? () => handleToggle('Register') : undefined} isHr={isHr}/>}
+      {/* {isHr && <Register />} */}
+      {/* {currentPage === 'Register' && <Register />} */}
+      {/* {currentPage === 'signIn' && <SignIn onToggle={() => handleToggle('clockInOut')} onSignUp={() => handleToggle('signUp')} />}
       {currentPage === 'signUp' && <SignUp onSignIn={() => handleToggle('signIn')} />}
-      {currentPage === 'clockInOut' && <ClockInOut />}
+      {currentPage === 'clockInOut' && <ClockInOut />} */}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function ClockInOut() {
+function ClockInOut({isHr, onToggle}) {
   const [clockedIn, setClockedIn] = useState(false);
 
   const handleClockIn = () => {
@@ -21,6 +21,9 @@ function ClockInOut() {
       ) : (
         <button onClick={handleClockOut}>Clock Out</button>
       )}
+      {isHr && <div className="toggle-link">
+        <p><button onClick={onToggle}>Register new employee</button></p>
+      </div>}
     </div>
   );
 }

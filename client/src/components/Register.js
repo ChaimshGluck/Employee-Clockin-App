@@ -18,16 +18,22 @@ function SignUp({ onSignIn }) {
 
   return (
     <div>
-      <h2>Sign Up</h2>
+      <h2>Register employee</h2>
       <form onSubmit={handleSignUp}>
-        <label>Username:</label>
+        <label>First name:</label>
         <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
 
-        <label>Email:</label>
+        <label>Last name:</label>
+        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+
+        <label>Email address:</label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
         <label>Password:</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+
+        <label htmlFor='hr-checkbox'>Give HR permissions</label>
+        <input type='checkbox' id='hr-checkbox'/>
 
         <button type="submit">Sign Up</button>
       </form>

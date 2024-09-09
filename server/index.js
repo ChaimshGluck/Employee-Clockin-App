@@ -1,5 +1,6 @@
 import express from 'express';
 import 'dotenv/config';
+import cors from 'cors';
 import cookieParser from 'cookie-parser'
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -14,6 +15,7 @@ const __dirname = path.dirname(__filename);
 const publicPath = path.join(__dirname, '../public/dist');
 app.use('/', express.static(publicPath));
 
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 
