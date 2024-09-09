@@ -23,7 +23,7 @@ function Login({ onToggle, setIsHr }) {
       }
       const employee = await response.json();
       console.log(employee)
-      if (employee.role == 'hr') {
+      if (employee.role === 'hr') {
         setIsHr(true)
       };
       onToggle();

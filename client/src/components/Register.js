@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function SignUp({ onSignIn }) {
+function Register({ onRegister }) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,7 +10,7 @@ function SignUp({ onSignIn }) {
     // Simple sign-up logic
     if (username && email && password) {
       alert('Account created! You can now sign in.');
-      onSignIn(); // Go back to sign-in page
+      onRegister(); // Go back to clockin page
     } else {
       alert('Please fill in all fields.');
     }
@@ -38,10 +38,10 @@ function SignUp({ onSignIn }) {
         <button type="submit">Sign Up</button>
       </form>
       <div className="toggle-link">
-        <p>Already have an account? <button onClick={onSignIn}>Sign In</button></p>
+        <p><button onClick={onRegister}>Back to clockin page</button></p>
       </div>
     </div>
   );
 }
 
-export default SignUp;
+export default Register;
