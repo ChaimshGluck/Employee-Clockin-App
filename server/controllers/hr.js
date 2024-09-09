@@ -1,6 +1,6 @@
 import db from '../db.js';
 import bcrypt from 'bcryptjs';
-import { employees, timeentries } from '../drizzle/schema.js';
+import { employees, roles, timeentries } from '../drizzle/schema.js';
 import { asc, desc, eq } from 'drizzle-orm';
 import { handleError } from '../utils.js';
 
@@ -12,14 +12,18 @@ export async function registerEmployee(employee) {
             lastName: employee.lastName,
             email: employee.email,
             password: passhash,
+            roleId: employee.isHr ? 1 : 2,
             dateHired: new Date().toISOString().split('T')[0]
         })
             .returning({
                 firstName: employees.firstName,
                 lastName: employees.lastName,
-                employeeId: employees.employeeId
+                employeeId: employees.employeeId,
+                roleId: employees.roleId
             })
-        console.log(`registered employee ${result.firstName} ${result.lastName}, id is ${result.employeeId}`)
+
+        const [role] = await db.select({ roleName: roles.roleName }).from(roles).where(eq(roles.roleId, result.roleId));
+        console.log(`registered ${role.roleName == 'hr' ? 'HR ' : ''}employee ${result.firstName} ${result.lastName}, id is ${result.employeeId}`)
         return { ok: true, employeeId: result.employeeId }
 
     } catch (error) {

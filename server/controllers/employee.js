@@ -2,7 +2,7 @@ import 'dotenv/config';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import db from '../db.js';
-import { employees, timeentries } from '../drizzle/schema.js';
+import { employees, roles, timeentries } from '../drizzle/schema.js';
 import { eq, desc, isNull, and } from 'drizzle-orm';
 import { handleError } from '../utils.js';
 
@@ -11,9 +11,11 @@ export async function verify(username, password, cb) {
         const [employeeRecord] = await db.select({
             employeeId: employees.employeeId,
             email: employees.email,
-            password: employees.password
+            password: employees.password,
+            roleId: roles.roleName
         })
-            .from(employees).where(eq(employees.email, username))
+            .from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
+            .where(eq(employees.email, username))
         if (!employeeRecord) {
             return cb(null, false, { message: 'Invalid email or password' })
         };
