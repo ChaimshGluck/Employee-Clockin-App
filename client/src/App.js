@@ -8,6 +8,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState('LogIn');
   const [isHr, setIsHr] = useState(false);
   const [employeeId, setEmployeeId] = useState(null);
+  const [showAllRecords, setShowAllRecords] = useState(false);
 
   // Function to toggle between pages
   const handleToggle = (page) => {
@@ -22,14 +23,18 @@ function App() {
         setEmployeeId={setEmployeeId}
       />}
       {currentPage === 'clockInOut' && <ClockInOut
-        onToggle={isHr ? handleToggle : undefined}
+        onToggle={handleToggle}
         isHr={isHr}
         employeeId={employeeId}
-      />}
-      {currentPage === 'Register' && <Register
-        onToggle={() => handleToggle('clockInOut')}
+        setShowAllRecords={setShowAllRecords}
       />}
       {currentPage === 'Records' && <Records
+        onToggle={() => handleToggle('clockInOut')}
+        employeeId={employeeId}
+        isHr={isHr}
+        showAllRecords={showAllRecords}
+      />}
+      {currentPage === 'Register' && <Register
         onToggle={() => handleToggle('clockInOut')}
       />}
     </div>
