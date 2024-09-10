@@ -1,18 +1,33 @@
 import React, { useState } from 'react';
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 function Register({ onRegister }) {
-  const [username, setUsername] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [hrPermission, setHrPermission] = useState(false);
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    // Simple sign-up logic
-    if (username && email && password) {
-      alert('Account created! You can now sign in.');
-      onRegister(); // Go back to clockin page
-    } else {
-      alert('Please fill in all fields.');
+    try {
+      await fetch(`${backendUrl}/hr/register`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+          isHr: hrPermission
+        })
+      })
+      alert('Account created!');
+      onRegister();
+    } catch {
+      alert('Error registering employee');
     }
   };
 
@@ -21,10 +36,10 @@ function Register({ onRegister }) {
       <h2>Register employee</h2>
       <form onSubmit={handleSignUp}>
         <label>First name:</label>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+        <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
 
         <label>Last name:</label>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
 
         <label>Email address:</label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -33,7 +48,7 @@ function Register({ onRegister }) {
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
 
         <label htmlFor='hr-checkbox'>Give HR permissions</label>
-        <input type='checkbox' id='hr-checkbox'/>
+        <input type='checkbox' id='hr-checkbox' onChange={() => setHrPermission(true)} />
 
         <button type="submit">Sign Up</button>
       </form>

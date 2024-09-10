@@ -9,13 +9,17 @@ import employeeRoutes from './routes/employee.js';
 
 const app = express();
 const port = process.env.PORT;
+const frontendPort = process.env.FE_PORT;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const publicPath = path.join(__dirname, '../public/dist');
 app.use('/', express.static(publicPath));
 
-app.use(cors());
+app.use(cors({
+    origin: `http://localhost:${frontendPort}`,
+    credentials: true,
+}));
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 

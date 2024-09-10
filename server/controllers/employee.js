@@ -63,7 +63,8 @@ export async function employeeClockin(employeeId) {
         return { ok: true };
 
     } catch (error) {
-        return handleError('Error clocking in:', error);
+        console.error('Error clocking in:', error);
+        return { ok: false, message: error.message };
     }
 }
 
@@ -83,7 +84,8 @@ export async function employeeClockout(employeeId) {
         return { ok: true };
 
     } catch (error) {
-        return handleError('Error clocking out:', error);
+        console.error('Error clocking in:', error);
+        return { ok: false, message: error.message };
     }
 };
 

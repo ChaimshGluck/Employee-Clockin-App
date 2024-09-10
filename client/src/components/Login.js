@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function Login({ onToggle, setIsHr }) {
+function Login({ onToggle, setIsHr, setEmployeeId }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -13,6 +13,7 @@ function Login({ onToggle, setIsHr }) {
         headers: {
           "Content-Type": "application/json"
         },
+        credentials: "include",
         body: JSON.stringify({
           username: email,
           password: password
@@ -22,7 +23,7 @@ function Login({ onToggle, setIsHr }) {
         throw new Error('Invalid email or password');
       }
       const employee = await response.json();
-      console.log(employee)
+      setEmployeeId(employee.employeeId)
       if (employee.role === 'hr') {
         setIsHr(true)
       };

@@ -29,11 +29,17 @@ router.post('/login', (req, res) => {
 
 router.post('/clockin', async (req, res) => {
     const result = await employeeClockin(req.query.employeeId);
+    if (!result.ok) {
+        return res.status(400).json({ message: result.message });
+    }
     res.json(result);
 })
 
 router.patch('/clockout', async (req, res) => {
     const result = await employeeClockout(req.query.employeeId);
+    if (!result.ok) {
+        return res.status(400).json({ message: result.message });
+    }
     res.json(result);
 })
 

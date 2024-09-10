@@ -6,6 +6,7 @@ import ClockInOut from './components/ClockInOut';
 function App() {
   const [currentPage, setCurrentPage] = useState('LogIn');
   const [isHr, setIsHr] = useState(false);
+  const [employeeId, setEmployeeId] = useState(null);
 
   // Function to toggle between pages
   const handleToggle = (page) => {
@@ -14,9 +15,19 @@ function App() {
 
   return (
     <div className="container">
-      {currentPage === 'LogIn' && <LogIn onToggle={() => handleToggle('clockInOut')} setIsHr={setIsHr} />}
-      {currentPage === 'clockInOut' && <ClockInOut onToggle={isHr ? () => handleToggle('Register') : undefined} isHr={isHr} />}
-      {currentPage === 'Register' && <Register onRegister={() => handleToggle('clockInOut')} />}
+      {currentPage === 'LogIn' && <LogIn
+        onToggle={() => handleToggle('clockInOut')}
+        setIsHr={setIsHr}
+        setEmployeeId={setEmployeeId}
+      />}
+      {currentPage === 'clockInOut' && <ClockInOut
+        onToggle={isHr ? () => handleToggle('Register') : undefined}
+        isHr={isHr}
+        employeeId={employeeId}
+      />}
+      {currentPage === 'Register' && <Register
+        onRegister={() => handleToggle('clockInOut')}
+      />}
     </div>
   );
 }

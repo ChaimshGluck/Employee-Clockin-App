@@ -20,7 +20,6 @@ export const employees = pgTable("employees", {
 	lastName: varchar("last_name", { length: 50 }).notNull(),
 	email: varchar("email", { length: 100 }).notNull(),
 	password: varchar("password", { length: 255 }).notNull(),
-	department: varchar("department", { length: 50 }),
 	roleId: integer("role_id"),
 	dateHired: date("date_hired").notNull(),
 },
