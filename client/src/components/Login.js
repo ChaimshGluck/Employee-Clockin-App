@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 function Login({ onToggle, setIsHr, setEmployeeId }) {

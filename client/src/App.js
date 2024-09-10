@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import LogIn from './components/Login';
 import Register from './components/Register';
 import ClockInOut from './components/ClockInOut';
+import Records from './components/Records';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('LogIn');
@@ -21,12 +22,15 @@ function App() {
         setEmployeeId={setEmployeeId}
       />}
       {currentPage === 'clockInOut' && <ClockInOut
-        onToggle={isHr ? () => handleToggle('Register') : undefined}
+        onToggle={isHr ? handleToggle : undefined}
         isHr={isHr}
         employeeId={employeeId}
       />}
       {currentPage === 'Register' && <Register
-        onRegister={() => handleToggle('clockInOut')}
+        onToggle={() => handleToggle('clockInOut')}
+      />}
+      {currentPage === 'Records' && <Records
+        onToggle={() => handleToggle('clockInOut')}
       />}
     </div>
   );

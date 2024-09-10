@@ -1,4 +1,3 @@
-import React from 'react';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 function ClockInOut({ isHr, onToggle, employeeId }) {
@@ -54,7 +53,8 @@ function ClockInOut({ isHr, onToggle, employeeId }) {
       <button onClick={handleClockIn}>Clock In</button>
       <button onClick={handleClockOut}>Clock Out</button>
       {isHr && <div className="toggle-link">
-        <p><button onClick={onToggle}>Register new employee</button></p>
+        <p><button onClick={() => onToggle('Register')}>Register new employee</button></p>
+        <p><button onClick={() => onToggle('Records')}>See all clockin records</button></p>
       </div>}
     </div>
   );

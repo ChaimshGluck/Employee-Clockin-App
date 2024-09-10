@@ -1,59 +1,161 @@
+/* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* General body styling */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-  }
-  
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Wrapper container for centering and styling app content */
+.container {
+  width: 100%;
+  max-width: 450px;
+  margin: 60px auto;
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Header and title */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333333;
+  font-size: 1.8em;
+  font-weight: 600;
+}
+
+/* Form elements */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+button {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+  background-color: #f9f9f9;
+  transition: background-color 0.2s ease-in;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+  background-color: #eef2f7;
+  border-color: #0a4408;
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+/* Button styles */
+button {
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: #0e702b;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* HR permissions checkbox */
+#hr-checkbox {
+  margin: 15px 0 0 10px;
+}
+
+/* Toggle links for navigation between forms */
+.toggle-link {
+  margin-top: 30px; /* Add more space above the toggle link */
+  text-align: center;
+  position: relative;
+}
+
+.toggle-link::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #ddd; /* Subtle divider above the toggle link */
+}
+
+.toggle-link button {
+  background: none;
+  border: none;
+  color: #28a745; /* Matching the button color */
+  cursor: pointer;
+  font-size: 1.1em; /* Slightly increase font size */
+  padding: 0;
+}
+
+.toggle-link button:hover {
+  text-decoration: underline;
+  color: #0e702b; /* Matching the button hover color */
+}
+
+/* Record list styling */
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+li {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Individual record styling */
+.record-details p {
+  margin: 5px 0;
+  font-size: 1em;
+  color: #555;
+}
+
+.record-details p span {
+  font-weight: 600;
+  color: #333;
+}
+
+/* For larger screens, increase the container width */
+@media (min-width: 768px) {
   .container {
-    width: 100%;
-    max-width: 400px;
-    margin: 50px auto;
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
   }
-  
-  h2 {
-    text-align: center;
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none;
   }
-  
-  input[type="text"],
-  input[type="password"],
-  input[type="email"],
-  button {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  button {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #218838;
-  }
-  
-  .toggle-link p {
-    text-align: center;
-  }
-  
-  .toggle-link button {
-    background: none;
-    border: none;
-    color: #007bff;
-    cursor: pointer;
-    padding: 0;
-  }
-  
-  .toggle-link button:hover {
-    text-decoration: underline;
-  }
-  
+}

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function Register({ onRegister }) {
+function Register({ onToggle }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -25,7 +25,7 @@ function Register({ onRegister }) {
         })
       })
       alert('Account created!');
-      onRegister();
+      onToggle();
     } catch {
       alert('Error registering employee');
     }
@@ -53,7 +53,7 @@ function Register({ onRegister }) {
         <button type="submit">Sign Up</button>
       </form>
       <div className="toggle-link">
-        <p><button onClick={onRegister}>Back to clockin page</button></p>
+        <p><button onClick={onToggle}>Back to clockin page</button></p>
       </div>
     </div>
   );
