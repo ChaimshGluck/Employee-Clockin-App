@@ -2,7 +2,6 @@ import React from 'react';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 function ClockInOut({ isHr, onToggle, employeeId }) {
-  // const [clockedIn, setClockedIn] = useState(false);
 
 
   const handleClockIn = async () => {
@@ -21,7 +20,6 @@ function ClockInOut({ isHr, onToggle, employeeId }) {
       const clockinRecord = await response.json();
       console.log(clockinRecord);
       alert('Clocked In!');
-      // setClockedIn(true);
     } catch (error) {
       console.error('Error clocking in:', error);
       alert(error.message);
@@ -44,7 +42,6 @@ function ClockInOut({ isHr, onToggle, employeeId }) {
       const clockoutRecord = await response.json();
       console.log(clockoutRecord);
       alert('Clocked Out!');
-      // setClockedIn(true);
     } catch (error) {
       console.error('Error clocking out:', error);
       alert(error.message);
