@@ -35,7 +35,12 @@ export async function registerEmployee(employee) {
     }
 };
 
-export async function updateEmployee() {
+export async function updateEmployee(employeeId) {
+    try {
+
+    } catch (error) {
+
+    }
 };
 
 export async function deleteEmployee(employeeId) {
@@ -68,3 +73,21 @@ export async function getAllRecords() {
         return handleError('Error getting all clockin records:', error);
     }
 };
+
+export async function getAllEmployees() {
+    try {
+        const result = await db.select({
+            employeeId: employees.employeeId,
+            firstName: employees.firstName,
+            lastName: employees.lastName,
+            email: employees.email,
+            password: employees.password,
+            role: roles.roleName,
+            dateHired: employees.dateHired
+        }).from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
+            .orderBy(asc(employees.dateHired))
+        return { ok: true, employees: result };
+    } catch (error) {
+        return handleError('Error getting all employees:', error)
+    }
+}

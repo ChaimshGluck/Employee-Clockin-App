@@ -23,7 +23,7 @@ const Records = ({ onToggle, employeeId, showAllRecords }) => {
 
         const getAllRecords = async () => {
             try {
-                const response = await fetch(`${backendUrl}/hr/employees`, {
+                const response = await fetch(`${backendUrl}/hr/all-records`, {
                     headers: { "Content-Type": "application/json" }
                 })
                 const responseRecords = await response.json();
@@ -47,6 +47,7 @@ const Records = ({ onToggle, employeeId, showAllRecords }) => {
                 <p><button onClick={onToggle}>Back to clockin page</button></p>
             </div>
             <ul>
+                {records.length == 0 && <p>You have no clockin records</p>}
                 {
                     records.map((record, index) => (
                         (

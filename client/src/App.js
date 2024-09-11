@@ -3,6 +3,7 @@ import LogIn from './components/Login';
 import Register from './components/Register';
 import ClockInOut from './components/ClockInOut';
 import Records from './components/Records';
+import Employees from './components/Employees';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('LogIn');
@@ -39,6 +40,9 @@ function App() {
         showAllRecords={showAllRecords}
       />}
       {currentPage === 'Register' && <Register
+        onToggle={() => handleToggle('clockInOut')}
+      />}
+      {currentPage === 'Employees' && <Employees
         onToggle={() => handleToggle('clockInOut')}
       />}
     </div>
