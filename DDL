@@ -35,7 +35,7 @@ CREATE TABLE
 
 
 INSERT INTO
-  Roles (role_name)
+  Roles (role_id, role_name)
 VALUES
-  ('hr'),
-  ('employee');
+  (1, 'hr'),
+  (2, 'employee');
