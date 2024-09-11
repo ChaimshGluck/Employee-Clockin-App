@@ -32,7 +32,7 @@ const Employees = ({ onToggle }) => {
                 {
                     employees.map((employee, index) => (
                         (
-                            <li key={index}>< Employee employeeDetails={employee} /></li>
+                            <li key={index}>< Employee employee={employee} onToggle={() => onToggle('Update-Employee')}/></li>
                         )
                     ))
                 }

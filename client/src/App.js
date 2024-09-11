@@ -4,6 +4,7 @@ import Register from './components/Register';
 import ClockInOut from './components/ClockInOut';
 import Records from './components/Records';
 import Employees from './components/Employees';
+import UpdateEmployee from './components/UpdateEmployee';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('LogIn');
@@ -43,8 +44,9 @@ function App() {
         onToggle={() => handleToggle('clockInOut')}
       />}
       {currentPage === 'Employees' && <Employees
-        onToggle={() => handleToggle('clockInOut')}
+        onToggle={handleToggle}
       />}
+      {currentPage === 'UpdateEmployee' && <UpdateEmployee />}
     </div>
   );
 }

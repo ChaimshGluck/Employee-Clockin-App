@@ -32,5 +32,5 @@
 ## Database Setup:
 
 - Run the DDL queries to set up the database tables.
-- Manually insert an employee record into the `employees` table and set the `role_id` column to `1` to give them HR access.
+- Manually insert a new employee record into the `employees` table, and set the `role_id` column to the role_id that corresponds to the HR role in the `roles` table, so they will have HR access.
 - Sign in using that employee’s credentials.
