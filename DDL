@@ -1,6 +1,6 @@
 CREATE TABLE
   Roles (
-    role_id INT PRIMARY KEY,
+    role_id SERIAL PRIMARY KEY,
     role_name VARCHAR(50) UNIQUE NOT NULL
   );
 
@@ -35,7 +35,7 @@ CREATE TABLE
 
 
 INSERT INTO
-  Roles (role_id, role_name)
+  Roles (role_name)
 VALUES
-  (1, 'hr'),
-  (2, 'employee');
+  ('hr'),
+  ('employee');

@@ -8,12 +8,16 @@ import { handleError } from '../utils.js';
 export async function registerEmployee(employee) {
     try {
         const passhash = await bcrypt.hash(employee.password, 10);
+        const roleName = employee.isHr ? 'hr' : 'employee'
+
+        const [role] = await db.select({ roleId: roles.roleId, roleName: roles.roleName }).from(roles).where(eq(roles.roleName, roleName));
+        console.log(role)
         const [result] = await db.insert(employees).values({
             firstName: employee.firstName,
             lastName: employee.lastName,
             email: employee.email,
             password: passhash,
-            roleId: employee.isHr ? 1 : 2,
+            roleId: role.roleId,
             dateHired: new Date().toISOString().split('T')[0]
         })
             .returning({
@@ -22,8 +26,6 @@ export async function registerEmployee(employee) {
                 employeeId: employees.employeeId,
                 roleId: employees.roleId
             })
-
-        const [role] = await db.select({ roleName: roles.roleName }).from(roles).where(eq(roles.roleId, result.roleId));
         console.log(`registered ${role.roleName == 'hr' ? 'HR ' : ''}employee ${result.firstName} ${result.lastName}, id is ${result.employeeId}`)
         return { ok: true, employeeId: result.employeeId }
 
