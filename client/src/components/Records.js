@@ -47,7 +47,7 @@ const Records = ({ onToggle, employeeId, showAllRecords }) => {
                 <p><button onClick={onToggle}>Back to clockin page</button></p>
             </div>
             <ul>
-                {records.length == 0 && <p>You have no clockin records</p>}
+                {records.length === 0 && <p>You have no clockin records</p>}
                 {
                     records.map((record, index) => (
                         (
