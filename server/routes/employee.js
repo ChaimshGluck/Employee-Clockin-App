@@ -23,7 +23,7 @@ router.post('/login', (req, res) => {
         const token = jwt.sign({ user: { id: user.employeeId, email: user.email } }, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log('token:', token);
         res.cookie('project2024-token', token, { httpOnly: true, secure: false, path: '/' });
-        return res.json({ ok: true, employeeId: user.employeeId, role: user.roleId });
+        return res.json({ ok: true, employee: user });
     })(req, res)
 })
 

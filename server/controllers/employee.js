@@ -10,9 +10,11 @@ export async function verify(username, password, cb) {
     try {
         const [employeeRecord] = await db.select({
             employeeId: employees.employeeId,
+            firstName: employees.firstName,
+            lastName: employees.lastName,
             email: employees.email,
             password: employees.password,
-            roleId: roles.roleName
+            role: roles.roleName
         })
             .from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
             .where(eq(employees.email, username))
@@ -20,7 +22,8 @@ export async function verify(username, password, cb) {
             return cb(null, false, { message: 'Invalid email or password' })
         };
 
-        const isPasswordCorrect = await bcrypt.compare(password, employeeRecord.password);
+        employeeRecord.fullName = `${employeeRecord.firstName} ${employeeRecord.lastName}`;
+        const isPasswordCorrect = bcrypt.compare(password, employeeRecord.password);
         if (isPasswordCorrect) {
             console.log(`employee ${employeeRecord.employeeId} logged in`);
             return cb(null, employeeRecord);

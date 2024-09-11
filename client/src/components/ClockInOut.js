@@ -1,6 +1,6 @@
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function ClockInOut({ isHr, onToggle, employeeId, setShowAllRecords }) {
+function ClockInOut({ isHr, onToggle, employeeId, fullName, setShowAllRecords }) {
 
 
   const handleClockIn = async () => {
@@ -49,10 +49,11 @@ function ClockInOut({ isHr, onToggle, employeeId, setShowAllRecords }) {
 
   return (
     <div>
+      <h2>Hello {fullName}</h2>
       <h2>Clock In/Out</h2>
       <button onClick={handleClockIn}>Clock In</button>
       <button onClick={handleClockOut}>Clock Out</button>
-      <p><button onClick={() => { onToggle('Records'); setShowAllRecords(false)}}>See all your clockin records</button></p>
+      <p><button onClick={() => { onToggle('Records'); setShowAllRecords(false) }}>See all your clockin records</button></p>
       {isHr && <div className="toggle-link">
         <p><button onClick={() => onToggle('Register')}>Register new employee</button></p>
         <p><button onClick={() => { onToggle('Records'); setShowAllRecords(true) }}>See all clockin records</button></p>

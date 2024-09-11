@@ -1,5 +1,6 @@
 import db from '../db.js';
 import bcrypt from 'bcryptjs';
+import { sql } from 'drizzle-orm';
 import { employees, roles, timeentries } from '../drizzle/schema.js';
 import { asc, desc, eq } from 'drizzle-orm';
 import { handleError } from '../utils.js';
@@ -53,12 +54,14 @@ export async function getAllRecords() {
         const result = await db.select({
             entryId: timeentries.entryId,
             employeeId: timeentries.employeeId,
+            fullName: sql`CONCAT(${employees.firstName}, ' ', ${employees.lastName})`,
             clockIn: timeentries.clockIn,
             clockOut: timeentries.clockOut,
             totalHours: timeentries.totalHours,
             entryDate: timeentries.entryDate
         })
-            .from(timeentries).orderBy(asc(timeentries.employeeId), desc(timeentries.entryDate))
+            .from(timeentries).leftJoin(employees, eq(timeentries.employeeId, employees.employeeId))
+            .orderBy(asc(timeentries.employeeId), desc(timeentries.entryDate))
         return { ok: true, employeesRecords: result };
 
     } catch (error) {
