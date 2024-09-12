@@ -26,13 +26,13 @@ const Employees = ({ onToggle }) => {
     return (
         <>
             <div className="toggle-link">
-                <p><button onClick={onToggle}>Back to clockin page</button></p>
+                <p><button onClick={() => onToggle('clockInOut')}>Back to clockin page</button></p>
             </div>
             <ul>
                 {
                     employees.map((employee, index) => (
                         (
-                            <li key={index}>< Employee employee={employee} onToggle={() => onToggle('Update-Employee')}/></li>
+                            <li key={index}>< Employee employee={employee} onToggle={onToggle} /></li>
                         )
                     ))
                 }

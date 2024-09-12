@@ -25,7 +25,7 @@ function Login({ onToggle, setIsHr, setEmployeeId, setFullName }) {
       const { employee } = await response.json();
       setEmployeeId(employee.employeeId);
       setFullName(employee.fullName);
-      if (employee.role === 'hr') {
+      if (employee.role === 'HR') {
         setIsHr(true)
       };
       onToggle();

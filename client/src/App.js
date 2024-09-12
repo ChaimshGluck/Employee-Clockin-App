@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, createContext } from 'react';
 import LogIn from './components/Login';
 import Register from './components/Register';
 import ClockInOut from './components/ClockInOut';
@@ -6,12 +6,15 @@ import Records from './components/Records';
 import Employees from './components/Employees';
 import UpdateEmployee from './components/UpdateEmployee';
 
+export const UserContext = createContext();
+
 function App() {
   const [currentPage, setCurrentPage] = useState('LogIn');
   const [employeeId, setEmployeeId] = useState(null);
   const [fullName, setFullName] = useState('');
   const [isHr, setIsHr] = useState(false);
   const [showAllRecords, setShowAllRecords] = useState(false);
+  const [employeeIdToUpdate, setEmployeeIdToUpdate] = useState(0);
 
   // Function to toggle between pages
   const handleToggle = (page) => {
@@ -20,12 +23,14 @@ function App() {
 
   return (
     <div className="container">
+
       {currentPage === 'LogIn' && <LogIn
         onToggle={() => handleToggle('clockInOut')}
         setIsHr={setIsHr}
         setEmployeeId={setEmployeeId}
         setFullName={setFullName}
       />}
+
       {currentPage === 'clockInOut' && <ClockInOut
         onToggle={handleToggle}
         isHr={isHr}
@@ -33,6 +38,7 @@ function App() {
         fullName={fullName}
         setShowAllRecords={setShowAllRecords}
       />}
+
       {currentPage === 'Records' && <Records
         onToggle={() => handleToggle('clockInOut')}
         employeeId={employeeId}
@@ -40,14 +46,22 @@ function App() {
         isHr={isHr}
         showAllRecords={showAllRecords}
       />}
-      {currentPage === 'Register' && <Register
-        onToggle={() => handleToggle('clockInOut')}
-      />}
-      {currentPage === 'Employees' && <Employees
-        onToggle={handleToggle}
-      />}
-      {currentPage === 'UpdateEmployee' && <UpdateEmployee />}
-    </div>
+
+      {currentPage === 'Register' &&
+        <Register onToggle={() => handleToggle('clockInOut')} />
+      }
+
+      {currentPage === 'Employees' &&
+        <UserContext.Provider value={setEmployeeIdToUpdate}>
+          <Employees onToggle={handleToggle} />
+        </UserContext.Provider>}
+
+      {currentPage === 'UpdateEmployee' &&
+        <UserContext.Provider value={employeeIdToUpdate}>
+          <UpdateEmployee onToggle={handleToggle}/>
+        </UserContext.Provider>}
+
+    </div >
   );
 }
 

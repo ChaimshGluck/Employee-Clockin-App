@@ -1,4 +1,8 @@
+import { useContext } from "react";
+import { UserContext } from "../App";
+
 const Employee = ({ employee, onToggle }) => {
+    const setEmployeeIdToUpdate = useContext(UserContext);
 
     return (
         <div>
@@ -7,7 +11,8 @@ const Employee = ({ employee, onToggle }) => {
             <p>Email: {employee.email}</p>
             <p>Role: {employee.role}</p>
             <p>Date hired: {employee.dateHired}</p>
-            <p><button onClick={() => onToggle('UpdateEmployee')}>Update employee info</button></p>
+            <p><button onClick={() => { onToggle('UpdateEmployee'); setEmployeeIdToUpdate(employee.employeeId) }}
+            >Update employee info</button></p>
         </div>
     )
 }

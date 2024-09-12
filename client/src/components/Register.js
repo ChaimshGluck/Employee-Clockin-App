@@ -11,7 +11,7 @@ function Register({ onToggle }) {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      await fetch(`${backendUrl}/hr/register`, {
+      const response = await fetch(`${backendUrl}/hr/register`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json"
@@ -24,9 +24,14 @@ function Register({ onToggle }) {
           isHr: hrPermission
         })
       })
-      alert('Account created!');
-      onToggle();
-    } catch {
+      const result = await response.json();
+      if (result.ok) {
+        alert('Account created!');
+        onToggle();
+      } else {
+        alert(result.error)
+      }
+    } catch (error) {
       alert('Error registering employee');
     }
   };
