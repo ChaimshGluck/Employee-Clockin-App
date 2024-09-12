@@ -101,7 +101,7 @@ const UpdateEmployee = ({ onToggle }) => {
         <div>
             <h2>Update employee</h2>
             <form onSubmit={handleSubmit}>
-                <label>First name: {employee.firstName}</label>
+                <label>First name:</label>
                 <input type="text" name="firstName" value={employee.firstName}
                     onChange={handleChange}
                     required />
