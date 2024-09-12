@@ -126,17 +126,21 @@ export async function updateEmployee(employee) {
         return { ok: true }
     } catch (error) {
         if (error.code === '23505') {
-            return handleError('Error registering employee:', 'Email already in use.')
+            return handleError('Error updating employee:', 'Email already in use.')
         }
-        return handleError('Error registering employee:', error);
+        return handleError('Error updating employee:', error);
     }
 };
 
 async function getRole(roleName) {
-    const [role] = await db.select({
-        roleId: roles.roleId,
-        roleName: roles.roleName
-    })
-        .from(roles).where(eq(roles.roleName, roleName))
-    return role;
+    try {
+        const [role] = await db.select({
+            roleId: roles.roleId,
+            roleName: roles.roleName
+        })
+            .from(roles).where(eq(roles.roleName, roleName))
+        return role;
+    } catch (error) {
+        return handleError('Error getting role:', error)
+    }
 }

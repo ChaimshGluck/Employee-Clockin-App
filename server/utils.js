@@ -1,7 +1,7 @@
 export function handleError(message, error) {
     console.error(message, error);
 
-    if (error == 'Email already in use') {
+    if (typeof error == 'string') {
         return { ok: false, error: error}
     }
     return { ok: false, error: error.message };
