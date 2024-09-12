@@ -1,15 +1,19 @@
 import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+import pkg from 'pg-connection-string';
+const { parse } = pkg;
+const { host, port, database, user, password } = parse(process.env.DATABASE_URL || '');
 
 const client = postgres({
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    database: process.env.DB_NAME,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    ssl: true,
-})
+    host,
+    port,
+    database,
+    user,
+    password,
+    ssl: true
+});
+
 const db = drizzle(client);
 
 export default db;

@@ -23,6 +23,7 @@
     "passport": "^0.7.0",
     "passport-cookie": "^1.0.9",
     "passport-local": "^1.0.0",
+    "pg-connection-string": "^2.6.4",
     "pg-promise": "^11.9.1",
     "postgres": "^3.4.4"
   },

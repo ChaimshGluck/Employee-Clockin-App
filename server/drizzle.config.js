@@ -1,7 +1,7 @@
 import { defineConfig } from 'drizzle-kit';
 import 'dotenv/config';
-import { parse } from 'pg-connection-string';
-
+import pkg from 'pg-connection-string';
+const { parse } = pkg;
 const { host, port, database, user, password } = parse(process.env.DATABASE_URL || '');
 
 export default defineConfig({
