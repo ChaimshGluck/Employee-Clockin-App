@@ -4,9 +4,9 @@
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.roles": {
+    "timesheet.roles": {
       "name": "roles",
-      "schema": "",
+      "schema": "timesheet",
       "columns": {
         "role_id": {
           "name": "role_id",
@@ -34,9 +34,9 @@
         }
       }
     },
-    "public.employees": {
+    "timesheet.employees": {
       "name": "employees",
-      "schema": "",
+      "schema": "timesheet",
       "columns": {
         "employee_id": {
           "name": "employee_id",
@@ -68,12 +68,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "department": {
-          "name": "department",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": false
-        },
         "role_id": {
           "name": "role_id",
           "type": "integer",
@@ -93,7 +87,7 @@
           "name": "employees_role_id_fkey",
           "tableFrom": "employees",
           "tableTo": "roles",
-          "schemaTo": "public",
+          "schemaTo": "timesheet",
           "columnsFrom": [
             "role_id"
           ],
@@ -115,9 +109,9 @@
         }
       }
     },
-    "public.timeentries": {
+    "timesheet.timeentries": {
       "name": "timeentries",
-      "schema": "",
+      "schema": "timesheet",
       "columns": {
         "entry_id": {
           "name": "entry_id",
@@ -167,7 +161,7 @@
           "name": "timeentries_employee_id_fkey",
           "tableFrom": "timeentries",
           "tableTo": "employees",
-          "schemaTo": "public",
+          "schemaTo": "timesheet",
           "columnsFrom": [
             "employee_id"
           ],
@@ -183,7 +177,9 @@
     }
   },
   "enums": {},
-  "schemas": {},
+  "schemas": {
+    "timesheet": "timesheet"
+  },
   "sequences": {},
   "_meta": {
     "schemas": {},
