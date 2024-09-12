@@ -6,7 +6,7 @@
 
 - `PORT=` [server port number]
 - `FE_PORT=` [frontend port number, rather 3000 if available]
-- `DB_URL=` [database connection URL in the format `postgres://user:password@host:port/dbname`]
+- `DB_URL=` [database connection URL in the format `postgresql://user:password@host:port/dbname`]
 - `JWT_SECRET=` [cookie secret]
 
 ### Create a `.env` file in the `client` folder with this:
