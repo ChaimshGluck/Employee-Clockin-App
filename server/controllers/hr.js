@@ -126,7 +126,6 @@ export async function deleteEmployee(employeeId) {
         await db.delete(employees).where(eq(employees.employeeId, employeeId));
         console.log(`deleted employee ${employeeId}`);
         return { ok: true };
-
     } catch (error) {
         return handleError('Error deleting employee:', error);
     }

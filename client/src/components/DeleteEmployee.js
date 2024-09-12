@@ -1,18 +1,15 @@
-import { useContext } from "react";
-import { UserContext } from "../App";
-
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const deleteEmployee = async (onToggle) => {
-    const employeeId = useContext(UserContext);
+const deleteEmployee = async (onToggle, employeeId) => {
     try {
-        const response = await fetch(`${backendUrl}/hr/register?employeeId=${employeeId}`, {
+        const response = await fetch(`${backendUrl}/hr/delete?employeeId=${employeeId}`, {
             method: 'DELETE',
             headers: {
                 "Content-Type": "application/json"
             }
         })
         const result = await response.json();
+        console.log()
         if (result.ok) {
             alert('Employee deleted');
             onToggle('Employees');

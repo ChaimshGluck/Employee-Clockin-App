@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../App";
-import { deleteEmployee } from "./DeleteEmployee";
+import deleteEmployee from "./DeleteEmployee.js";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const UpdateEmployee = ({ onToggle }) => {
@@ -148,7 +148,7 @@ const UpdateEmployee = ({ onToggle }) => {
                 <button type="submit">Update</button>
             </form>
             <div className="toggle-link">
-                <p><button onClick={() => deleteEmployee(onToggle)}>Delete employee</button></p>
+                <p><button onClick={() => deleteEmployee(onToggle, employeeId)}>Delete employee</button></p>
             </div>
             <div className="toggle-link">
                 <p><button onClick={() => onToggle('Employees')}>Back to employees page</button></p>
