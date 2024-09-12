@@ -56,7 +56,7 @@ export async function employeeClockin(employeeId) {
             throw new Error('Employee is currently clocked in');
         }
 
-        const timestamp = new Date().toISOString();
+        const timestamp = new Date().toLocaleString();
         await db.insert(timeentries).values({
             employeeId: employeeId,
             clockIn: timestamp
@@ -79,7 +79,7 @@ export async function employeeClockout(employeeId) {
             throw new Error('Employee is not clocked in')
         }
 
-        const timestamp = new Date().toISOString();
+        const timestamp = new Date().toLocaleString();
         await db.update(timeentries).set({ clockOut: timestamp })
             .where(eq(entryExists.entryId, timeentries.entryId))
         console.log(`employee ${employeeId} clocked out at ${timestamp}`);

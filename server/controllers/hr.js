@@ -58,7 +58,7 @@ export async function getAllRecords() {
             entryDate: timeentries.entryDate
         })
             .from(timeentries).leftJoin(employees, eq(timeentries.employeeId, employees.employeeId))
-            .orderBy(asc(timeentries.employeeId), desc(timeentries.entryDate))
+            .orderBy(desc(timeentries.entryDate))
         return { ok: true, employeesRecords: result };
 
     } catch (error) {

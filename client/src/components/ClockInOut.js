@@ -53,7 +53,7 @@ function ClockInOut({ isHr, onToggle, employeeId, fullName, setShowAllRecords })
       <h2>Clock In/Out</h2>
       <button onClick={handleClockIn}>Clock In</button>
       <button onClick={handleClockOut}>Clock Out</button>
-      <p><button onClick={() => { onToggle('Records'); setShowAllRecords(false) }}>See all your clockin records</button></p>
+      <p className="toggle-link"><button onClick={() => { onToggle('Records'); setShowAllRecords(false) }}>See all your clockin records</button></p>
       {isHr && <div className="toggle-link">
         <p><button onClick={() => onToggle('Register')}>Register new employee</button></p>
         <p><button onClick={() => { onToggle('Records'); setShowAllRecords(true) }}>See all clockin records</button></p>

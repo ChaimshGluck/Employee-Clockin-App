@@ -77,7 +77,7 @@ const UpdateEmployee = ({ onToggle }) => {
                 },
                 body: JSON.stringify({
                     firstName: updatedEmployee.firstName,
-                    lastName: updatedEmployee.emaillastName,
+                    lastName: updatedEmployee.lastName,
                     email: updatedEmployee.email,
                     password: updatedEmployee.password,
                     isHr: updatedEmployee.hrPermission,
