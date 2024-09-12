@@ -30,7 +30,7 @@ CREATE TABLE
           FROM
             clock_out - clock_in
         ) / 3600
-      ) | | ' hours ' | | FLOOR(
+      ) || ' hours ' || FLOOR(
         (
           EXTRACT(
             EPOCH
@@ -38,7 +38,7 @@ CREATE TABLE
               clock_out - clock_in
           ) % 3600
         ) / 60
-      ) | | ' minutes'
+      ) || ' minutes'
     ) STORED,
     entry_date DATE NOT NULL DEFAULT CURRENT_DATE
   );
