@@ -8,11 +8,6 @@ router.post('/register', async (req, res) => {
     res.json(result);
 })
 
-router.delete(`/employee/:id`, async (req, res) => {
-    const result = await deleteEmployee(req.params.id);
-    res.json(result);
-})
-
 router.get('/all-records', async (req, res) => {
     const result = await getAllRecords();
     res.json(result);
@@ -28,7 +23,12 @@ router.get('/employee', async (req, res) => {
     res.json(result);
 })
 
-router.patch('/update-employee', async (req, res) => {
+router.patch('/update', async (req, res) => {
     const result = await updateEmployee(req.body);
+    res.json(result);
+})
+
+router.delete('/delete', async (req, res) => {
+    const result = await deleteEmployee(req.query.employeeId);
     res.json(result);
 })

@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../App";
+import { deleteEmployee } from "./DeleteEmployee";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const UpdateEmployee = ({ onToggle }) => {
@@ -70,7 +71,7 @@ const UpdateEmployee = ({ onToggle }) => {
                 ...employee,
                 password: showPasswordFields ? passwordData.newPassword : employee.password
             };
-            const result = await fetch(`${backendUrl}/hr/update-employee`, {
+            const result = await fetch(`${backendUrl}/hr/update`, {
                 method: 'PATCH',
                 headers: {
                     "Content-Type": "application/json"
@@ -146,6 +147,9 @@ const UpdateEmployee = ({ onToggle }) => {
 
                 <button type="submit">Update</button>
             </form>
+            <div className="toggle-link">
+                <p><button onClick={() => deleteEmployee(onToggle)}>Delete employee</button></p>
+            </div>
             <div className="toggle-link">
                 <p><button onClick={() => onToggle('Employees')}>Back to employees page</button></p>
             </div>

@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import db from '../db.js';
 import { employees, roles, timeentries } from '../drizzle/schema.js';
 import { eq, desc, isNull, and } from 'drizzle-orm';
-import { handleError } from '../utils.js';
+import { handleError } from './utils.js';
 
 export async function verify(username, password, cb) {
     try {
