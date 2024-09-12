@@ -8,10 +8,9 @@ import { handleError } from '../utils.js';
 export async function registerEmployee(employee) {
     try {
         const passhash = await bcrypt.hash(employee.password, 10);
-        const roleName = employee.isHr ? 'hr' : 'employee'
+        const roleName = employee.isHr ? 'HR' : 'employee'
 
-        const [role] = await db.select({ roleId: roles.roleId, roleName: roles.roleName }).from(roles).where(eq(roles.roleName, roleName));
-        console.log(role)
+        const role = await getRole(roleName);
         const [result] = await db.insert(employees).values({
             firstName: employee.firstName,
             lastName: employee.lastName,
@@ -24,24 +23,15 @@ export async function registerEmployee(employee) {
                 firstName: employees.firstName,
                 lastName: employees.lastName,
                 employeeId: employees.employeeId,
-                roleId: employees.roleId
             })
-        console.log(`registered ${role.roleName == 'hr' ? 'HR ' : ''}employee ${result.firstName} ${result.lastName}, id is ${result.employeeId}`)
+        console.log(`registered ${role.roleName == 'HR' ? 'HR ' : ''}employee ${result.firstName} ${result.lastName}, id is ${result.employeeId}`)
         return { ok: true, employeeId: result.employeeId }
 
     } catch (error) {
         if (error.code === '23505') {
-            return handleError('Error registering employee:', 'Email already in use.')
+            return handleError('Error registering employee:', 'Email already in use')
         }
         return handleError('Error registering employee:', error);
-    }
-};
-
-export async function updateEmployee(employeeId) {
-    try {
-
-    } catch (error) {
-
     }
 };
 
@@ -83,7 +73,6 @@ export async function getAllEmployees() {
             firstName: employees.firstName,
             lastName: employees.lastName,
             email: employees.email,
-            password: employees.password,
             role: roles.roleName,
             dateHired: employees.dateHired
         }).from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
@@ -92,4 +81,62 @@ export async function getAllEmployees() {
     } catch (error) {
         return handleError('Error getting all employees:', error)
     }
+}
+
+export async function getEmployee(employeeId) {
+    try {
+        const [result] = await db.select({
+            firstName: employees.firstName,
+            lastName: employees.lastName,
+            email: employees.email,
+            password: employees.password,
+            role: roles.roleName,
+            dateHired: employees.dateHired
+        })
+            .from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
+            .where(eq(employees.employeeId, employeeId))
+        return { ok: true, fetchedEmployee: result };
+    } catch (error) {
+        return handleError('Error getting employee info:', error)
+    }
+}
+
+export async function updateEmployee(employee) {
+    console.log(employee)
+    try {
+        const passhash = await bcrypt.hash(employee.password, 10);
+        const roleName = employee.isHr ? 'HR' : 'employee';
+        const role = await getRole(roleName);
+        console.log(passhash, role)
+
+        const [result] = await db.update(employees)
+            .set({
+                firstName: employee.firstName,
+                lastName: employee.lastName,
+                email: employee.email,
+                password: passhash,
+                roleId: role.roleId,
+            })
+            .where(eq(employees.employeeId, employee.employeeId))
+            .returning({
+                firstName: employees.firstName,
+                lastName: employees.lastName,
+            })
+        console.log(`updated employee ${result.firstName} ${result.lastName}`)
+        return { ok: true }
+    } catch (error) {
+        if (error.code === '23505') {
+            return handleError('Error registering employee:', 'Email already in use.')
+        }
+        return handleError('Error registering employee:', error);
+    }
+};
+
+async function getRole(roleName) {
+    const [role] = await db.select({
+        roleId: roles.roleId,
+        roleName: roles.roleName
+    })
+        .from(roles).where(eq(roles.roleName, roleName))
+    return role;
 }

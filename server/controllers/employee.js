@@ -21,9 +21,8 @@ export async function verify(username, password, cb) {
         if (!employeeRecord) {
             return cb(null, false, { message: 'Invalid email or password' })
         };
-
         employeeRecord.fullName = `${employeeRecord.firstName} ${employeeRecord.lastName}`;
-        const isPasswordCorrect = bcrypt.compare(password, employeeRecord.password);
+        const isPasswordCorrect = await bcrypt.compare(password, employeeRecord.password);
         if (isPasswordCorrect) {
             console.log(`employee ${employeeRecord.employeeId} logged in`);
             return cb(null, employeeRecord);
