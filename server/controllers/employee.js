@@ -25,6 +25,7 @@ export async function verify(username, password, cb) {
         const isPasswordCorrect = await bcrypt.compare(password, employeeRecord.password);
         if (isPasswordCorrect) {
             console.log(`employee ${employeeRecord.employeeId} logged in`);
+            employeeRecord.password = '';
             return cb(null, employeeRecord);
 
         } else {
@@ -65,7 +66,7 @@ export async function employeeClockin(employeeId) {
         return { ok: true };
 
     } catch (error) {
-        return handleError('Error clocking in:', error);
+        return handleError('Error clocking in:', error.message);
     }
 }
 
@@ -85,7 +86,7 @@ export async function employeeClockout(employeeId) {
         return { ok: true };
 
     } catch (error) {
-        return handleError('Error clocking in:', error);
+        return handleError('Error clocking in:', error.message);
     }
 };
 
@@ -98,7 +99,7 @@ export async function getEmployeeRecords(employeeId) {
             totalHours: timeentries.totalHours,
             entryDate: timeentries.entryDate
         })
-            .from(timeentries).where(eq(timeentries.employeeId, employeeId)).orderBy(desc(timeentries.entryDate))
+            .from(timeentries).where(eq(timeentries.employeeId, employeeId)).orderBy(desc(timeentries.clockIn))
         return { ok: true, employeeRecords: result };
 
     } catch (error) {

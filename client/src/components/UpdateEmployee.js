@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../App";
-import deleteEmployee from "./DeleteEmployee.js";
+import { EmployeeContext } from "../App";
+import DeleteWarning from "./DeleteWarning";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const UpdateEmployee = ({ onToggle }) => {
-    const employeeId = useContext(UserContext);
+const UpdateEmployee = ({ setCurrentPage }) => {
+    const employeeId = useContext(EmployeeContext);
     const [isLoading, setIsLoading] = useState(true);
     const [employee, setEmployee] = useState({
         firstName: '',
@@ -18,18 +18,20 @@ const UpdateEmployee = ({ onToggle }) => {
         newPassword: '',
         confirmPassword: ''
     });
+    const [showDeleteBox, setShowDeleteBox] = useState(false);
 
     useEffect(() => {
         const getEmployee = async () => {
             try {
-                const response = await fetch(`${backendUrl}/hr/employee?employeeId=${employeeId}`, {
-                    headers: { "Content-Type": "application/json" }
+                const response = await fetch(`${backendUrl}/hr/employee?employeeIdtoUpdate=${employeeId}`, {
+                    headers: { "Content-Type": "application/json" },
+                    credentials: 'include'
                 })
                 const { fetchedEmployee } = await response.json();
+                console.log('fetched employee:', fetchedEmployee)
                 setEmployee(prevData => ({
                     ...prevData,
                     ...fetchedEmployee,
-                    password: fetchedEmployee.password,
                     hrPermission: fetchedEmployee.role === 'HR'
                 }));
                 setIsLoading(false);
@@ -76,6 +78,7 @@ const UpdateEmployee = ({ onToggle }) => {
                 headers: {
                     "Content-Type": "application/json"
                 },
+                credentials: 'include',
                 body: JSON.stringify({
                     firstName: updatedEmployee.firstName,
                     lastName: updatedEmployee.lastName,
@@ -87,7 +90,7 @@ const UpdateEmployee = ({ onToggle }) => {
             })
             if (result.ok) {
                 alert('Account updated!');
-                onToggle('Employees');
+                setCurrentPage('Employees');
             }
         } catch {
             alert('Error registering employee');
@@ -148,10 +151,13 @@ const UpdateEmployee = ({ onToggle }) => {
                 <button type="submit">Update</button>
             </form>
             <div className="toggle-link">
-                <p><button onClick={() => deleteEmployee(onToggle, employeeId)}>Delete employee</button></p>
+                <p><button onClick={() => setShowDeleteBox(true)}>Delete employee</button></p>
             </div>
+            {showDeleteBox &&
+                <DeleteWarning setShowDeleteBox={setShowDeleteBox} setCurrentPage={setCurrentPage} />
+            }
             <div className="toggle-link">
-                <p><button onClick={() => onToggle('Employees')}>Back to employees page</button></p>
+                <p><button onClick={() => setCurrentPage('Employees')}>Back to employees page</button></p>
             </div>
         </div>
     )

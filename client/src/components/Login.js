@@ -1,12 +1,14 @@
 import { useState } from 'react';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function Login({ onToggle, setIsHr, setEmployeeId, setFullName }) {
+function Login({ setCurrentPage, setIsHr, setEmployeeId, setFullName }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await fetch(`${backendUrl}/employee/login`, {
         method: 'POST',
@@ -19,20 +21,33 @@ function Login({ onToggle, setIsHr, setEmployeeId, setFullName }) {
           password: password
         })
       })
-      if (!response.ok) {
-        throw new Error('Invalid email or password');
+
+      if (response.status === 401) {
+        setIsLoading(false);
+        const { message } = await response.json();
+        alert(message);
+        return
       }
+
       const { employee } = await response.json();
       setEmployeeId(employee.employeeId);
       setFullName(employee.fullName);
       if (employee.role === 'HR') {
         setIsHr(true)
       };
-      onToggle();
+      setIsLoading(false);
+      setCurrentPage();
+
     } catch (e) {
-      alert(e);
+      setIsLoading(false);
+      console.error('Login error:', e);
+      alert('An error occurred while logging in. Please try again later.');
     }
   };
+
+  if (isLoading) {
+    return <p>Logging in...</p>;
+  }
 
   return (
     <div>

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function Register({ onToggle }) {
+function Register({ setCurrentPage }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -26,8 +26,8 @@ function Register({ onToggle }) {
       })
       const result = await response.json();
       if (result.ok) {
-        alert('Account created!');
-        onToggle();
+        alert('New employee reggistered!');
+        setCurrentPage();
       } else {
         alert(result.error)
       }
@@ -55,10 +55,10 @@ function Register({ onToggle }) {
         <label htmlFor='hr-checkbox'>Give HR permissions</label>
         <input type='checkbox' id='hr-checkbox' onChange={() => setHrPermission(true)} />
 
-        <button type="submit">Sign Up</button>
+        <button type="submit">Register</button>
       </form>
       <div className="toggle-link">
-        <p><button onClick={onToggle}>Back to clockin page</button></p>
+        <p><button onClick={setCurrentPage}>Back to clockin page</button></p>
       </div>
     </div>
   );

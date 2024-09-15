@@ -75,6 +75,24 @@ button {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+#deleteBox .delete-button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px; 
+  margin-top: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
+#deleteBox button {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  flex: 1;
+  max-width: 70px;
+}
+
 button:hover {
   background-color: #0e702b;
 }
@@ -90,7 +108,8 @@ button:active {
 
 /* Toggle links for navigation between forms */
 .toggle-link {
-  margin-top: 30px; /* Add more space above the toggle link */
+  margin-top: 30px;
+  /* Add more space above the toggle link */
   text-align: center;
   position: relative;
 }
@@ -102,21 +121,25 @@ button:active {
   left: 0;
   width: 100%;
   height: 1px;
-  background-color: #ddd; /* Subtle divider above the toggle link */
+  background-color: #ddd;
+  /* Subtle divider above the toggle link */
 }
 
 .toggle-link button {
   background: none;
   border: none;
-  color: #28a745; /* Matching the button color */
+  color: #28a745;
+  /* Matching the button color */
   cursor: pointer;
-  font-size: 1.1em; /* Slightly increase font size */
+  font-size: 1.1em;
+  /* Slightly increase font size */
   padding: 0;
 }
 
 .toggle-link button:hover {
   text-decoration: underline;
-  color: #0e702b; /* Matching the button hover color */
+  color: #0e702b;
+  /* Matching the button hover color */
 }
 
 /* Record list styling */
@@ -144,6 +167,33 @@ li {
 .record-details p span {
   font-weight: 600;
   color: #333;
+}
+
+#deleteBox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#deleteAlert {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 300px;
+  text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 5px;
 }
 
 /* For larger screens, increase the container width */

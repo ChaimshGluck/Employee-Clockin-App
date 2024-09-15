@@ -47,7 +47,7 @@ export async function getAllRecords() {
             entryDate: timeentries.entryDate
         })
             .from(timeentries).leftJoin(employees, eq(timeentries.employeeId, employees.employeeId))
-            .orderBy(desc(timeentries.entryDate))
+            .orderBy(desc(timeentries.clockIn))
         return { ok: true, employeesRecords: result };
 
     } catch (error) {
@@ -65,25 +65,24 @@ export async function getAllEmployees() {
             role: roles.roleName,
             dateHired: employees.dateHired
         }).from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
-            .orderBy(asc(employees.dateHired))
+            .orderBy(desc(employees.employeeId))
         return { ok: true, employees: result };
     } catch (error) {
         return handleError('Error getting all employees:', error)
     }
 }
 
-export async function getEmployee(employeeId) {
+export async function getEmployee(employeeIdtoUpdate) {
     try {
         const [result] = await db.select({
             firstName: employees.firstName,
             lastName: employees.lastName,
             email: employees.email,
-            password: employees.password,
             role: roles.roleName,
             dateHired: employees.dateHired
         })
             .from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
-            .where(eq(employees.employeeId, employeeId))
+            .where(eq(employees.employeeId, employeeIdtoUpdate))
         return { ok: true, fetchedEmployee: result };
     } catch (error) {
         return handleError('Error getting employee info:', error)

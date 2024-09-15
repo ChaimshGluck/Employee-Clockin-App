@@ -1,6 +1,6 @@
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function ClockInOut({ isHr, onToggle, employeeId, fullName, setShowAllRecords }) {
+function ClockInOut({ isHr, setCurrentPage, employeeId, fullName, setShowAllRecords }) {
 
 
   const handleClockIn = async () => {
@@ -12,7 +12,9 @@ function ClockInOut({ isHr, onToggle, employeeId, fullName, setShowAllRecords })
       });
 
       if (!response.ok) {
+        console.log('response:', response)
         const errorData = await response.json();
+        console.log('error data:', errorData)
         throw new Error(errorData.message);
       }
 
@@ -53,11 +55,11 @@ function ClockInOut({ isHr, onToggle, employeeId, fullName, setShowAllRecords })
       <h2>Clock In/Out</h2>
       <button onClick={handleClockIn}>Clock In</button>
       <button onClick={handleClockOut}>Clock Out</button>
-      <p className="toggle-link"><button onClick={() => { onToggle('Records'); setShowAllRecords(false) }}>See all your clockin records</button></p>
+      <p className="toggle-link"><button onClick={() => { setCurrentPage('Records'); setShowAllRecords(false) }}>See all your clockin records</button></p>
       {isHr && <div className="toggle-link">
-        <p><button onClick={() => onToggle('Register')}>Register new employee</button></p>
-        <p><button onClick={() => { onToggle('Records'); setShowAllRecords(true) }}>See all clockin records</button></p>
-        <p><button onClick={() => onToggle('Employees')}>See all employees</button></p>
+        <p><button onClick={() => setCurrentPage('Register')}>Register new employee</button></p>
+        <p><button onClick={() => { setCurrentPage('Records'); setShowAllRecords(true) }}>See all clockin records</button></p>
+        <p><button onClick={() => setCurrentPage('Employees')}>See all employees</button></p>
       </div>}
     </div>
   );
