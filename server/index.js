@@ -7,10 +7,10 @@ import employeeRoutes from './routes/employee.js';
 
 const app = express();
 const port = process.env.PORT;
-const frontendPort = process.env.FE_PORT;
+const frontendUrl = 'http://159.89.232.94:3000';
 
 app.use(cors({
-    origin: `http://localhost:${frontendPort}`,
+    origin: frontendUrl,
     credentials: true,
 }));
 

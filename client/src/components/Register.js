@@ -26,7 +26,7 @@ function Register({ setCurrentPage }) {
       })
       const result = await response.json();
       if (result.ok) {
-        alert('New employee reggistered!');
+        alert('New employee registered!');
         setCurrentPage();
       } else {
         alert(result.error)
