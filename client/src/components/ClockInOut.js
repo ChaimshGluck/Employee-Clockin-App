@@ -5,12 +5,12 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL;
 function ClockInOut({ isHr, setIsHr, setCurrentPage, employeeId, setEmployeeId, fullName, setFullName, setShowAllRecords }) {
 
 
-  // useEffect(() => {
-  //   console.log('test')
-  //   console.log("Employee ID:", employeeId);
-  //   console.log("Full Name:", fullName);
-  //   console.log("isHR:", isHr);
-  // }, [employeeId, fullName, isHr])
+  useEffect(() => {
+    console.log('test')
+    console.log("Employee ID:", employeeId);
+    console.log("Full Name:", fullName);
+    console.log("isHR:", isHr);
+  }, [employeeId, fullName, isHr])
 
   if (!employeeId || !fullName || isHr === null) {
     return <p>Loading employee data...</p>;

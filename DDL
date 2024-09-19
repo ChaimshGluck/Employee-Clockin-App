@@ -21,8 +21,8 @@ CREATE TABLE
   TimeEntries (
     entry_id SERIAL PRIMARY KEY,
     employee_id INT REFERENCES Employees(employee_id) ON DELETE CASCADE,
-    clock_in TIMESTAMP NOT NULL,
-    clock_out TIMESTAMP,
+    clock_in TIMESTAMPTZ NOT NULL,
+    clock_out TIMESTAMPTZ,
     total_hours VARCHAR GENERATED ALWAYS AS (
       FLOOR(
         EXTRACT(

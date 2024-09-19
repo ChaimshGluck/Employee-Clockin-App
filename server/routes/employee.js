@@ -28,9 +28,6 @@ router.post('/login', (req, res) => {
     })(req, res)
 })
 
-// res.cookie('project2024-token', token, { httpOnly: true, secure: false, path: '/' });
-//     return res.json({ ok: true, token, employee: { id: user.employeeId, email: user.email, role: user.role, name: user.name, records: user.records } });
-
 router.post('/clockin', async (req, res) => {
     const result = await employeeClockin(req.query.employeeId);
     if (!result.ok) {

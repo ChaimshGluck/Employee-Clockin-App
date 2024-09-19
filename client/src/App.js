@@ -13,7 +13,6 @@ function App() {
   const [currentPage, setCurrentPage] = useState(() => {
     return localStorage.getItem('currentPage') || 'LogIn'
   });
-  // const [currentPage, setCurrentPage] = useState('LogIn');
   const [employeeId, setEmployeeId] = useState(() => {
     return JSON.parse(localStorage.getItem('employee'))?.employeeId || null
   });
@@ -27,6 +26,23 @@ function App() {
     return localStorage.getItem('showAllRecords') || false
   });
   const [employeeIdToUpdate, setEmployeeIdToUpdate] = useState(0);
+
+  const isTokenValid = () => {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+
+    const decodedToken = JSON.parse(atob(token.split('.')[1]));
+    const currentTime = Math.floor(Date.now() / 1000);
+
+    return decodedToken.exp > currentTime;
+  };
+
+  useEffect(() => {
+    if (!isTokenValid()) {
+      localStorage.clear();
+      setCurrentPage('LogIn');
+    }
+  }, []);
 
   useEffect(() => {
     console.log(currentPage, employeeId, fullName, isHr)

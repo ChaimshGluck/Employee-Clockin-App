@@ -32,7 +32,7 @@ const Employees = ({ setCurrentPage }) => {
     }
 
     const handleToggle = () => {
-        localStorage.setItem('currentPage', 'ClockInout')
+        localStorage.setItem('currentPage', 'ClockInOut')
         setCurrentPage('ClockInOut')
     }
 
