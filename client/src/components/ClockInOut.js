@@ -1,7 +1,20 @@
+import { useEffect } from "react";
+
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function ClockInOut({ isHr, setCurrentPage, employeeId, fullName, setShowAllRecords }) {
+function ClockInOut({ isHr, setIsHr, setCurrentPage, employeeId, setEmployeeId, fullName, setFullName, setShowAllRecords }) {
 
+
+  useEffect(() => {
+    console.log('test')
+    console.log("Employee ID:", employeeId);
+    console.log("Full Name:", fullName);
+    console.log("isHR:", isHr);
+  }, [employeeId, fullName, isHr])
+
+  if (!employeeId || !fullName || isHr === null) {
+    return <p>Loading employee data...</p>;
+  }
 
   const handleClockIn = async () => {
     try {
@@ -49,18 +62,50 @@ function ClockInOut({ isHr, setCurrentPage, employeeId, fullName, setShowAllReco
     }
   };
 
+  const logout = async () => {
+    try {
+      // await fetch(`${backendUrl}/employee/logout`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   // credentials: "include"
+      // })
+      // localStorage.removeItem('employee');
+      // localStorage.removeItem('token');
+      // localStorage.removeItem('currentPage');
+      localStorage.clear();
+      setEmployeeId(null); // Reset employeeId
+      setFullName(''); // Reset fullName
+      setIsHr(false);
+      setCurrentPage('LogIn');
+      alert('Logged out');
+    } catch (error) {
+      console.error('Error logging out:', error)
+    }
+  }
+
+  const handleToggle = (page) => {
+    localStorage.setItem('currentPage', page);
+    setCurrentPage(page);
+  }
+
+  const handleshowAllRecords = (showAll) => {
+    localStorage.setItem('showAllRecords', showAll);
+    setShowAllRecords(showAll);
+  }
+
   return (
     <div>
       <h2>Hello {fullName}</h2>
       <h2>Clock In/Out</h2>
       <button onClick={handleClockIn}>Clock In</button>
       <button onClick={handleClockOut}>Clock Out</button>
-      <p className="toggle-link"><button onClick={() => { setCurrentPage('Records'); setShowAllRecords(false) }}>See all your clockin records</button></p>
+      <p className="toggle-link"><button onClick={() => { handleToggle('Records'); handleshowAllRecords(false) }}>See all your clockin records</button></p>
       {isHr && <div className="toggle-link">
-        <p><button onClick={() => setCurrentPage('Register')}>Register new employee</button></p>
-        <p><button onClick={() => { setCurrentPage('Records'); setShowAllRecords(true) }}>See all clockin records</button></p>
-        <p><button onClick={() => setCurrentPage('Employees')}>See all employees</button></p>
+        <p><button onClick={() => handleToggle('Register')}>Register new employee</button></p>
+        <p><button onClick={() => { handleToggle('Records'); handleshowAllRecords(true) }}>See all clockin records</button></p>
+        <p><button onClick={() => handleToggle('Employees')}>See all employees</button></p>
       </div>}
+      <p><button onClick={logout}>Log out</button></p>
     </div>
   );
 }

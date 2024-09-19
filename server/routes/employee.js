@@ -24,9 +24,12 @@ router.post('/login', (req, res) => {
         const token = jwt.sign({ user: { id: user.employeeId, email: user.email, role: user.role } }, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log('token:', token);
         res.cookie('project2024-token', token, { httpOnly: true, secure: false, path: '/' });
-        return res.json({ ok: true, employee: user });
+        return res.json({ ok: true, token, employee: user });
     })(req, res)
 })
+
+// res.cookie('project2024-token', token, { httpOnly: true, secure: false, path: '/' });
+//     return res.json({ ok: true, token, employee: { id: user.employeeId, email: user.email, role: user.role, name: user.name, records: user.records } });
 
 router.post('/clockin', async (req, res) => {
     const result = await employeeClockin(req.query.employeeId);

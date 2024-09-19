@@ -31,11 +31,15 @@ const Employees = ({ setCurrentPage }) => {
         return <p>Getting Employees...</p>;
     }
 
+    const handleToggle = () => {
+        localStorage.setItem('currentPage', 'ClockInout')
+        setCurrentPage('ClockInOut')
+    }
 
     return (
         <>
             <div className="toggle-link">
-                <p><button onClick={() => setCurrentPage('ClockInOut')}>Back to clockin page</button></p>
+                <p><button onClick={handleToggle}>Back to clockin page</button></p>
             </div>
             <ul>
                 {

@@ -1,6 +1,7 @@
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 import CookieStrategy from 'passport-cookie';
+import jwt from 'jsonwebtoken';
 import { verify, verifyCookie } from "../controllers/employee.js";
 
 const localStrategy = new LocalStrategy(verify);
@@ -56,6 +57,22 @@ export function checkRole(requiredRoles) {
     };
 }
 
+export function authenticateJWT(req, res, next) {
+    const token = req.cookies['project2024-token'];
+
+    if (token) {
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(403).json({ message: 'Invalid or expired token' });
+            }
+
+            req.user = decoded.user; // attach the user info from the token to the req object
+            next();
+        });
+    } else {
+        return res.status(401).json({ message: 'No token provided, please log in.' });
+    }
+}
 
 
 export default passport;

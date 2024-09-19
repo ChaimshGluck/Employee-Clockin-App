@@ -1,4 +1,5 @@
-import { useState, createContext } from 'react';
+import { useState, createContext, useEffect } from 'react';
+// import { Routes, Route } from 'react-router-dom';
 import LogIn from './components/Login';
 import Register from './components/Register';
 import ClockInOut from './components/ClockInOut';
@@ -9,19 +10,33 @@ import UpdateEmployee from './components/UpdateEmployee';
 export const EmployeeContext = createContext();
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('LogIn');
-  const [employeeId, setEmployeeId] = useState(null);
-  const [fullName, setFullName] = useState('');
-  const [isHr, setIsHr] = useState(false);
-  const [showAllRecords, setShowAllRecords] = useState(false);
+  const [currentPage, setCurrentPage] = useState(() => {
+    return localStorage.getItem('currentPage') || 'LogIn'
+  });
+  // const [currentPage, setCurrentPage] = useState('LogIn');
+  const [employeeId, setEmployeeId] = useState(() => {
+    return JSON.parse(localStorage.getItem('employee'))?.employeeId || null
+  });
+  const [fullName, setFullName] = useState(() => {
+    return JSON.parse(localStorage.getItem('employee'))?.fullName || ''
+  });
+  const [isHr, setIsHr] = useState(() => {
+    return JSON.parse(localStorage.getItem('employee'))?.role === 'HR' || false
+  });
+  const [showAllRecords, setShowAllRecords] = useState(() => {
+    return localStorage.getItem('showAllRecords') || false
+  });
   const [employeeIdToUpdate, setEmployeeIdToUpdate] = useState(0);
 
+  useEffect(() => {
+    console.log(currentPage, employeeId, fullName, isHr)
+  }, [currentPage, employeeId, fullName, isHr])
 
   return (
     <div className="container">
 
       {currentPage === 'LogIn' && <LogIn
-        setCurrentPage={() => setCurrentPage('ClockInOut')}
+        setCurrentPage={setCurrentPage}
         setIsHr={setIsHr}
         setEmployeeId={setEmployeeId}
         setFullName={setFullName}
@@ -30,14 +45,17 @@ function App() {
       {currentPage === 'ClockInOut' && <ClockInOut
         setCurrentPage={setCurrentPage}
         isHr={isHr}
+        setIsHr={setIsHr}
         employeeId={employeeId}
+        setEmployeeId={setEmployeeId}
         fullName={fullName}
+        setFullName={setFullName}
         setShowAllRecords={setShowAllRecords}
       />}
 
       {currentPage === 'Records' &&
         <Records
-        setCurrentPage={() => setCurrentPage('ClockInOut')}
+          setCurrentPage={() => setCurrentPage('ClockInOut')}
           employeeId={employeeId}
           fullName={fullName}
           isHr={isHr}

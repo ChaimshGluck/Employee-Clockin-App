@@ -27,6 +27,7 @@ function Register({ setCurrentPage }) {
       const result = await response.json();
       if (result.ok) {
         alert('New employee registered!');
+        localStorage.setItem('currentPage', 'ClockInOut')
         setCurrentPage();
       } else {
         alert(result.error)
@@ -35,6 +36,11 @@ function Register({ setCurrentPage }) {
       alert('Error registering employee');
     }
   };
+
+  const handleToggle = () => {
+    localStorage.setItem('currentPage', 'ClockInOut');
+    setCurrentPage();
+  }
 
   return (
     <div>
@@ -58,7 +64,7 @@ function Register({ setCurrentPage }) {
         <button type="submit">Register</button>
       </form>
       <div className="toggle-link">
-        <p><button onClick={setCurrentPage}>Back to clockin page</button></p>
+        <p><button onClick={handleToggle}>Back to clockin page</button></p>
       </div>
     </div>
   );

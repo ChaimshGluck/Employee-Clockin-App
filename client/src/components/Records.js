@@ -50,10 +50,15 @@ const Records = ({ setCurrentPage, employeeId, showAllRecords }) => {
         return <p>Getting records...</p>;
     }
 
+    const handleToggle = () => {
+        localStorage.setItem('currentPage', 'ClockInout')
+        setCurrentPage()
+    }
+    
     return (
         <>
             <div className="toggle-link">
-                <p><button onClick={setCurrentPage}>Back to clockin page</button></p>
+                <p><button onClick={handleToggle}>Back to clockin page</button></p>
             </div>
             <ul>
                 {records.length === 0 && <p>You have no clockin records</p>}

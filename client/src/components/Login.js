@@ -1,7 +1,7 @@
 import { useState } from 'react';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function Login({ setCurrentPage, setIsHr, setEmployeeId, setFullName }) {
+function LogIn({ setCurrentPage, setIsHr, setEmployeeId, setFullName }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -28,16 +28,20 @@ function Login({ setCurrentPage, setIsHr, setEmployeeId, setFullName }) {
         alert(message);
         return
       }
-
-      const { employee } = await response.json();
-      setEmployeeId(employee.employeeId);
-      setFullName(employee.fullName);
-      if (employee.role === 'HR') {
-        setIsHr(true)
-      };
+      console.log("Setting current page to ClockInOut");
+      const data = await response.json();
       setIsLoading(false);
-      setCurrentPage();
-
+      console.log("employee's token:", data.token)
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('employee', JSON.stringify(data.employee));
+      setEmployeeId(data.employee.employeeId);
+      setFullName(data.employee.fullName);
+      if (data.employee.role === 'HR') {
+        setIsHr(true)
+      }
+      console.log("Setting current page to ClockInOut");
+      localStorage.setItem('currentPage', 'ClockInOut')
+      setCurrentPage('ClockInOut');
     } catch (e) {
       setIsLoading(false);
       console.error('Login error:', e);
@@ -65,4 +69,4 @@ function Login({ setCurrentPage, setIsHr, setEmployeeId, setFullName }) {
   );
 }
 
-export default Login;
+export default LogIn;

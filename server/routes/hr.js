@@ -22,7 +22,7 @@ router.get('/employees', async (req, res) => {
 })
 
 router.get('/employee', async (req, res) => {
-    const result = await getEmployee(req.query.employeeIdtoUpdate);
+    const result = await getEmployee(req.query.employeeIdToUpdate);
     res.json(result);
 })
 

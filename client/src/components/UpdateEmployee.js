@@ -23,7 +23,7 @@ const UpdateEmployee = ({ setCurrentPage }) => {
     useEffect(() => {
         const getEmployee = async () => {
             try {
-                const response = await fetch(`${backendUrl}/hr/employee?employeeIdtoUpdate=${employeeId}`, {
+                const response = await fetch(`${backendUrl}/hr/employee?employeeIdToUpdate=${employeeId}`, {
                     headers: { "Content-Type": "application/json" },
                     credentials: 'include'
                 })
@@ -60,6 +60,10 @@ const UpdateEmployee = ({ setCurrentPage }) => {
         }));
     }
 
+    useEffect(() => {
+        console.log(employee)
+    }, [employee])
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -90,11 +94,17 @@ const UpdateEmployee = ({ setCurrentPage }) => {
             })
             if (result.ok) {
                 alert('Account updated!');
+                localStorage.setItem('currentPage', 'Employees');
                 setCurrentPage('Employees');
             }
         } catch {
             alert('Error registering employee');
         }
+    }
+
+    const handleToggle = () => {
+        localStorage.setItem('currentPage', 'Employees')
+        setCurrentPage('Employees')
     }
 
     if (isLoading || !employee) {
@@ -157,7 +167,7 @@ const UpdateEmployee = ({ setCurrentPage }) => {
                 <DeleteWarning setShowDeleteBox={setShowDeleteBox} setCurrentPage={setCurrentPage} />
             }
             <div className="toggle-link">
-                <p><button onClick={() => setCurrentPage('Employees')}>Back to employees page</button></p>
+                <p><button onClick={handleToggle}>Back to employees page</button></p>
             </div>
         </div>
     )

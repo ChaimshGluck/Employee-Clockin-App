@@ -20,6 +20,7 @@ const DeleteWarning = ({ setCurrentPage, setShowDeleteBox }) => {
             setShowDeleteBox(false);
             if (result.ok) {
                 alert('Employee deleted');
+                localStorage.setItem('currentPage', 'Employees');
                 setCurrentPage('Employees');
             } else {
                 alert(result.error)
