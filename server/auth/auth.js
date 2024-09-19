@@ -47,6 +47,7 @@ export function checkHR(req, res, next) {
     if (req.path === '/register') return next();
 
     const userRole = req.user.role;
+    console.log("Requester's role", userRole)
     if (userRole !== 'HR') {
         return res.status(403).json({ message: 'Forbidden - Insufficient permissions' });
     }

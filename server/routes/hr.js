@@ -35,3 +35,7 @@ router.delete('/delete', async (req, res) => {
     const result = await deleteEmployee(req.query.employeeId);
     res.json(result);
 })
+
+router.get('/user-role', (req, res) => {
+    res.json({ ok: true, role: req.user.role });
+});

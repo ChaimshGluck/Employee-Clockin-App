@@ -1,11 +1,11 @@
 import { useState, createContext, useEffect } from 'react';
-// import { Routes, Route } from 'react-router-dom';
 import LogIn from './components/Login';
 import Register from './components/Register';
 import ClockInOut from './components/ClockInOut';
 import Records from './components/Records';
 import Employees from './components/Employees';
 import UpdateEmployee from './components/UpdateEmployee';
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 export const EmployeeContext = createContext();
 
@@ -37,6 +37,21 @@ function App() {
     return decodedToken.exp > currentTime;
   };
 
+  const fetchUserRole = async () => {
+    try {
+      const response = await fetch(`${backendUrl}/hr/user-role`, { credentials: 'include' });
+      if (response.ok) {
+        setIsHr(true);
+        localStorage.setItem('isHr', true);
+      } else {
+        setIsHr(false);
+        localStorage.setItem('isHr', false);
+      }
+    } catch (error) {
+      console.error('Error fetching user role:', error);
+    }
+  };
+
   useEffect(() => {
     if (!isTokenValid()) {
       localStorage.clear();
@@ -56,6 +71,7 @@ function App() {
         setIsHr={setIsHr}
         setEmployeeId={setEmployeeId}
         setFullName={setFullName}
+        fetchUserRole={fetchUserRole}
       />}
 
       {currentPage === 'ClockInOut' && <ClockInOut
@@ -67,15 +83,16 @@ function App() {
         fullName={fullName}
         setFullName={setFullName}
         setShowAllRecords={setShowAllRecords}
+        fetchUserRole={fetchUserRole}
       />}
 
       {currentPage === 'Records' &&
         <Records
           setCurrentPage={() => setCurrentPage('ClockInOut')}
           employeeId={employeeId}
-          fullName={fullName}
           isHr={isHr}
           showAllRecords={showAllRecords}
+          fetchUserRole={fetchUserRole}
         />}
 
       {currentPage === 'Register' &&

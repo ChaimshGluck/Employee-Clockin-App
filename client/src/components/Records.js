@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import Record from "./Record";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const Records = ({ setCurrentPage, employeeId, showAllRecords }) => {
+const Records = ({ isHr, setCurrentPage, employeeId, showAllRecords, fetchUserRole }) => {
     const [records, setRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
+    useEffect(() => {
+        fetchUserRole();
+    }, [fetchUserRole, isHr]);
 
     useEffect(() => {
         const getRecords = async () => {
@@ -39,12 +42,12 @@ const Records = ({ setCurrentPage, employeeId, showAllRecords }) => {
                 alert(e)
             }
         }
-        if (showAllRecords) {
+        if (isHr && showAllRecords) {
             getAllRecords()
         } else {
             getRecords();
         }
-    }, [employeeId, showAllRecords])
+    }, [isHr, employeeId, showAllRecords])
 
     if (isLoading) {
         return <p>Getting records...</p>;
@@ -54,7 +57,7 @@ const Records = ({ setCurrentPage, employeeId, showAllRecords }) => {
         localStorage.setItem('currentPage', 'ClockInOut')
         setCurrentPage()
     }
-    
+
     return (
         <>
             <div className="toggle-link">

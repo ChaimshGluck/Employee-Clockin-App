@@ -18,12 +18,13 @@ router.post('/login', (req, res) => {
 
         if (!user) {
             console.log('Error logging in:', info.message);
-            return res.status(401).json({ ok: false, message: 'Invalid email or password' }); 
+            return res.status(401).json({ ok: false, message: 'Invalid email or password' });
         }
 
         const token = jwt.sign({ user: { id: user.employeeId, email: user.email, role: user.role } }, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log('token:', token);
         res.cookie('project2024-token', token, { httpOnly: true, secure: false, path: '/' });
+        delete user.role;
         return res.json({ ok: true, token, employee: user });
     })(req, res)
 })

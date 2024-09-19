@@ -2,8 +2,7 @@ import { useEffect } from "react";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function ClockInOut({ isHr, setIsHr, setCurrentPage, employeeId, setEmployeeId, fullName, setFullName, setShowAllRecords }) {
-
+function ClockInOut({ isHr, setIsHr, fetchUserRole, setCurrentPage, employeeId, setEmployeeId, fullName, setFullName, setShowAllRecords }) {
 
   useEffect(() => {
     console.log('test')
@@ -11,6 +10,11 @@ function ClockInOut({ isHr, setIsHr, setCurrentPage, employeeId, setEmployeeId, 
     console.log("Full Name:", fullName);
     console.log("isHR:", isHr);
   }, [employeeId, fullName, isHr])
+
+  useEffect(() => {
+    fetchUserRole();
+  }, [fetchUserRole, isHr]);
+
 
   if (!employeeId || !fullName || isHr === null) {
     return <p>Loading employee data...</p>;

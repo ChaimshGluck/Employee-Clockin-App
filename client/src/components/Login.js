@@ -1,7 +1,7 @@
 import { useState } from 'react';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function LogIn({ setCurrentPage, setIsHr, setEmployeeId, setFullName }) {
+function LogIn({ setCurrentPage, setEmployeeId, setFullName, fetchUserRole }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -34,9 +34,7 @@ function LogIn({ setCurrentPage, setIsHr, setEmployeeId, setFullName }) {
       localStorage.setItem('employee', JSON.stringify(data.employee));
       setEmployeeId(data.employee.employeeId);
       setFullName(data.employee.fullName);
-      if (data.employee.role === 'HR') {
-        setIsHr(true)
-      }
+      await fetchUserRole();
       localStorage.setItem('currentPage', 'ClockInOut')
       setCurrentPage('ClockInOut');
     } catch (e) {
