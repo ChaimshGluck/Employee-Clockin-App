@@ -59,10 +59,6 @@ function App() {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(currentPage, employeeId, fullName, isHr)
-  }, [currentPage, employeeId, fullName, isHr])
-
   return (
     <div className="container">
 

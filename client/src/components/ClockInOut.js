@@ -5,13 +5,6 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL;
 function ClockInOut({ isHr, setIsHr, fetchUserRole, setCurrentPage, employeeId, setEmployeeId, fullName, setFullName, setShowAllRecords }) {
 
   useEffect(() => {
-    console.log('test')
-    console.log("Employee ID:", employeeId);
-    console.log("Full Name:", fullName);
-    console.log("isHR:", isHr);
-  }, [employeeId, fullName, isHr])
-
-  useEffect(() => {
     fetchUserRole();
   }, [fetchUserRole, isHr]);
 
