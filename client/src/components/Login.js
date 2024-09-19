@@ -28,10 +28,8 @@ function LogIn({ setCurrentPage, setIsHr, setEmployeeId, setFullName }) {
         alert(message);
         return
       }
-      console.log("Setting current page to ClockInOut");
       const data = await response.json();
       setIsLoading(false);
-      console.log("employee's token:", data.token)
       localStorage.setItem('token', data.token);
       localStorage.setItem('employee', JSON.stringify(data.employee));
       setEmployeeId(data.employee.employeeId);
@@ -39,7 +37,6 @@ function LogIn({ setCurrentPage, setIsHr, setEmployeeId, setFullName }) {
       if (data.employee.role === 'HR') {
         setIsHr(true)
       }
-      console.log("Setting current page to ClockInOut");
       localStorage.setItem('currentPage', 'ClockInOut')
       setCurrentPage('ClockInOut');
     } catch (e) {

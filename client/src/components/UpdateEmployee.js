@@ -28,7 +28,6 @@ const UpdateEmployee = ({ setCurrentPage }) => {
                     credentials: 'include'
                 })
                 const { fetchedEmployee } = await response.json();
-                console.log('fetched employee:', fetchedEmployee)
                 setEmployee(prevData => ({
                     ...prevData,
                     ...fetchedEmployee,
@@ -59,10 +58,6 @@ const UpdateEmployee = ({ setCurrentPage }) => {
             [name]: value
         }));
     }
-
-    useEffect(() => {
-        console.log(employee)
-    }, [employee])
 
     const handleSubmit = async (e) => {
         e.preventDefault();

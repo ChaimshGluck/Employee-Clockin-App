@@ -5,12 +5,12 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL;
 function ClockInOut({ isHr, setIsHr, setCurrentPage, employeeId, setEmployeeId, fullName, setFullName, setShowAllRecords }) {
 
 
-  useEffect(() => {
-    console.log('test')
-    console.log("Employee ID:", employeeId);
-    console.log("Full Name:", fullName);
-    console.log("isHR:", isHr);
-  }, [employeeId, fullName, isHr])
+  // useEffect(() => {
+  //   console.log('test')
+  //   console.log("Employee ID:", employeeId);
+  //   console.log("Full Name:", fullName);
+  //   console.log("isHR:", isHr);
+  // }, [employeeId, fullName, isHr])
 
   if (!employeeId || !fullName || isHr === null) {
     return <p>Loading employee data...</p>;
@@ -25,14 +25,11 @@ function ClockInOut({ isHr, setIsHr, setCurrentPage, employeeId, setEmployeeId, 
       });
 
       if (!response.ok) {
-        console.log('response:', response)
         const errorData = await response.json();
         console.log('error data:', errorData)
         throw new Error(errorData.message);
       }
 
-      const clockinRecord = await response.json();
-      console.log(clockinRecord);
       alert('Clocked In!');
     } catch (error) {
       console.error('Error clocking in:', error);
@@ -52,9 +49,6 @@ function ClockInOut({ isHr, setIsHr, setCurrentPage, employeeId, setEmployeeId, 
         const errorData = await response.json();
         throw new Error(errorData.message);
       }
-
-      const clockoutRecord = await response.json();
-      console.log(clockoutRecord);
       alert('Clocked Out!');
     } catch (error) {
       console.error('Error clocking out:', error);
@@ -64,17 +58,9 @@ function ClockInOut({ isHr, setIsHr, setCurrentPage, employeeId, setEmployeeId, 
 
   const logout = async () => {
     try {
-      // await fetch(`${backendUrl}/employee/logout`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   // credentials: "include"
-      // })
-      // localStorage.removeItem('employee');
-      // localStorage.removeItem('token');
-      // localStorage.removeItem('currentPage');
       localStorage.clear();
-      setEmployeeId(null); // Reset employeeId
-      setFullName(''); // Reset fullName
+      setEmployeeId(null);
+      setFullName('');
       setIsHr(false);
       setCurrentPage('LogIn');
       alert('Logged out');

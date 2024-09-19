@@ -5,11 +5,19 @@ function Register({ setCurrentPage }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState({
+    password: '',
+    confirmPassword: ''
+  });
   const [hrPermission, setHrPermission] = useState(false);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    if (password.password !== password.confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
     try {
       const response = await fetch(`${backendUrl}/hr/register`, {
         method: 'POST',
@@ -20,7 +28,7 @@ function Register({ setCurrentPage }) {
           firstName: firstName,
           lastName: lastName,
           email: email,
-          password: password,
+          password: password.password,
           isHr: hrPermission
         })
       })
@@ -36,6 +44,14 @@ function Register({ setCurrentPage }) {
       alert('Error registering employee');
     }
   };
+
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    setPassword(prevData => ({
+      ...prevData,
+      [name]: value
+    }))
+  }
 
   const handleToggle = () => {
     localStorage.setItem('currentPage', 'ClockInOut');
@@ -56,7 +72,10 @@ function Register({ setCurrentPage }) {
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
         <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input type="password" name="password" value={password.password} onChange={handlePasswordChange} required />
+
+        <label>Confirm password</label>
+        <input type="password" name="confirmPassword" value={password.confirmPassword} onChange={handlePasswordChange} required />
 
         <label htmlFor='hr-checkbox'>Give HR permissions</label>
         <input type='checkbox' id='hr-checkbox' onChange={() => setHrPermission(true)} />
