@@ -79,9 +79,7 @@ function App() {
         changePage={changePage}
         isHr={isHr}
         employeeId={employeeId}
-        setEmployeeId={setEmployeeId}
         fullName={fullName}
-        setFullName={setFullName}
         setShowAllRecords={setShowAllRecords}
         fetchUserRole={fetchUserRole}
       />}

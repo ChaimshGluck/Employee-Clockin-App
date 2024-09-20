@@ -1,8 +1,9 @@
 import { useEffect } from "react";
+import Logout from "./Logout";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, setEmployeeId, fullName, setFullName, setShowAllRecords }) {
+function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, setShowAllRecords }) {
 
   useEffect(() => {
     fetchUserRole();
@@ -53,18 +54,6 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, setEmployeeId
     }
   };
 
-  const logout = async () => {
-    try {
-      localStorage.clear();
-      setEmployeeId(null);
-      setFullName('');
-      changePage('LogIn');
-      alert('Logged out');
-    } catch (error) {
-      console.error('Error logging out:', error)
-    }
-  }
-
   const handleShowAllRecords = (showAll) => {
     localStorage.setItem('showAllRecords', showAll);
     setShowAllRecords(showAll);
@@ -82,7 +71,7 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, setEmployeeId
         <p><button onClick={() => { changePage('Records'); handleShowAllRecords(true) }}>See all clockin records</button></p>
         <p><button onClick={() => changePage('Employees')}>See all employees</button></p>
       </div>}
-      <p><button onClick={logout}>Log out</button></p>
+      <Logout />
     </div>
   );
 }
