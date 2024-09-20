@@ -82,7 +82,7 @@ function App() {
   }, [message])
 
   useEffect(() => {
-    if(currentPage === 'Employees') return;
+    if (currentPage === 'Employees' || currentPage === 'ClockInOut') return;
     setMessage(null);
   }, [currentPage]);
 
