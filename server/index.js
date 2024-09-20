@@ -1,5 +1,4 @@
 import express from 'express';
-// import session from 'express-session';
 import 'dotenv/config';
 import cors from 'cors';
 import cookieParser from 'cookie-parser'
@@ -14,15 +13,6 @@ app.use(cors({
     origin: frontendUrl,
     credentials: true,
 }));
-
-// app.use(
-//     session({
-//         secret: "supersecret difficult to guess string",
-//         cookie: { secure: false },
-//         resave: false,
-//         saveUninitialized: false
-//     })
-// )
 
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));

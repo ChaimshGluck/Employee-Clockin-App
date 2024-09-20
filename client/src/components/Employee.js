@@ -1,14 +1,8 @@
 import { useContext } from "react";
 import { EmployeeContext } from "../App";
 
-const Employee = ({ employee, setCurrentPage }) => {
+const Employee = ({ employee, changePage }) => {
     const setEmployeeIdToUpdate = useContext(EmployeeContext);
-
-    const handleToggle = (page) => {
-        localStorage.setItem('currentPage', page);
-        setCurrentPage(page);
-        setEmployeeIdToUpdate(employee.employeeId)
-    }
 
     return (
         <div>
@@ -17,7 +11,7 @@ const Employee = ({ employee, setCurrentPage }) => {
             <p>Email: {employee.email}</p>
             <p>Role: {employee.role}</p>
             <p>Date hired: {employee.dateHired}</p>
-            <p><button onClick={() => handleToggle('UpdateEmployee')}
+            <p><button onClick={() => { changePage('UpdateEmployee'); setEmployeeIdToUpdate(employee.employeeId) }}
             >Update employee info</button></p>
         </div>
     )

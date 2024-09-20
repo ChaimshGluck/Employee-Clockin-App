@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Record from "./Record";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const Records = ({ isHr, setCurrentPage, employeeId, showAllRecords, fetchUserRole }) => {
+const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole }) => {
     const [records, setRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -53,15 +53,10 @@ const Records = ({ isHr, setCurrentPage, employeeId, showAllRecords, fetchUserRo
         return <p>Getting records...</p>;
     }
 
-    const handleToggle = () => {
-        localStorage.setItem('currentPage', 'ClockInOut')
-        setCurrentPage()
-    }
-
     return (
         <>
             <div className="toggle-link">
-                <p><button onClick={handleToggle}>Back to clockin page</button></p>
+                <p><button onClick={() => changePage('ClockInOut')}>Back to clockin page</button></p>
             </div>
             <ul>
                 {records.length === 0 && <p>You have no clockin records</p>}

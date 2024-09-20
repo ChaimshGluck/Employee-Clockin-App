@@ -1,7 +1,7 @@
 import { useState } from 'react';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function Register({ setCurrentPage }) {
+function Register({ changePage }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -36,7 +36,7 @@ function Register({ setCurrentPage }) {
       if (result.ok) {
         alert('New employee registered!');
         localStorage.setItem('currentPage', 'ClockInOut')
-        setCurrentPage();
+        changePage();
       } else {
         alert(result.error)
       }
@@ -51,11 +51,6 @@ function Register({ setCurrentPage }) {
       ...prevData,
       [name]: value
     }))
-  }
-
-  const handleToggle = () => {
-    localStorage.setItem('currentPage', 'ClockInOut');
-    setCurrentPage();
   }
 
   return (
@@ -83,7 +78,7 @@ function Register({ setCurrentPage }) {
         <button type="submit">Register</button>
       </form>
       <div className="toggle-link">
-        <p><button onClick={handleToggle}>Back to clockin page</button></p>
+        <p><button onClick={() => changePage('ClockInOut')}>Back to clockin page</button></p>
       </div>
     </div>
   );

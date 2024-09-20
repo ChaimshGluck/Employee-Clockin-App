@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function ClockInOut({ isHr, setIsHr, fetchUserRole, setCurrentPage, employeeId, setEmployeeId, fullName, setFullName, setShowAllRecords }) {
+function ClockInOut({ isHr, setIsHr, fetchUserRole, changePage, employeeId, setEmployeeId, fullName, setFullName, setShowAllRecords }) {
 
   useEffect(() => {
     fetchUserRole();
@@ -59,19 +59,14 @@ function ClockInOut({ isHr, setIsHr, fetchUserRole, setCurrentPage, employeeId, 
       setEmployeeId(null);
       setFullName('');
       setIsHr(false);
-      setCurrentPage('LogIn');
+      changePage('LogIn');
       alert('Logged out');
     } catch (error) {
       console.error('Error logging out:', error)
     }
   }
 
-  const handleToggle = (page) => {
-    localStorage.setItem('currentPage', page);
-    setCurrentPage(page);
-  }
-
-  const handleshowAllRecords = (showAll) => {
+  const handleShowAllRecords = (showAll) => {
     localStorage.setItem('showAllRecords', showAll);
     setShowAllRecords(showAll);
   }
@@ -82,11 +77,11 @@ function ClockInOut({ isHr, setIsHr, fetchUserRole, setCurrentPage, employeeId, 
       <h2>Clock In/Out</h2>
       <button onClick={handleClockIn}>Clock In</button>
       <button onClick={handleClockOut}>Clock Out</button>
-      <p className="toggle-link"><button onClick={() => { handleToggle('Records'); handleshowAllRecords(false) }}>See all your clockin records</button></p>
+      <p className="toggle-link"><button onClick={() => { changePage('Records'); handleShowAllRecords(false) }}>See all your clockin records</button></p>
       {isHr && <div className="toggle-link">
-        <p><button onClick={() => handleToggle('Register')}>Register new employee</button></p>
-        <p><button onClick={() => { handleToggle('Records'); handleshowAllRecords(true) }}>See all clockin records</button></p>
-        <p><button onClick={() => handleToggle('Employees')}>See all employees</button></p>
+        <p><button onClick={() => changePage('Register')}>Register new employee</button></p>
+        <p><button onClick={() => { changePage('Records'); handleShowAllRecords(true) }}>See all clockin records</button></p>
+        <p><button onClick={() => changePage('Employees')}>See all employees</button></p>
       </div>}
       <p><button onClick={logout}>Log out</button></p>
     </div>

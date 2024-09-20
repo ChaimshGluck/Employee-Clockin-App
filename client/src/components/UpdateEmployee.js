@@ -3,7 +3,7 @@ import { EmployeeContext } from "../App";
 import DeleteWarning from "./DeleteWarning";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const UpdateEmployee = ({ setCurrentPage }) => {
+const UpdateEmployee = ({ changePage }) => {
     const employeeId = useContext(EmployeeContext);
     const [isLoading, setIsLoading] = useState(true);
     const [employee, setEmployee] = useState({
@@ -90,16 +90,11 @@ const UpdateEmployee = ({ setCurrentPage }) => {
             if (result.ok) {
                 alert('Account updated!');
                 localStorage.setItem('currentPage', 'Employees');
-                setCurrentPage('Employees');
+                changePage('Employees');
             }
         } catch {
             alert('Error registering employee');
         }
-    }
-
-    const handleToggle = () => {
-        localStorage.setItem('currentPage', 'Employees')
-        setCurrentPage('Employees')
     }
 
     if (isLoading || !employee) {
@@ -159,10 +154,10 @@ const UpdateEmployee = ({ setCurrentPage }) => {
                 <p><button onClick={() => setShowDeleteBox(true)}>Delete employee</button></p>
             </div>
             {showDeleteBox &&
-                <DeleteWarning setShowDeleteBox={setShowDeleteBox} setCurrentPage={setCurrentPage} />
+                <DeleteWarning setShowDeleteBox={setShowDeleteBox} changePage={changePage} />
             }
             <div className="toggle-link">
-                <p><button onClick={handleToggle}>Back to employees page</button></p>
+                <p><button onClick={() => changePage('Employees')}>Back to employees page</button></p>
             </div>
         </div>
     )

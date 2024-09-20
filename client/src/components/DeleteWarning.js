@@ -3,13 +3,13 @@ import { EmployeeContext } from "../App";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 
-const DeleteWarning = ({ setCurrentPage, setShowDeleteBox }) => {
+const DeleteWarning = ({ changePage, setShowDeleteBox }) => {
     const employeeId = useContext(EmployeeContext);
 
     const confirmDelete = async () => {
         setShowDeleteBox(false);
         try {
-            const response = await fetch(`${backendUrl}/hr/delete?employeeId=${employeeId}`, {
+            const response = await fetch(`${backendUrl}/hr/delete?employeeIdToDelete=${employeeId}`, {
                 method: 'DELETE',
                 headers: {
                     "Content-Type": "application/json"
@@ -21,7 +21,7 @@ const DeleteWarning = ({ setCurrentPage, setShowDeleteBox }) => {
             if (result.ok) {
                 alert('Employee deleted');
                 localStorage.setItem('currentPage', 'Employees');
-                setCurrentPage('Employees');
+                changePage('Employees');
             } else {
                 alert(result.error)
             }

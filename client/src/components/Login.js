@@ -1,7 +1,7 @@
 import { useState } from 'react';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function LogIn({ setCurrentPage, setEmployeeId, setFullName, fetchUserRole }) {
+function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -36,7 +36,7 @@ function LogIn({ setCurrentPage, setEmployeeId, setFullName, fetchUserRole }) {
       setFullName(data.employee.fullName);
       await fetchUserRole();
       localStorage.setItem('currentPage', 'ClockInOut')
-      setCurrentPage('ClockInOut');
+      changePage('ClockInOut');
     } catch (e) {
       setIsLoading(false);
       console.error('Login error:', e);

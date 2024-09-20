@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Employee from "./Employee";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const Employees = ({ setCurrentPage }) => {
+const Employees = ({ changePage }) => {
     const [employees, setEmployees] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -31,21 +31,16 @@ const Employees = ({ setCurrentPage }) => {
         return <p>Getting Employees...</p>;
     }
 
-    const handleToggle = () => {
-        localStorage.setItem('currentPage', 'ClockInOut')
-        setCurrentPage('ClockInOut')
-    }
-
     return (
         <>
             <div className="toggle-link">
-                <p><button onClick={handleToggle}>Back to clockin page</button></p>
+                <p><button onClick={() => changePage('ClockInOut')}>Back to clockin page</button></p>
             </div>
             <ul>
                 {
                     employees.map((employee, index) => (
                         (
-                            <li key={index}>< Employee employee={employee} setCurrentPage={setCurrentPage} /></li>
+                            <li key={index}>< Employee employee={employee} changePage={changePage} /></li>
                         )
                     ))
                 }

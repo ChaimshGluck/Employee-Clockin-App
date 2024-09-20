@@ -59,11 +59,16 @@ function App() {
     }
   }, []);
 
+  const changePage = (page) => {
+    localStorage.setItem('currentPage', page);
+    setCurrentPage(page);
+  }
+
   return (
     <div className="container">
 
       {currentPage === 'LogIn' && <LogIn
-        setCurrentPage={setCurrentPage}
+        changePage={changePage}
         setIsHr={setIsHr}
         setEmployeeId={setEmployeeId}
         setFullName={setFullName}
@@ -71,7 +76,7 @@ function App() {
       />}
 
       {currentPage === 'ClockInOut' && <ClockInOut
-        setCurrentPage={setCurrentPage}
+        changePage={changePage}
         isHr={isHr}
         setIsHr={setIsHr}
         employeeId={employeeId}
@@ -84,7 +89,7 @@ function App() {
 
       {currentPage === 'Records' &&
         <Records
-          setCurrentPage={() => setCurrentPage('ClockInOut')}
+          changePage={() => changePage('ClockInOut')}
           employeeId={employeeId}
           isHr={isHr}
           showAllRecords={showAllRecords}
@@ -93,18 +98,18 @@ function App() {
 
       {currentPage === 'Register' &&
         <Register
-          setCurrentPage={() => setCurrentPage('ClockInOut')}
+          changePage={() => changePage('ClockInOut')}
         />
       }
 
       {currentPage === 'Employees' &&
         <EmployeeContext.Provider value={setEmployeeIdToUpdate}>
-          <Employees setCurrentPage={setCurrentPage} />
+          <Employees changePage={changePage} />
         </EmployeeContext.Provider>}
 
       {currentPage === 'UpdateEmployee' &&
         <EmployeeContext.Provider value={employeeIdToUpdate}>
-          <UpdateEmployee setCurrentPage={setCurrentPage} />
+          <UpdateEmployee changePage={changePage} />
         </EmployeeContext.Provider>}
 
     </div >

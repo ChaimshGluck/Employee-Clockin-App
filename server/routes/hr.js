@@ -32,7 +32,7 @@ router.patch('/update', async (req, res) => {
 })
 
 router.delete('/delete', async (req, res) => {
-    const result = await deleteEmployee(req.query.employeeId);
+    const result = await deleteEmployee(req.query.employeeIdToDelete);
     res.json(result);
 })
 
