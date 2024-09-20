@@ -1,7 +1,7 @@
 import { useState } from 'react';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole }) {
+function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole, handleMessage }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +25,7 @@ function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole }) {
       if (response.status === 401) {
         setIsLoading(false);
         const { message } = await response.json();
-        alert(message);
+        handleMessage(message, 'error');
         return
       }
       const data = await response.json();
@@ -40,7 +40,7 @@ function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole }) {
     } catch (e) {
       setIsLoading(false);
       console.error('Login error:', e);
-      alert('An error occurred while logging in. Please try again later.');
+      handleMessage('An error occurred while logging in. Please try again later.', 'error');
     }
   };
 
@@ -52,8 +52,8 @@ function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole }) {
     <div>
       <h2>Sign In</h2>
       <form onSubmit={handleSignIn}>
-        <label>Email address:</label>
-        <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <label>Email Address:</label>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
         <label>Password:</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />

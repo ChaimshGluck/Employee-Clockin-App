@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Record from "./Record";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole }) => {
+const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole, handleMessage }) => {
     const [records, setRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -23,7 +23,7 @@ const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole }
                 setIsLoading(false);
             } catch (e) {
                 setIsLoading(false);
-                alert(e)
+                handleMessage(e, 'error');
             }
         }
 
@@ -39,7 +39,7 @@ const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole }
                 setIsLoading(false);
             } catch (e) {
                 setIsLoading(false);
-                alert(e)
+                handleMessage(e, 'error');
             }
         }
         if (isHr && showAllRecords) {
@@ -47,7 +47,7 @@ const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole }
         } else {
             getRecords();
         }
-    }, [employeeId, showAllRecords, isHr])
+    }, [employeeId, showAllRecords, isHr, handleMessage])
 
     if (isLoading) {
         return <p>Getting records...</p>;
@@ -56,10 +56,10 @@ const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole }
     return (
         <>
             <div className="toggle-link">
-                <p><button onClick={() => changePage('ClockInOut')}>Back to clockin page</button></p>
+                <p><button onClick={() => changePage('ClockInOut')}>Back to Clock In/Out Page</button></p>
             </div>
             <ul>
-                {records.length === 0 && <p>You have no clockin records</p>}
+                {records.length === 0 && <p>No clock-in records available.</p>}
                 {
                     records.map((record, index) => (
                         (

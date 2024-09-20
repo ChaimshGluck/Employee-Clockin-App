@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Employee from "./Employee";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const Employees = ({ changePage }) => {
+const Employees = ({ changePage, handleMessage }) => {
     const [employees, setEmployees] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -21,11 +21,11 @@ const Employees = ({ changePage }) => {
                 setIsLoading(false);
             } catch (e) {
                 setIsLoading(false);
-                alert(e)
+                handleMessage(e, 'error');
             }
         }
         getAllEmployees()
-    }, [])
+    }, [handleMessage])
 
     if (isLoading) {
         return <p>Getting Employees...</p>;
@@ -34,7 +34,7 @@ const Employees = ({ changePage }) => {
     return (
         <>
             <div className="toggle-link">
-                <p><button onClick={() => changePage('ClockInOut')}>Back to clockin page</button></p>
+                <p><button onClick={() => changePage('ClockInOut')}>Back to Clock In/Out Page</button></p>
             </div>
             <ul>
                 {

@@ -3,7 +3,7 @@ import { EmployeeContext } from "../App";
 import DeleteWarning from "./DeleteWarning";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const UpdateEmployee = ({ changePage }) => {
+const UpdateEmployee = ({ changePage, handleMessage }) => {
     const employeeId = useContext(EmployeeContext);
     const [isLoading, setIsLoading] = useState(true);
     const [employee, setEmployee] = useState({
@@ -36,12 +36,12 @@ const UpdateEmployee = ({ changePage }) => {
                 setIsLoading(false);
             } catch (error) {
                 console.error('Fetching employee data failed:', error);
-                alert('Failed to load employee data');
+                handleMessage('Failed to load employee data', 'error');
                 setIsLoading(false);
             }
         }
         getEmployee();
-    }, [employeeId])
+    }, [employeeId, handleMessage])
 
     const handleChange = (e) => {
         const { type, name, value, checked } = e.target;
@@ -63,7 +63,7 @@ const UpdateEmployee = ({ changePage }) => {
         e.preventDefault();
 
         if (showPasswordFields && passwordData.newPassword !== passwordData.confirmPassword) {
-            alert('Passwords do not match');
+            handleMessage('Passwords do not match', 'error');
             return;
         }
 
@@ -88,12 +88,12 @@ const UpdateEmployee = ({ changePage }) => {
                 })
             })
             if (result.ok) {
-                alert('Account updated!');
+                handleMessage('Employee Info Updated!', 'success');
                 localStorage.setItem('currentPage', 'Employees');
                 changePage('Employees');
             }
         } catch {
-            alert('Error registering employee');
+            handleMessage('Error registering employee', 'error');
         }
     }
 
@@ -103,19 +103,19 @@ const UpdateEmployee = ({ changePage }) => {
 
     return (
         <div>
-            <h2>Update employee</h2>
+            <h2>Update Employee</h2>
             <form onSubmit={handleSubmit}>
                 <label>First name:</label>
                 <input type="text" name="firstName" value={employee.firstName}
                     onChange={handleChange}
                     required />
 
-                <label>Last name:</label>
+                <label>Last Name:</label>
                 <input type="text" name="lastName" value={employee.lastName}
                     onChange={handleChange}
                 />
 
-                <label>Email address:</label>
+                <label>Email Address:</label>
                 <input type="email" name="email" value={employee.email}
                     onChange={handleChange} required />
 
@@ -145,19 +145,23 @@ const UpdateEmployee = ({ changePage }) => {
                     </>
                 )}
 
-                <label htmlFor='hr-checkbox'>Give HR permissions</label>
+                <label htmlFor='hr-checkbox'>Grant HR Permissions</label>
                 <input type='checkbox' name='hrPermission' id='hr-checkbox' checked={employee.hrPermission} onChange={handleChange} />
 
                 <button type="submit">Update</button>
             </form>
             <div className="toggle-link">
-                <p><button onClick={() => setShowDeleteBox(true)}>Delete employee</button></p>
+                <p><button onClick={() => setShowDeleteBox(true)}>Delete Employee</button></p>
             </div>
             {showDeleteBox &&
-                <DeleteWarning setShowDeleteBox={setShowDeleteBox} changePage={changePage} />
+                <DeleteWarning
+                    setShowDeleteBox={setShowDeleteBox}
+                    changePage={changePage}
+                    handleMessage={handleMessage}
+                />
             }
             <div className="toggle-link">
-                <p><button onClick={() => changePage('Employees')}>Back to employees page</button></p>
+                <p><button onClick={() => changePage('Employees')}>Back to Clock In/Out Page</button></p>
             </div>
         </div>
     )

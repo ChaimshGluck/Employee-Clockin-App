@@ -7,12 +7,12 @@ const Employee = ({ employee, changePage }) => {
     return (
         <div>
             <p>First name: {employee.firstName}</p>
-            {employee.lastName && <p>Last name: {employee.lastName}</p>}
+            {employee.lastName && <p>Last Name: {employee.lastName}</p>}
             <p>Email: {employee.email}</p>
             <p>Role: {employee.role}</p>
-            <p>Date hired: {employee.dateHired}</p>
+            <p>Date Hired: {employee.dateHired}</p>
             <p><button onClick={() => { changePage('UpdateEmployee'); setEmployeeIdToUpdate(employee.employeeId) }}
-            >Update employee info</button></p>
+            >Update Employee Info</button></p>
         </div>
     )
 }

@@ -2,11 +2,7 @@ function Logout() {
     const handleLogout = () => {
         try {
             localStorage.clear();
-            // setEmployeeId(null);
-            // setFullName('');
-            // changePage('LogIn');
             window.location.reload();
-            alert('Logged out');
         } catch (error) {
             console.error('Error logging out:', error)
         }

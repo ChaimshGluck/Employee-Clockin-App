@@ -54,7 +54,7 @@ export async function employeeClockin(employeeId) {
         const [currentlyClockedIn] = await db.select({ entryId: timeentries.entryId })
             .from(timeentries).where(and(eq(timeentries.employeeId, employeeId), isNull(timeentries.clockOut)))
         if (currentlyClockedIn) {
-            throw new Error('Employee is currently clocked in');
+            throw new Error('You are currently clocked in');
         }
 
         const timestamp = new Date().toLocaleString();
@@ -76,7 +76,7 @@ export async function employeeClockout(employeeId) {
             .where(and(eq(timeentries.employeeId, employeeId), isNull(timeentries.clockOut)));
         console.log(entryExists)
         if (!entryExists) {
-            throw new Error('Employee is not clocked in')
+            throw new Error('You are not clocked in')
         }
 
         const timestamp = new Date().toLocaleString();

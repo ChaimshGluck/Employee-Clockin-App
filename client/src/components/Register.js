@@ -1,7 +1,7 @@
 import { useState } from 'react';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function Register({ changePage }) {
+function Register({ changePage, handleMessage }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -14,7 +14,7 @@ function Register({ changePage }) {
   const handleSignUp = async (e) => {
     e.preventDefault();
     if (password.password !== password.confirmPassword) {
-      alert('Passwords do not match');
+      handleMessage('Passwords do not match', 'error');
       return;
     }
 
@@ -34,14 +34,14 @@ function Register({ changePage }) {
       })
       const result = await response.json();
       if (result.ok) {
-        alert('New employee registered!');
+        handleMessage('New employee registered!', 'success');
         localStorage.setItem('currentPage', 'ClockInOut')
         changePage();
       } else {
-        alert(result.error)
+        handleMessage(result.error, 'error')
       }
     } catch (error) {
-      alert('Error registering employee');
+      handleMessage('Error registering employee', 'error');
     }
   };
 
@@ -57,28 +57,28 @@ function Register({ changePage }) {
     <div>
       <h2>Register employee</h2>
       <form onSubmit={handleSignUp}>
-        <label>First name:</label>
+        <label>First Name:</label>
         <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
 
-        <label>Last name:</label>
+        <label>Last Name:</label>
         <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
 
-        <label>Email address:</label>
+        <label>Email Address:</label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
         <label>Password:</label>
         <input type="password" name="password" value={password.password} onChange={handlePasswordChange} required />
 
-        <label>Confirm password</label>
+        <label>Confirm Password</label>
         <input type="password" name="confirmPassword" value={password.confirmPassword} onChange={handlePasswordChange} required />
 
-        <label htmlFor='hr-checkbox'>Give HR permissions</label>
+        <label htmlFor='hr-checkbox'>Grant HR Permissions</label>
         <input type='checkbox' id='hr-checkbox' onChange={() => setHrPermission(true)} />
 
         <button type="submit">Register</button>
       </form>
       <div className="toggle-link">
-        <p><button onClick={() => changePage('ClockInOut')}>Back to clockin page</button></p>
+        <p><button onClick={() => changePage('ClockInOut')}>Back to Clock In/Out Page</button></p>
       </div>
     </div>
   );

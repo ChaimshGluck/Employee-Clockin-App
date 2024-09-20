@@ -3,12 +3,11 @@ import Logout from "./Logout";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, setShowAllRecords }) {
+function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, setShowAllRecords, handleMessage }) {
 
   useEffect(() => {
     fetchUserRole();
   }, [fetchUserRole, isHr]);
-
 
   if (!employeeId || !fullName || isHr === null) {
     return <p>Loading employee data...</p>;
@@ -28,10 +27,10 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
         throw new Error(errorData.message);
       }
 
-      alert('Clocked In!');
+      handleMessage('Clocked In!', 'info');
     } catch (error) {
       console.error('Error clocking in:', error);
-      alert(error.message);
+      handleMessage(error.message, 'error');
     }
   };
 
@@ -47,10 +46,10 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
         const errorData = await response.json();
         throw new Error(errorData.message);
       }
-      alert('Clocked Out!');
+      handleMessage('Clocked Out!', 'info');
     } catch (error) {
       console.error('Error clocking out:', error);
-      alert(error.message);
+      handleMessage(error.message, 'error');
     }
   };
 
@@ -61,15 +60,15 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
 
   return (
     <div>
-      <h2>Hello {fullName}</h2>
-      <h2>Clock In/Out</h2>
+      <h2>Welcome, {fullName}</h2>
+      <h2>Clock In / Clock Out</h2>
       <button onClick={handleClockIn}>Clock In</button>
       <button onClick={handleClockOut}>Clock Out</button>
-      <p className="toggle-link"><button onClick={() => { changePage('Records'); handleShowAllRecords(false) }}>See all your clockin records</button></p>
+      <p className="toggle-link"><button onClick={() => { changePage('Records'); handleShowAllRecords(false) }}>View your clock-in records</button></p>
       {isHr && <div className="toggle-link">
-        <p><button onClick={() => changePage('Register')}>Register new employee</button></p>
-        <p><button onClick={() => { changePage('Records'); handleShowAllRecords(true) }}>See all clockin records</button></p>
-        <p><button onClick={() => changePage('Employees')}>See all employees</button></p>
+        <p><button onClick={() => changePage('Register')}>Register a new employee</button></p>
+        <p><button onClick={() => { changePage('Records'); handleShowAllRecords(true) }}>View all clock-in records</button></p>
+        <p><button onClick={() => changePage('Employees')}>View all employees</button></p>
       </div>}
       <Logout />
     </div>

@@ -196,6 +196,42 @@ li {
   border-radius: 5px;
 }
 
+.snackbar {
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 16px;
+  position: fixed;
+  z-index: 1;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s, bottom 0.3s;
+}
+
+.snackbar.show {
+  visibility: visible;
+  opacity: 1;
+  top: 30px;
+}
+
+.snackbar.success {
+  background-color: #28a745;
+}
+
+.snackbar.error {
+  background-color: #dc3545;
+}
+
+.snackbar.info {
+  background-color: #17a2b8;
+}
+
 /* For larger screens, increase the container width */
 @media (min-width: 768px) {
   .container {

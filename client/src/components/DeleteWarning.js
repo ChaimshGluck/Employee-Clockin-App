@@ -3,7 +3,7 @@ import { EmployeeContext } from "../App";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 
-const DeleteWarning = ({ changePage, setShowDeleteBox }) => {
+const DeleteWarning = ({ changePage, setShowDeleteBox, handleMessage }) => {
     const employeeId = useContext(EmployeeContext);
 
     const confirmDelete = async () => {
@@ -19,14 +19,14 @@ const DeleteWarning = ({ changePage, setShowDeleteBox }) => {
             const result = await response.json();
             setShowDeleteBox(false);
             if (result.ok) {
-                alert('Employee deleted');
+                handleMessage('Employee deleted', 'success');
                 localStorage.setItem('currentPage', 'Employees');
                 changePage('Employees');
             } else {
-                alert(result.error)
+                handleMessage(result.error, 'error');
             }
         } catch (error) {
-            alert('Error deleting employee');
+            handleMessage('Error deleting employee', 'error');
         }
     }
 
@@ -39,7 +39,7 @@ const DeleteWarning = ({ changePage, setShowDeleteBox }) => {
     return (
         <div id="deleteBox" >
             <div id="deleteAlert">
-                <p>Are you sure you want to delete?</p>
+                <p>Are you sure you want to delete this Employee?</p>
                 <div className="delete-button-container">
                     <button onClick={confirmDelete}>Yes</button>
                     <button onClick={cancelDelete}>No</button>

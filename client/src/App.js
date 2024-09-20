@@ -1,4 +1,4 @@
-import { useState, createContext, useEffect } from 'react';
+import { useState, createContext, useEffect, useRef } from 'react';
 import LogIn from './components/Login';
 import Register from './components/Register';
 import ClockInOut from './components/ClockInOut';
@@ -26,6 +26,9 @@ function App() {
     return localStorage.getItem('showAllRecords') === 'true' || false
   });
   const [employeeIdToUpdate, setEmployeeIdToUpdate] = useState(0);
+  const [message, setMessage] = useState(null);
+  const [messageType, setMessageType] = useState(null);
+  const timeoutRef = useRef(null);
 
   const isTokenValid = () => {
     const token = localStorage.getItem('token');
@@ -59,6 +62,35 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    if (message) {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        setMessage(null);
+        timeoutRef.current = null;
+      }, 6000)
+
+      return () => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      }
+    }
+  }, [message])
+
+  useEffect(() => {
+    if(currentPage === 'Employees') return;
+    setMessage(null);
+  }, [currentPage]);
+
+  const handleMessage = (message, type) => {
+    setMessage(message);
+    setMessageType(type);
+  }
+
   const changePage = (page) => {
     localStorage.setItem('currentPage', page);
     setCurrentPage(page);
@@ -73,6 +105,7 @@ function App() {
         setEmployeeId={setEmployeeId}
         setFullName={setFullName}
         fetchUserRole={fetchUserRole}
+        handleMessage={handleMessage}
       />}
 
       {currentPage === 'ClockInOut' && <ClockInOut
@@ -82,6 +115,7 @@ function App() {
         fullName={fullName}
         setShowAllRecords={setShowAllRecords}
         fetchUserRole={fetchUserRole}
+        handleMessage={handleMessage}
       />}
 
       {currentPage === 'Records' &&
@@ -91,23 +125,33 @@ function App() {
           isHr={isHr}
           showAllRecords={showAllRecords}
           fetchUserRole={fetchUserRole}
+          handleMessage={handleMessage}
         />}
 
       {currentPage === 'Register' &&
         <Register
           changePage={() => changePage('ClockInOut')}
+          handleMessage={handleMessage}
         />
       }
 
       {currentPage === 'Employees' &&
         <EmployeeContext.Provider value={setEmployeeIdToUpdate}>
-          <Employees changePage={changePage} />
+          <Employees
+            changePage={changePage}
+            handleMessage={handleMessage}
+          />
         </EmployeeContext.Provider>}
 
       {currentPage === 'UpdateEmployee' &&
         <EmployeeContext.Provider value={employeeIdToUpdate}>
-          <UpdateEmployee changePage={changePage} />
+          <UpdateEmployee
+            changePage={changePage}
+            handleMessage={handleMessage}
+          />
         </EmployeeContext.Provider>}
+
+      {message && <div className={`snackbar show ${messageType}`}>{message}</div>}
 
     </div >
   );
