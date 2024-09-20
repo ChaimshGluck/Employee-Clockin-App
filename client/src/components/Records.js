@@ -47,7 +47,7 @@ const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole }
         } else {
             getRecords();
         }
-    }, [isHr, employeeId, showAllRecords])
+    }, [employeeId, showAllRecords, isHr])
 
     if (isLoading) {
         return <p>Getting records...</p>;

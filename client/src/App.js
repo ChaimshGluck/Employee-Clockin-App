@@ -20,10 +20,10 @@ function App() {
     return JSON.parse(localStorage.getItem('employee'))?.fullName || ''
   });
   const [isHr, setIsHr] = useState(() => {
-    return JSON.parse(localStorage.getItem('employee'))?.role === 'HR' || false
+    return JSON.parse(localStorage.getItem('isHr')) || false
   });
   const [showAllRecords, setShowAllRecords] = useState(() => {
-    return localStorage.getItem('showAllRecords') || false
+    return localStorage.getItem('showAllRecords') === 'true' || false
   });
   const [employeeIdToUpdate, setEmployeeIdToUpdate] = useState(0);
 
@@ -78,7 +78,6 @@ function App() {
       {currentPage === 'ClockInOut' && <ClockInOut
         changePage={changePage}
         isHr={isHr}
-        setIsHr={setIsHr}
         employeeId={employeeId}
         setEmployeeId={setEmployeeId}
         fullName={fullName}

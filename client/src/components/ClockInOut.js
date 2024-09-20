@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function ClockInOut({ isHr, setIsHr, fetchUserRole, changePage, employeeId, setEmployeeId, fullName, setFullName, setShowAllRecords }) {
+function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, setEmployeeId, fullName, setFullName, setShowAllRecords }) {
 
   useEffect(() => {
     fetchUserRole();
@@ -58,7 +58,6 @@ function ClockInOut({ isHr, setIsHr, fetchUserRole, changePage, employeeId, setE
       localStorage.clear();
       setEmployeeId(null);
       setFullName('');
-      setIsHr(false);
       changePage('LogIn');
       alert('Logged out');
     } catch (error) {
