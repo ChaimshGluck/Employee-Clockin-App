@@ -128,9 +128,30 @@ button:active {
   transform: scale(0.98);
 }
 
-/* HR permissions checkbox */
-.hr-checkbox {
-  margin: 15px 0 0 10px;
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.checkbox-container label {
+  margin-right: 25px;
+}
+
+.checkbox {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+.checkbox:checked {
+  accent-color: #0a4408;
+  /* Change the color of the checkmark */
+}
+
+label {
+  cursor: pointer;
 }
 
 /* Toggle links for navigation between forms */
@@ -298,7 +319,7 @@ label[for="employee-dropdown"] {
 }
 
 /* Style for the password input and toggle button */
-.password-container {
+/* .password-container {
   position: relative;
   width: 100%;
 }
@@ -306,7 +327,7 @@ label[for="employee-dropdown"] {
 .password-container input {
   width: 100%;
   padding-right: 45px;
-  /* Ensure there's space for the toggle button */
+  Ensure there's space for the toggle button
   padding: 12px 15px;
   margin: 10px 0;
   border: 1px solid #ddd;
@@ -336,28 +357,28 @@ label[for="employee-dropdown"] {
   height: auto;
   color: #551616;
   width: auto;
-  /* Ensure it doesn't stretch */
-  /* line-height: 1; */
+  Ensure it doesn't stretch
+  line-height: 1;
   transition: color 0.3s ease;
 }
 
 
 .toggle-password-btn:hover {
   color: #333;
-  /* Change icon color on hover */
+  Change icon color on hover
   background: none;
   background-color:#c0c4d0;
 }
 
 .toggle-password-btn:active {
   transform: translateY(-50%);
-  /* Prevent jumping */
+  Prevent jumping
   background: none;
 }
 
 .password-container input {
   padding-right: 45px;
-}
+} */
 
 @media (min-width: 768px) {
   .container {

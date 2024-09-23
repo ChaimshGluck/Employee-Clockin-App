@@ -18,6 +18,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
         newPassword: '',
         confirmPassword: ''
     });
+    const [showPassword, setShowPassword] = useState(false);
     const [showDeleteBox, setShowDeleteBox] = useState(false);
 
     useEffect(() => {
@@ -106,19 +107,24 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
         <div>
             <h2>Update Employee</h2>
             <form onSubmit={handleSubmit}>
-                <label>First name:<span className="required">*</span></label>
-                <input type="text" name="firstName" value={employee.firstName}
+                <label htmlFor="update-fname">First name:<span className="required">*</span></label>
+                <input type="text" id='update-fname' name="firstName" value={employee.firstName}
                     onChange={handleChange}
                     required />
 
-                <label>Last Name:</label>
-                <input type="text" name="lastName" value={employee.lastName}
+                <label htmlFor="update-lname">Last Name:</label>
+                <input type="text" id='update-lname' name="lastName" value={employee.lastName}
                     onChange={handleChange}
                 />
 
-                <label>Email Address:<span className="required">*</span></label>
-                <input type="email" name="email" value={employee.email}
+                <label htmlFor="update-email">Email Address:<span className="required">*</span></label>
+                <input type="email" id='update-email' name="email" value={employee.email}
                     onChange={handleChange} required />
+
+                <div className="checkbox-container">
+                    <label htmlFor='update-hr-checkbox'>Grant HR Permissions</label>
+                    <input type='checkbox' name='hrPermission' className='checkbox' id="update-hr-checkbox" checked={employee.hrPermission} onChange={handleChange} />
+                </div>
 
                 <div className='toggle-link'>
                     <button type="button" onClick={() => setShowPasswordFields(!showPasswordFields)}>
@@ -128,26 +134,35 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
 
                 {showPasswordFields && (
                     <>
-                        <label>New Password:<span className="required">*</span></label>
+                        <label htmlFor="update-pass">New Password:<span className="required">*</span></label>
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
+                            id='update-pass'
                             name="newPassword"
                             value={passwordData.newPassword}
                             onChange={handlePasswordChange}
                         />
 
-                        <label>Confirm New Password:<span className="required">*</span></label>
+                        <label htmlFor="update-confirm-pass">Confirm New Password:<span className="required">*</span></label>
                         <input
-                            type="password"
+                            type={showPassword ? "text" : "password"}
+                            id='update-confirm-pass'
                             name="confirmPassword"
                             value={passwordData.confirmPassword}
                             onChange={handlePasswordChange}
                         />
+
+                        <div className="checkbox-container">
+                            <label htmlFor='password-update-checkbox'>Show Password</label>
+                            <input
+                                type='checkbox'
+                                className='checkbox'
+                                id='password-update-checkbox'
+                                onChange={() => setShowPassword(!showPassword)}
+                            />
+                        </div>
                     </>
                 )}
-
-                <label htmlFor='hr-checkbox'>Grant HR Permissions</label>
-                <input type='checkbox' name='hrPermission' className='hr-checkbox' checked={employee.hrPermission} onChange={handleChange} />
 
                 <button type="submit">Update</button>
             </form>

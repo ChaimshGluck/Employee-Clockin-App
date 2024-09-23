@@ -9,6 +9,7 @@ function Register({ changePage, handleMessage }) {
     password: '',
     confirmPassword: ''
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [hrPermission, setHrPermission] = useState(false);
 
   const handleSignUp = async (e) => {
@@ -36,7 +37,6 @@ function Register({ changePage, handleMessage }) {
       if (result.ok) {
         handleMessage('New Employee Registered!', 'success');
         setTimeout(() => {
-          localStorage.setItem('currentPage', 'ClockInOut');
           changePage();
         }, 4000)
       } else {
@@ -57,30 +57,56 @@ function Register({ changePage, handleMessage }) {
 
   return (
     <div>
-      <h2>Register employee</h2>
+      <h2>Register Employee</h2>
       <form onSubmit={handleSignUp}>
-        <label>First Name:<span className="required">*</span></label>
-        <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
+        <label htmlFor='fname-register'>First Name:<span className="required">*</span></label>
+        <input type="text" id='fname-register' value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
 
-        <label>Last Name:</label>
-        <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+        <label htmlFor='lname-register'>Last Name:</label>
+        <input type="text" id='lname-register' value={lastName} onChange={(e) => setLastName(e.target.value)} />
 
-        <label>Email Address:<span className="required">*</span></label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        <label htmlFor='email-register'>Email Address:<span className="required">*</span></label>
+        <input type="email" id='email-register' value={email} onChange={(e) => setEmail(e.target.value)} required />
 
-        <label>Password:<span className="required">*</span></label>
-        <input type="password" name="password" value={password.password} onChange={handlePasswordChange} required />
+        <label htmlFor='pass-register'>Password:<span className="required">*</span></label>
+        <input
+          type={showPassword ? "text" : "password"}
+          id='pass-register'
+          name="password"
+          value={password.password}
+          onChange={handlePasswordChange}
+          required
+        />
 
-        <label>Confirm Password:<span className="required">*</span></label>
-        <input type="password" name="confirmPassword" value={password.confirmPassword} onChange={handlePasswordChange} required />
+        <label htmlFor='confirm-pass-register'>Confirm Password:<span className="required">*</span></label>
+        <input
+          type={showPassword ? "text" : "password"}
+          id='confirm-pass-register'
+          name="confirmPassword"
+          value={password.confirmPassword}
+          onChange={handlePasswordChange}
+          required
+        />
 
-        <label htmlFor='hr-checkbox'>Grant HR Permissions</label>
-        <input type='checkbox' className='hr-checkbox' onChange={() => setHrPermission(true)} />
+        <div className="checkbox-container">
+          <label htmlFor='password-register-checkbox'>Show Password</label>
+          <input
+            type='checkbox'
+            className='checkbox'
+            id='password-register-checkbox'
+            onChange={() => setShowPassword(!showPassword)}
+          />
+        </div>
+
+        <div className="checkbox-container">
+          <label htmlFor='hr-checkbox'>Grant HR Permissions</label>
+          <input type='checkbox' className='checkbox' id='hr-checkbox' onChange={() => setHrPermission(!hrPermission)} />
+        </div>
 
         <button type="submit">Register</button>
       </form>
       <div className="toggle-link">
-        <p><button onClick={() => changePage('ClockInOut')}>Back to Clock In/Out Page</button></p>
+        <p><button onClick={changePage}>Back to Clock In/Out Page</button></p>
       </div>
     </div>
   );
