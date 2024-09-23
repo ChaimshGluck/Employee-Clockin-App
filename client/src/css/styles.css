@@ -28,6 +28,17 @@ body {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Subheading styles */
+h1 {
+  text-align: center;
+  margin-bottom: 10px;
+  /* Space below main heading */
+  font-size: 2.5em;
+  /* Larger size for prominence */
+  color: #28a745;
+  /* Match with your button color */
+}
+
 /* Header and title */
 h2 {
   text-align: center;
@@ -37,7 +48,24 @@ h2 {
   font-weight: 600;
 }
 
-/* Form elements */
+h3 {
+  text-align: center;
+  margin-bottom: 30px;
+  /* Space below description */
+  color: #555;
+  /* Softer color for secondary text */
+  font-size: 1.1em;
+  /* Slightly increase size for readability */
+}
+
+h4 {
+  margin-top: 20px;
+  /* Space above the footer message */
+  text-align: center;
+  color: #555;
+  /* Softer color */
+}
+
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -66,7 +94,6 @@ input[type="email"]:focus {
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
 }
 
-/* Button styles */
 button {
   background-color: #28a745;
   color: #ffffff;
@@ -78,7 +105,7 @@ button {
 #deleteBox .delete-button-container {
   display: flex;
   justify-content: center;
-  gap: 10px; 
+  gap: 10px;
   margin-top: 20px;
   margin-right: 20px;
   margin-left: 20px;
@@ -102,7 +129,7 @@ button:active {
 }
 
 /* HR permissions checkbox */
-#hr-checkbox {
+.hr-checkbox {
   margin: 15px 0 0 10px;
 }
 
@@ -232,10 +259,119 @@ li {
   background-color: #17a2b8;
 }
 
-/* For larger screens, increase the container width */
+/* Dropdown and Filter Styles */
+select {
+  width: 100%;
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  background-color: #f9f9f9;
+  transition: background-color 0.2s ease-in;
+}
+
+select:focus {
+  background-color: #eef2f7;
+  border-color: #0a4408;
+  outline: none;
+  box-shadow: 0 0 8px rgba(32, 92, 39, 0.3);
+}
+
+/* Styling the option elements */
+option {
+  padding: 10px;
+  font-size: 1em;
+}
+
+/* Improve appearance of the filter label */
+label[for="employee-dropdown"] {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #555;
+}
+
+.required {
+  color: red;
+  margin-left: 2px;
+}
+
+/* Style for the password input and toggle button */
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 45px;
+  /* Ensure there's space for the toggle button */
+  padding: 12px 15px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  background-color: #f9f9f9;
+  transition: background-color 0.2s ease-in;
+}
+
+.password-container input:focus {
+  background-color: #eef2f7;
+  border-color: #98b098;
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2em;
+  padding: 0;
+  height: auto;
+  color: #551616;
+  width: auto;
+  /* Ensure it doesn't stretch */
+  /* line-height: 1; */
+  transition: color 0.3s ease;
+}
+
+
+.toggle-password-btn:hover {
+  color: #333;
+  /* Change icon color on hover */
+  background: none;
+  background-color:#c0c4d0;
+}
+
+.toggle-password-btn:active {
+  transform: translateY(-50%);
+  /* Prevent jumping */
+  background: none;
+}
+
+.password-container input {
+  padding-right: 45px;
+}
+
 @media (min-width: 768px) {
   .container {
     max-width: 500px;
+  }
+
+  h2 {
+    font-size: 2em;
+    /* Larger font size for headers on bigger screens */
+  }
+
+  h3 {
+    font-size: 1.2em;
+    /* Adjust size for readability */
   }
 }
 

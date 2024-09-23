@@ -11,7 +11,11 @@ const Employee = ({ employee, changePage }) => {
             <p>Email: {employee.email}</p>
             <p>Role: {employee.role}</p>
             <p>Date Hired: {employee.dateHired}</p>
-            <p><button onClick={() => { changePage('UpdateEmployee'); setEmployeeIdToUpdate(employee.employeeId) }}
+            <p><button onClick={() => {
+                changePage('UpdateEmployee');
+                setEmployeeIdToUpdate(employee.employeeId);
+                localStorage.setItem('employeeIdToUpdate', employee.employeeId);
+            }}
             >Update Employee Info</button></p>
         </div>
     )

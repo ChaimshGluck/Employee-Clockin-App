@@ -72,39 +72,44 @@ export async function getAllEmployees() {
     }
 }
 
-export async function getEmployee(employeeIdtoUpdate) {
+export async function getEmployee(employeeIdToUpdate) {
     try {
         const [result] = await db.select({
             firstName: employees.firstName,
             lastName: employees.lastName,
             email: employees.email,
-            role: roles.roleName,
-            dateHired: employees.dateHired
+            hrPermission: roles.roleName,
         })
             .from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
-            .where(eq(employees.employeeId, employeeIdtoUpdate))
-        return { ok: true, fetchedEmployee: result };
+            .where(eq(employees.employeeId, employeeIdToUpdate))
+        if (result) {
+            result.hrPermission = result.hrPermission === 'HR';
+            return { ok: true, fetchedEmployee: result };
+        } else throw new Error('Employee ID doesn\'t exist')
     } catch (error) {
         return handleError('Error getting employee info:', error)
     }
 }
 
 export async function updateEmployee(employee) {
-    console.log(employee)
+    console.log('incoming employee:', employee)
     try {
-        const passhash = await bcrypt.hash(employee.password, 10);
         const roleName = employee.isHr ? 'HR' : 'employee';
         const role = await getRole(roleName);
-        console.log(passhash, role)
+
+        const updatedEmployee = {
+            firstName: employee.firstName,
+            lastName: employee.lastName,
+            email: employee.email,
+            roleId: role.roleId,
+        }
+
+        if (employee.password) {
+            updatedEmployee.password = await bcrypt.hash(employee.password, 10);
+        }
 
         const [result] = await db.update(employees)
-            .set({
-                firstName: employee.firstName,
-                lastName: employee.lastName,
-                email: employee.email,
-                password: passhash,
-                roleId: role.roleId,
-            })
+            .set(updatedEmployee)
             .where(eq(employees.employeeId, employee.employeeId))
             .returning({
                 firstName: employees.firstName,

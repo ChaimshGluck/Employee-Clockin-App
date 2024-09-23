@@ -34,14 +34,16 @@ function Register({ changePage, handleMessage }) {
       })
       const result = await response.json();
       if (result.ok) {
-        handleMessage('New employee registered!', 'success');
-        localStorage.setItem('currentPage', 'ClockInOut')
-        changePage();
+        handleMessage('New Employee Registered!', 'success');
+        setTimeout(() => {
+          localStorage.setItem('currentPage', 'ClockInOut');
+          changePage();
+        }, 4000)
       } else {
         handleMessage(result.error, 'error')
       }
     } catch (error) {
-      handleMessage('Error registering employee', 'error');
+      handleMessage('Error Registering Employee', 'error');
     }
   };
 
@@ -57,23 +59,23 @@ function Register({ changePage, handleMessage }) {
     <div>
       <h2>Register employee</h2>
       <form onSubmit={handleSignUp}>
-        <label>First Name:</label>
+        <label>First Name:<span className="required">*</span></label>
         <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required />
 
         <label>Last Name:</label>
         <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
 
-        <label>Email Address:</label>
+        <label>Email Address:<span className="required">*</span></label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
-        <label>Password:</label>
+        <label>Password:<span className="required">*</span></label>
         <input type="password" name="password" value={password.password} onChange={handlePasswordChange} required />
 
-        <label>Confirm Password</label>
+        <label>Confirm Password:<span className="required">*</span></label>
         <input type="password" name="confirmPassword" value={password.confirmPassword} onChange={handlePasswordChange} required />
 
         <label htmlFor='hr-checkbox'>Grant HR Permissions</label>
-        <input type='checkbox' id='hr-checkbox' onChange={() => setHrPermission(true)} />
+        <input type='checkbox' className='hr-checkbox' onChange={() => setHrPermission(true)} />
 
         <button type="submit">Register</button>
       </form>

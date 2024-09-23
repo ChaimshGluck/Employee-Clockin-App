@@ -10,7 +10,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
         firstName: '',
         lastName: '',
         email: '',
-        password: '',
+        password: null,
         hrPermission: false
     });
     const [showPasswordFields, setShowPasswordFields] = useState(false);
@@ -30,8 +30,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
                 const { fetchedEmployee } = await response.json();
                 setEmployee(prevData => ({
                     ...prevData,
-                    ...fetchedEmployee,
-                    hrPermission: fetchedEmployee.role === 'HR'
+                    ...fetchedEmployee
                 }));
                 setIsLoading(false);
             } catch (error) {
@@ -62,38 +61,40 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (showPasswordFields && passwordData.newPassword !== passwordData.confirmPassword) {
-            handleMessage('Passwords do not match', 'error');
-            return;
+        const updatedEmployee = {
+            firstName: employee.firstName,
+            lastName: employee.lastName,
+            email: employee.email,
+            isHr: employee.hrPermission,
+            employeeId: employeeId
+        }
+
+        if (showPasswordFields) {
+            if (passwordData.newPassword !== passwordData.confirmPassword) {
+                handleMessage('Passwords do not match', 'error');
+                return;
+            } else {
+                updatedEmployee.password = passwordData.newPassword;
+            }
         }
 
         try {
-            const updatedEmployee = {
-                ...employee,
-                password: showPasswordFields ? passwordData.newPassword : employee.password
-            };
             const result = await fetch(`${backendUrl}/hr/update`, {
                 method: 'PATCH',
                 headers: {
                     "Content-Type": "application/json"
                 },
                 credentials: 'include',
-                body: JSON.stringify({
-                    firstName: updatedEmployee.firstName,
-                    lastName: updatedEmployee.lastName,
-                    email: updatedEmployee.email,
-                    password: updatedEmployee.password,
-                    isHr: updatedEmployee.hrPermission,
-                    employeeId: employeeId
-                })
+                body: JSON.stringify(updatedEmployee)
             })
             if (result.ok) {
                 handleMessage('Employee Info Updated!', 'success');
-                localStorage.setItem('currentPage', 'Employees');
-                changePage('Employees');
+                setTimeout(() => {
+                    changePage('Employees');
+                }, 4000)
             }
         } catch {
-            handleMessage('Error registering employee', 'error');
+            handleMessage('Error Updating Employee', 'error');
         }
     }
 
@@ -105,7 +106,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
         <div>
             <h2>Update Employee</h2>
             <form onSubmit={handleSubmit}>
-                <label>First name:</label>
+                <label>First name:<span className="required">*</span></label>
                 <input type="text" name="firstName" value={employee.firstName}
                     onChange={handleChange}
                     required />
@@ -115,7 +116,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
                     onChange={handleChange}
                 />
 
-                <label>Email Address:</label>
+                <label>Email Address:<span className="required">*</span></label>
                 <input type="email" name="email" value={employee.email}
                     onChange={handleChange} required />
 
@@ -127,7 +128,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
 
                 {showPasswordFields && (
                     <>
-                        <label>New Password:</label>
+                        <label>New Password:<span className="required">*</span></label>
                         <input
                             type="password"
                             name="newPassword"
@@ -135,7 +136,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
                             onChange={handlePasswordChange}
                         />
 
-                        <label>Confirm New Password:</label>
+                        <label>Confirm New Password:<span className="required">*</span></label>
                         <input
                             type="password"
                             name="confirmPassword"
@@ -146,7 +147,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
                 )}
 
                 <label htmlFor='hr-checkbox'>Grant HR Permissions</label>
-                <input type='checkbox' name='hrPermission' id='hr-checkbox' checked={employee.hrPermission} onChange={handleChange} />
+                <input type='checkbox' name='hrPermission' className='hr-checkbox' checked={employee.hrPermission} onChange={handleChange} />
 
                 <button type="submit">Update</button>
             </form>

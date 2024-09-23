@@ -20,7 +20,6 @@ const DeleteWarning = ({ changePage, setShowDeleteBox, handleMessage }) => {
             setShowDeleteBox(false);
             if (result.ok) {
                 handleMessage('Employee deleted', 'success');
-                localStorage.setItem('currentPage', 'Employees');
                 changePage('Employees');
             } else {
                 handleMessage(result.error, 'error');

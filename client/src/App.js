@@ -25,7 +25,9 @@ function App() {
   const [showAllRecords, setShowAllRecords] = useState(() => {
     return localStorage.getItem('showAllRecords') === 'true' || false
   });
-  const [employeeIdToUpdate, setEmployeeIdToUpdate] = useState(0);
+  const [employeeIdToUpdate, setEmployeeIdToUpdate] = useState(() => {
+    return localStorage.getItem('employeeIdToUpdate') || null
+  });
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState(null);
   const timeoutRef = useRef(null);
@@ -82,7 +84,6 @@ function App() {
   }, [message])
 
   useEffect(() => {
-    if (currentPage === 'Employees' || currentPage === 'ClockInOut') return;
     setMessage(null);
   }, [currentPage]);
 
