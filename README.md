@@ -1,4 +1,4 @@
-# Project2024
+# Employee Clock-in App
 
 ## Project Setup Instructions
 
