@@ -21,9 +21,9 @@ router.post('/login', (req, res) => {
             return res.status(401).json({ ok: false, message: 'Invalid email or password' });
         }
 
-        const token = jwt.sign({ user: { id: user.employeeId, email: user.email, role: user.role } }, process.env.JWT_SECRET, { expiresIn: '15s' });
+        const token = jwt.sign({ user: { id: user.employeeId, email: user.email, role: user.role } }, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log('token:', token);
-        res.cookie('project2024-token', token, { httpOnly: true, secure: false, path: '/', maxAge: 15000 });
+        res.cookie('project2024-token', token, { httpOnly: true, secure: false, path: '/', maxAge: 3600000 });
         delete user.role;
         return res.json({ ok: true, token, employee: user });
     })(req, res)
