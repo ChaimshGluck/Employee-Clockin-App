@@ -35,7 +35,7 @@ function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole, handleMe
       localStorage.setItem('employee', JSON.stringify(data.employee));
       setEmployeeId(data.employee.employeeId);
       setFullName(data.employee.fullName);
-      await fetchUserRole();
+      fetchUserRole();
       changePage('ClockInOut');
     } catch (e) {
       setIsLoading(false);

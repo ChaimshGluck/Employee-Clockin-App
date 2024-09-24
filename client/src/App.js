@@ -32,14 +32,20 @@ function App() {
   const [messageType, setMessageType] = useState(null);
   const timeoutRef = useRef(null);
 
-  const isTokenValid = () => {
+  const tokenIsValid = () => {
     const token = localStorage.getItem('token');
-    if (!token) return false;
+    if (!token) {
+      return false
+    };
 
-    const decodedToken = JSON.parse(atob(token.split('.')[1]));
-    const currentTime = Math.floor(Date.now() / 1000);
-
-    return decodedToken.exp > currentTime;
+    try {
+      const decodedToken = JSON.parse(atob(token.split('.')[1]));
+      const currentTime = Math.floor(Date.now() / 1000);
+      return decodedToken.exp > currentTime;
+    } catch (error) {
+      console.error('Error decoding token:', error);
+      return false;
+    }
   };
 
   const fetchUserRole = async () => {
@@ -58,7 +64,7 @@ function App() {
   };
 
   useEffect(() => {
-    if (!isTokenValid()) {
+    if (!tokenIsValid()) {
       localStorage.clear();
       setCurrentPage('LogIn');
     }
@@ -93,8 +99,13 @@ function App() {
   }
 
   const changePage = (page) => {
-    localStorage.setItem('currentPage', page);
-    setCurrentPage(page);
+    if (tokenIsValid()) {
+      localStorage.setItem('currentPage', page);
+      setCurrentPage(page);
+    } else {
+      localStorage.clear();
+      setCurrentPage('LogIn');
+    }
   }
 
   return (
@@ -121,7 +132,7 @@ function App() {
 
       {currentPage === 'Records' &&
         <Records
-          changePage={() => changePage('ClockInOut')}
+          changePage={changePage}
           employeeId={employeeId}
           isHr={isHr}
           showAllRecords={showAllRecords}
@@ -131,7 +142,7 @@ function App() {
 
       {currentPage === 'Register' &&
         <Register
-          changePage={() => changePage('ClockInOut')}
+          changePage={changePage}
           handleMessage={handleMessage}
         />
       }

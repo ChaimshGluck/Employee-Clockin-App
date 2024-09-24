@@ -134,7 +134,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
 
                 {showPasswordFields && (
                     <>
-                        <label htmlFor="update-pass">New Password:<span className="required">*</span></label>
+                        <label htmlFor="update-pass">New Password:</label>
                         <input
                             type={showPassword ? "text" : "password"}
                             id='update-pass'
@@ -143,7 +143,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
                             onChange={handlePasswordChange}
                         />
 
-                        <label htmlFor="update-confirm-pass">Confirm New Password:<span className="required">*</span></label>
+                        <label htmlFor="update-confirm-pass">Confirm New Password:</label>
                         <input
                             type={showPassword ? "text" : "password"}
                             id='update-confirm-pass'

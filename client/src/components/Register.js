@@ -37,7 +37,7 @@ function Register({ changePage, handleMessage }) {
       if (result.ok) {
         handleMessage('New Employee Registered!', 'success');
         setTimeout(() => {
-          changePage();
+          changePage('ClockInOut');
         }, 4000)
       } else {
         handleMessage(result.error, 'error')

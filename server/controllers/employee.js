@@ -45,7 +45,7 @@ export function verifyCookie(token, done) {
         return done(null, decoded.user);
     } catch (error) {
         console.error('Error verifying cookie:', error);
-        return done(null, false);
+        return done(error, null);
     }
 }
 
