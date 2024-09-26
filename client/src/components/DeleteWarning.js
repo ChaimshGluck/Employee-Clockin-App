@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import { EmployeeContext } from "../App";
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 
-const DeleteWarning = ({ changePage, setShowDeleteBox, handleMessage, backendUrl }) => {
+const DeleteWarning = ({ changePage, setShowDeleteBox, handleMessage }) => {
     const employeeId = useContext(EmployeeContext);
 
     const confirmDelete = async () => {

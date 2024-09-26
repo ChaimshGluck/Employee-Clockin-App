@@ -1,6 +1,7 @@
 import { useState } from 'react';
+const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function Register({ changePage, handleMessage, backendUrl }) {
+function Register({ changePage, handleMessage }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
