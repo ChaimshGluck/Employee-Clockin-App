@@ -1,9 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { EmployeeContext } from "../App";
 import DeleteWarning from "./DeleteWarning";
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const UpdateEmployee = ({ changePage, handleMessage }) => {
+const UpdateEmployee = ({ changePage, handleMessage, backendUrl }) => {
     const employeeId = useContext(EmployeeContext);
     const [isLoading, setIsLoading] = useState(true);
     const [employee, setEmployee] = useState({
@@ -174,6 +173,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
                     setShowDeleteBox={setShowDeleteBox}
                     changePage={changePage}
                     handleMessage={handleMessage}
+                    backendUrl={backendUrl}
                 />
             }
             <div className="toggle-link">

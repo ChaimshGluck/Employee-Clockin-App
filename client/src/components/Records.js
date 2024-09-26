@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import Record from "./Record";
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole, handleMessage }) => {
+const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole, handleMessage, backendUrl }) => {
     const [records, setRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [employeeIdToFilter, setEmployeeIdToFilter] = useState('');

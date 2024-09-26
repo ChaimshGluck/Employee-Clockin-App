@@ -1,9 +1,7 @@
 import { useEffect } from "react";
 import Logout from "./Logout";
 
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
-
-function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, setShowAllRecords, handleMessage }) {
+function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, setShowAllRecords, handleMessage, backendUrl }) {
 
   useEffect(() => {
     fetchUserRole();

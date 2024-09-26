@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import Employee from "./Employee";
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-const Employees = ({ changePage, handleMessage }) => {
+const Employees = ({ changePage, handleMessage, backendUrl }) => {
     const [employees, setEmployees] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 

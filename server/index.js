@@ -8,9 +8,10 @@ import employeeRoutes from './routes/employee.js';
 const app = express();
 const port = process.env.PORT;
 const frontendUrl = process.env.FE_URL;
+const frontendDomainUrl = process.env.FE_DOMAIN_URL;
 
 app.use(cors({
-    origin: frontendUrl,
+    origin: [frontendUrl, frontendDomainUrl],
     credentials: true,
 }));
 

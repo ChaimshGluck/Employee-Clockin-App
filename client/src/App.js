@@ -5,7 +5,9 @@ import ClockInOut from './components/ClockInOut';
 import Records from './components/Records';
 import Employees from './components/Employees';
 import UpdateEmployee from './components/UpdateEmployee';
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+const backendUrl = window.location.hostname === process.env.REACT_APP_DOMAIN_NAME
+  ? process.env.REACT_APP_BACKEND_DOMAIN
+  : process.env.REACT_APP_BACKEND_URL;
 
 export const EmployeeContext = createContext();
 
@@ -118,6 +120,7 @@ function App() {
         setFullName={setFullName}
         fetchUserRole={fetchUserRole}
         handleMessage={handleMessage}
+        backendUrl={backendUrl}
       />}
 
       {currentPage === 'ClockInOut' && <ClockInOut
@@ -128,6 +131,7 @@ function App() {
         setShowAllRecords={setShowAllRecords}
         fetchUserRole={fetchUserRole}
         handleMessage={handleMessage}
+        backendUrl={backendUrl}
       />}
 
       {currentPage === 'Records' &&
@@ -138,12 +142,14 @@ function App() {
           showAllRecords={showAllRecords}
           fetchUserRole={fetchUserRole}
           handleMessage={handleMessage}
+          backendUrl={backendUrl}
         />}
 
       {currentPage === 'Register' &&
         <Register
           changePage={changePage}
           handleMessage={handleMessage}
+          backendUrl={backendUrl}
         />
       }
 
@@ -152,6 +158,7 @@ function App() {
           <Employees
             changePage={changePage}
             handleMessage={handleMessage}
+            backendUrl={backendUrl}
           />
         </EmployeeContext.Provider>}
 
@@ -160,6 +167,7 @@ function App() {
           <UpdateEmployee
             changePage={changePage}
             handleMessage={handleMessage}
+            backendUrl={backendUrl}
           />
         </EmployeeContext.Provider>}
 

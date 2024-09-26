@@ -1,7 +1,6 @@
 import { useState } from 'react';
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole, handleMessage }) {
+function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole, handleMessage, backendUrl }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
