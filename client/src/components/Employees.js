@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import Employee from "./Employee";
+import LoadingSpinner from "./LoadingSpinner";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const Employees = ({ changePage, handleMessage }) => {
     const [employees, setEmployees] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-
 
     useEffect(() => {
 
@@ -28,7 +28,7 @@ const Employees = ({ changePage, handleMessage }) => {
     }, [handleMessage])
 
     if (isLoading) {
-        return <p>Getting Employees...</p>;
+        return <LoadingSpinner isLoading={isLoading} message={"Getting Employees..."}/>
     }
 
     return (

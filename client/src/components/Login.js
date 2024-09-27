@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import LoadingSpinner from './LoadingSpinner';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole, handleMessage }) {
@@ -45,7 +46,7 @@ function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole, handleMe
   };
 
   if (isLoading) {
-    return <p>Logging in...</p>;
+    return <LoadingSpinner isLoading={isLoading} message={"Logging in..."}/>
   }
 
   return (

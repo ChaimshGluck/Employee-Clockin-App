@@ -23,13 +23,11 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.log('error data:', errorData)
         throw new Error(errorData.message);
       }
 
       handleMessage('Clocked In!', 'info');
     } catch (error) {
-      console.error('Error clocking in:', error);
       handleMessage(error.message, 'error');
     }
   };
@@ -48,7 +46,6 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
       }
       handleMessage('Clocked Out!', 'info');
     } catch (error) {
-      console.error('Error clocking out:', error);
       handleMessage(error.message, 'error');
     }
   };

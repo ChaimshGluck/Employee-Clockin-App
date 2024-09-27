@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { EmployeeContext } from "../App";
 import DeleteWarning from "./DeleteWarning";
+import LoadingSpinner from "./LoadingSpinner";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const UpdateEmployee = ({ changePage, handleMessage }) => {
@@ -100,7 +101,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
     }
 
     if (isLoading || !employee) {
-        return <p>Loading employee data...</p>;
+        return <LoadingSpinner isLoading={isLoading} message={"Loading employee data..."} />
     }
 
     return (

@@ -106,7 +106,7 @@ function Register({ changePage, handleMessage }) {
         <button type="submit">Register</button>
       </form>
       <div className="toggle-link">
-        <p><button onClick={changePage}>Back to Clock In/Out Page</button></p>
+        <p><button onClick={() => changePage('ClockInOut')}>Back to Clock In/Out Page</button></p>
       </div>
     </div>
   );

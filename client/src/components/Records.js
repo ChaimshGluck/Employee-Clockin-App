@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Record from "./Record";
+import LoadingSpinner from "./LoadingSpinner";
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole, handleMessage }) => {
@@ -55,7 +56,7 @@ const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole, 
     }
 
     if (isLoading) {
-        return <p>Getting records...</p>;
+        return <LoadingSpinner isLoading={isLoading} message={"Getting Records..."} />
     }
 
     return (
