@@ -129,6 +129,15 @@ button:active {
   transform: scale(0.98);
 }
 
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+input.invalid {
+  border-color: #dc3545;
+}
+
 .checkbox-container {
   display: flex;
   align-items: center;
@@ -189,6 +198,22 @@ label {
   text-decoration: underline;
   color: #0e702b;
   /* Matching the button hover color */
+}
+
+.error-message {
+  color: #dc3545; /* Red color for errors */
+  background-color: #f8d7da; /* Light red background for better visibility */
+  padding: 8px;
+  border-radius: 6px;
+  margin-top: 4px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.error-message-icon {
+  font-size: 1.2rem;
 }
 
 /* Record list styling */
