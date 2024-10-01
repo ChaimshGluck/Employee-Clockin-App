@@ -11,7 +11,7 @@ const client = postgres({
     database,
     user,
     password,
-    ssl: true
+    ssl: false
 });
 
 const db = drizzle(client);

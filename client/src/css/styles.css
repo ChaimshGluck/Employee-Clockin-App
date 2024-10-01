@@ -95,7 +95,7 @@ input[type="email"]:focus {
 }
 
 button {
-  background-color: #28a745;
+  background-color: rgb(40, 167, 69);
   color: #ffffff;
   border: none;
   cursor: pointer;
