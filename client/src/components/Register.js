@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { Formik } from 'formik';
-import { AiOutlineExclamationCircle } from 'react-icons/ai';
+import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import ValidationMessage from './ValidationMessage.js';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 function Register({ changePage, handleMessage }) {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const UserSchema = Yup.object({
+  const EmployeeSchema = Yup.object({
     firstName: Yup.string()
       .required('Please enter your first name.')
       .max(15, 'First name must be 15 characters or fewer.'),
@@ -37,7 +37,7 @@ function Register({ changePage, handleMessage }) {
         confirmPassword: '',
         hrPermission: false
       }}
-      validationSchema={UserSchema}
+      validationSchema={EmployeeSchema}
       onSubmit={async (values) => {
         try {
           const response = await fetch(`${backendUrl}/hr/register`, {
@@ -67,84 +67,64 @@ function Register({ changePage, handleMessage }) {
         }
       }}
     >
-      {(formik) => (
+      {({errors, touched, isValid, dirty}) => (
         <div>
           <h2>Register Employee</h2>
-          <form onSubmit={formik.handleSubmit}>
+          <Form >
 
             <label htmlFor='register-firstName'>First Name:<span className="required">*</span></label>
-            <input
+            <Field
               type="text"
               id='register-firstName'
               name='firstName'
-              className={formik.errors.firstName && formik.touched.firstName ? 'invalid' : ''}
-              {...formik.getFieldProps('firstName')}
+              className={errors.firstName && touched.firstName ? 'invalid' : ''}
             />
-            {formik.errors.firstName && formik.touched.firstName && (
-              <div className="error-message">
-                <AiOutlineExclamationCircle className="error-message-icon" />
-                {formik.errors.firstName}
-              </div>
+            {errors.firstName && touched.firstName && (
+              <ValidationMessage message={errors.firstName} />
             )}
 
             <label htmlFor='register-lastName'>Last Name:</label>
-            <input
+            <Field
               type="text"
               id='register-lastName'
               name='lastName'
-              className={formik.errors.lastName && formik.touched.lastName ? 'invalid' : ''}
-              {...formik.getFieldProps('lastName')}
+              className={errors.lastName && touched.lastName ? 'invalid' : ''}
             />
-            {formik.errors.lastName && formik.touched.lastName && (
-              <div className="error-message">
-                <AiOutlineExclamationCircle className="error-message-icon" />
-                {formik.errors.lastName}
-              </div>
+            {errors.lastName && touched.lastName && (
+              <ValidationMessage message={errors.lastName} />
             )}
 
             <label htmlFor='register-email'>Email Address:<span className="required">*</span></label>
-            <input
+            <Field
               type="email"
               id='register-email'
               name='email'
-              className={formik.errors.email && formik.touched.email ? 'invalid' : ''}
-              {...formik.getFieldProps('email')}
+              className={errors.email && touched.email ? 'invalid' : ''}
             />
-            {formik.errors.email && formik.touched.email && (
-              <div className="error-message">
-                <AiOutlineExclamationCircle className="error-message-icon" />
-                {formik.errors.email}
-              </div>
+            {errors.email && touched.email && (
+              <ValidationMessage message={errors.email} />
             )}
 
             <label htmlFor='register-password'>Password:<span className="required">*</span></label>
-            <input
+            <Field
               type={showPassword ? "text" : "password"}
               id='register-password'
               name="password"
-              className={(formik.errors.password || formik.errors.confirmPassword) && formik.touched.password ? 'invalid' : ''}
-              {...formik.getFieldProps('password')}
+              className={(errors.password || errors.confirmPassword) && touched.password ? 'invalid' : ''}
             />
-            {formik.errors.password && formik.touched.password && (
-              <div className="error-message">
-                <AiOutlineExclamationCircle className="error-message-icon" />
-                {formik.errors.password}
-              </div>
+            {errors.password && touched.password && (
+              <ValidationMessage message={errors.password} />
             )}
 
             <label htmlFor='register-confirmPassword'>Confirm Password:<span className="required">*</span></label>
-            <input
+            <Field
               type={showPassword ? "text" : "password"}
               id='register-confirmPassword'
               name="confirmPassword"
-              className={formik.errors.confirmPassword && formik.touched.confirmPassword ? 'invalid' : ''}
-              {...formik.getFieldProps('confirmPassword')}
+              className={errors.confirmPassword && touched.confirmPassword ? 'invalid' : ''}
             />
-            {formik.errors.confirmPassword && formik.touched.confirmPassword && (
-              <div className="error-message">
-                <AiOutlineExclamationCircle className="error-message-icon" />
-                {formik.errors.confirmPassword}
-              </div>
+            {errors.confirmPassword && touched.confirmPassword && (
+              <ValidationMessage message={errors.confirmPassword} />
             )}
 
             <div className="checkbox-container">
@@ -153,22 +133,23 @@ function Register({ changePage, handleMessage }) {
                 type='checkbox'
                 className='checkbox'
                 id='register-passCheckbox'
+                checked={showPassword}
                 onChange={() => setShowPassword(!showPassword)}
               />
             </div>
 
             <div className="checkbox-container">
               <label htmlFor='register-hrPermission'>Grant HR Permissions</label>
-              <input
+              <Field
                 type='checkbox'
                 className='checkbox'
                 id='register-hrPermission'
-                {...formik.getFieldProps('hrPermission')}
+                name='hrPermission'
               />
             </div>
 
-            <button type="submit" disabled={!(formik.isValid && formik.dirty)}>Register</button>
-          </form>
+            <button type="submit" disabled={!(isValid && dirty)}>Register</button>
+          </Form>
           <div className="toggle-link">
             <p><button onClick={() => changePage('ClockInOut')}>Back to Clock In/Out Page</button></p>
           </div>

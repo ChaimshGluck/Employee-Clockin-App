@@ -40,7 +40,6 @@ function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole, handleMe
       changePage('ClockInOut');
     } catch (e) {
       setIsLoading(false);
-      console.error('Login error:', e);
       handleMessage('An error occurred while logging in. Please try again later.', 'error');
     }
   };
