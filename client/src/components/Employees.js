@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Employee from "./Employee";
 import LoadingSpinner from "./LoadingSpinner";
+import { FaArrowLeft } from 'react-icons/fa';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const Employees = ({ changePage, handleMessage }) => {
@@ -28,25 +29,30 @@ const Employees = ({ changePage, handleMessage }) => {
     }, [handleMessage])
 
     if (isLoading) {
-        return <LoadingSpinner isLoading={isLoading} message={"Getting Employees..."}/>
+        return <LoadingSpinner isLoading={isLoading} message={"Getting Employees..."} />
     }
 
     return (
         <>
             <div className="toggle-link">
-                <p><button onClick={() => changePage('ClockInOut')}>Back to Clock In/Out Page</button></p>
+                <button className="back-button" onClick={() => changePage('ClockInOut')}>
+                    <FaArrowLeft className="back-icon" /> Back to Clock In/Out Page
+                </button>
             </div>
-            <ul>
-                {
-                    employees.map((employee, index) => (
-                        (
-                            <li key={index}>< Employee employee={employee} changePage={changePage} /></li>
-                        )
+            <h2>Employee Directory</h2>
+            <ul className="list-container">
+                {employees.length === 0 ? (
+                    <p className="no-records">No employees found.</p>
+                ) : (
+                    employees.map((employee) => (
+                        <li key={employee.employeeId} className="list-item">
+                            <Employee employee={employee} changePage={changePage} />
+                        </li>
                     ))
-                }
+                )}
             </ul>
         </>
-    )
+    );
 }
 
 export default Employees;

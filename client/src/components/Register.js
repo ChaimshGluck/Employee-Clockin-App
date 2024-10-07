@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import ValidationMessage from './ValidationMessage.js';
+import { FaArrowLeft } from 'react-icons/fa';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 function Register({ changePage, handleMessage }) {
@@ -67,8 +68,14 @@ function Register({ changePage, handleMessage }) {
         }
       }}
     >
-      {({errors, touched, isValid, dirty}) => (
+      {({ errors, touched, isValid, dirty }) => (
         <div>
+          <div className="toggle-link">
+            <button className="back-button" onClick={() => changePage('ClockInOut')}>
+              <FaArrowLeft className="back-icon" /> Back to Clock In/Out Page
+            </button>
+          </div>
+          
           <h2>Register Employee</h2>
           <Form >
 
@@ -150,9 +157,6 @@ function Register({ changePage, handleMessage }) {
 
             <button type="submit" disabled={!(isValid && dirty)}>Register</button>
           </Form>
-          <div className="toggle-link">
-            <p><button onClick={() => changePage('ClockInOut')}>Back to Clock In/Out Page</button></p>
-          </div>
         </div>
       )}
     </ Formik>

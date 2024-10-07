@@ -5,6 +5,7 @@ import { EmployeeContext } from "../App";
 import DeleteWarning from "./DeleteWarning";
 import LoadingSpinner from "./LoadingSpinner";
 import ValidationMessage from "./ValidationMessage";
+import { FaArrowLeft } from "react-icons/fa";
 
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
@@ -116,6 +117,12 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
         >
             {({ errors, isValid, touched, values, handleChange, handleBlur, setFieldValue, setTouched }) => (
                 <div>
+                    <div className="toggle-link">
+                        <button className="back-button" onClick={() => changePage('ClockInOut')}>
+                            <FaArrowLeft className="back-icon" /> Back to Employees Page
+                        </button>
+                    </div>
+
                     <h2>Update Employee Info</h2>
                     <Form >
                         <RevalidateOnSchemaChange validationSchema={showPasswordFields ? EmployeeSchemaWithPass : EmployeeSchema} />
@@ -230,9 +237,6 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
                             handleMessage={handleMessage}
                         />
                     }
-                    <div className="toggle-link">
-                        <p><button onClick={() => changePage('Employees')}>Back to Clock In/Out Page</button></p>
-                    </div>
                 </div>
             )}
         </Formik>
