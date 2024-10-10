@@ -1,10 +1,13 @@
-import { useState, createContext, useEffect, useRef } from 'react';
+import React, { useState, createContext, useEffect, useRef } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ReactDOMServer from 'react-dom/server';
 import LogIn from './components/Login';
 import Register from './components/Register';
 import ClockInOut from './components/ClockInOut';
 import Records from './components/Records';
 import Employees from './components/Employees';
 import UpdateEmployee from './components/UpdateEmployee';
+import ActivateAccount from './components/ActivateAccount';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 export const EmployeeContext = createContext();
@@ -30,6 +33,7 @@ function App() {
   });
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState(null);
+  const [persistMessage, setPersistMessage] = useState(false);
   const timeoutRef = useRef(null);
 
   const tokenIsValid = () => {
@@ -70,16 +74,28 @@ function App() {
     }
   }, []);
 
+  const convertJSXToString = (jsx) => {
+    return ReactDOMServer.renderToStaticMarkup(jsx).replace(/<[^>]+>/g, '');
+  }
+
   useEffect(() => {
     if (message) {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
 
+      const getDurationForMessage = (message) => {
+        if (React.isValidElement(message)) {
+          message = convertJSXToString(message);
+        }
+        return Math.max(3000, message.length * 100);
+      }
+
+      const duration = getDurationForMessage(message);
       timeoutRef.current = setTimeout(() => {
         setMessage(null);
         timeoutRef.current = null;
-      }, 6000)
+      }, duration)
 
       return () => {
         if (timeoutRef.current) {
@@ -90,12 +106,15 @@ function App() {
   }, [message])
 
   useEffect(() => {
-    setMessage(null);
-  }, [currentPage]);
+    if (!persistMessage) {
+      setMessage(null);
+    }
+  }, [currentPage, persistMessage]);
 
-  const handleMessage = (message, type) => {
+  const handleMessage = (message, type, persist = false) => {
     setMessage(message);
     setMessageType(type);
+    setPersistMessage(persist);
   }
 
   const changePage = (page) => {
@@ -109,63 +128,71 @@ function App() {
   }
 
   return (
-    <div className="container">
+    <Router>
+      <div className="container">
+        <Routes>
+          <Route path='/employee/activate/:token' element={<ActivateAccount />} />
+          <Route path='/' element={
+            <>
+              {currentPage === 'LogIn' && <LogIn
+                changePage={changePage}
+                setIsHr={setIsHr}
+                setEmployeeId={setEmployeeId}
+                setFullName={setFullName}
+                fetchUserRole={fetchUserRole}
+                handleMessage={handleMessage}
+              />}
 
-      {currentPage === 'LogIn' && <LogIn
-        changePage={changePage}
-        setIsHr={setIsHr}
-        setEmployeeId={setEmployeeId}
-        setFullName={setFullName}
-        fetchUserRole={fetchUserRole}
-        handleMessage={handleMessage}
-      />}
+              {currentPage === 'ClockInOut' && <ClockInOut
+                changePage={changePage}
+                isHr={isHr}
+                employeeId={employeeId}
+                fullName={fullName}
+                setShowAllRecords={setShowAllRecords}
+                fetchUserRole={fetchUserRole}
+                handleMessage={handleMessage}
+              />}
 
-      {currentPage === 'ClockInOut' && <ClockInOut
-        changePage={changePage}
-        isHr={isHr}
-        employeeId={employeeId}
-        fullName={fullName}
-        setShowAllRecords={setShowAllRecords}
-        fetchUserRole={fetchUserRole}
-        handleMessage={handleMessage}
-      />}
+              {currentPage === 'Records' &&
+                <Records
+                  changePage={changePage}
+                  employeeId={employeeId}
+                  isHr={isHr}
+                  showAllRecords={showAllRecords}
+                  fetchUserRole={fetchUserRole}
+                  handleMessage={handleMessage}
+                />}
 
-      {currentPage === 'Records' &&
-        <Records
-          changePage={changePage}
-          employeeId={employeeId}
-          isHr={isHr}
-          showAllRecords={showAllRecords}
-          fetchUserRole={fetchUserRole}
-          handleMessage={handleMessage}
-        />}
+              {currentPage === 'Register' &&
+                <Register
+                  changePage={changePage}
+                  handleMessage={handleMessage}
+                  convertJSXToString={convertJSXToString}
+                />
+              }
 
-      {currentPage === 'Register' &&
-        <Register
-          changePage={changePage}
-          handleMessage={handleMessage}
-        />
-      }
+              {currentPage === 'Employees' &&
+                <EmployeeContext.Provider value={setEmployeeIdToUpdate}>
+                  <Employees
+                    changePage={changePage}
+                    handleMessage={handleMessage}
+                  />
+                </EmployeeContext.Provider>}
 
-      {currentPage === 'Employees' &&
-        <EmployeeContext.Provider value={setEmployeeIdToUpdate}>
-          <Employees
-            changePage={changePage}
-            handleMessage={handleMessage}
-          />
-        </EmployeeContext.Provider>}
+              {currentPage === 'UpdateEmployee' &&
+                <EmployeeContext.Provider value={employeeIdToUpdate}>
+                  <UpdateEmployee
+                    changePage={changePage}
+                    handleMessage={handleMessage}
+                  />
+                </EmployeeContext.Provider>}
 
-      {currentPage === 'UpdateEmployee' &&
-        <EmployeeContext.Provider value={employeeIdToUpdate}>
-          <UpdateEmployee
-            changePage={changePage}
-            handleMessage={handleMessage}
-          />
-        </EmployeeContext.Provider>}
-
-      {message && <div className={`snackbar show ${messageType}`}>{message}</div>}
-
-    </div >
+              {message && <div className={`snackbar show ${messageType}`}>{message}</div>}
+            </>
+          } />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

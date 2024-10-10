@@ -1,21 +1,21 @@
 import { relations } from "drizzle-orm/relations";
-import { roles, employees, timeentries } from "./schema.js";
+import { rolesInTimesheet, employeesInTimesheet, timeentriesInTimesheet } from "./schema";
 
-export const employeesInTimesheetRelations = relations(employees, ({one, many}) => ({
-	rolesInTimesheet: one(roles, {
-		fields: [employees.roleId],
-		references: [roles.roleId]
+export const employeesInTimesheetRelations = relations(employeesInTimesheet, ({one, many}) => ({
+	rolesInTimesheet: one(rolesInTimesheet, {
+		fields: [employeesInTimesheet.roleId],
+		references: [rolesInTimesheet.roleId]
 	}),
-	timeentriesInTimesheets: many(timeentries),
+	timeentriesInTimesheets: many(timeentriesInTimesheet),
 }));
 
-export const rolesInTimesheetRelations = relations(roles, ({many}) => ({
-	employeesInTimesheets: many(employees),
+export const rolesInTimesheetRelations = relations(rolesInTimesheet, ({many}) => ({
+	employeesInTimesheets: many(employeesInTimesheet),
 }));
 
-export const timeentriesInTimesheetRelations = relations(timeentries, ({one}) => ({
-	employeesInTimesheet: one(employees, {
-		fields: [timeentries.employeeId],
-		references: [employees.employeeId]
+export const timeentriesInTimesheetRelations = relations(timeentriesInTimesheet, ({one}) => ({
+	employeesInTimesheet: one(employeesInTimesheet, {
+		fields: [timeentriesInTimesheet.employeeId],
+		references: [employeesInTimesheet.employeeId]
 	}),
 }));

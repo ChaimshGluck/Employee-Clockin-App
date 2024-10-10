@@ -5,7 +5,7 @@ import ValidationMessage from './ValidationMessage.js';
 import { FaArrowLeft } from 'react-icons/fa';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
-function Register({ changePage, handleMessage }) {
+function Register({ changePage, handleMessage, convertJSXToString }) {
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -56,10 +56,14 @@ function Register({ changePage, handleMessage }) {
           })
           const result = await response.json();
           if (result.ok) {
-            handleMessage('New Employee Registered!', 'success');
-            setTimeout(() => {
-              changePage('ClockInOut');
-            }, 4000)
+            const jsxMessage = (
+              <div>
+                <h3>Employee Registered!</h3>
+                <p>An activation link has been sent to the employee's email. They must activate their account before logging in.</p>
+              </div>
+            )
+            handleMessage(jsxMessage, 'info', true);
+            changePage('ClockInOut');
           } else {
             handleMessage(result.error, 'error')
           }
@@ -75,7 +79,7 @@ function Register({ changePage, handleMessage }) {
               <FaArrowLeft className="back-icon" /> Back to Clock In/Out Page
             </button>
           </div>
-          
+
           <h2>Register Employee</h2>
           <Form >
 

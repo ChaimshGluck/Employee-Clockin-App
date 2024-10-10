@@ -15,7 +15,7 @@ passport.use('cookie', cookieStrategy);
 export function authenticateCookie(req, res, next) {
     console.log('Incoming request path:', req.path);
 
-    if (req.path === '/login' || req.path === '/register') return next();
+    if (req.path === '/login' || req.path === '/register' || req.path.startsWith('/activate')) return next();
 
     if (!req.cookies['project2024-token']) {
         console.log('No cookie provided');
@@ -44,6 +44,7 @@ export function authenticateCookie(req, res, next) {
 }
 
 export function checkHR(req, res, next) {
+    console.log('Incoming checkHR request path:', req.path);
     if (req.path === '/register') return next();
 
     const userRole = req.user.role;

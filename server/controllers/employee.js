@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import db from '../db.js';
 import { employees, roles, timeentries } from '../drizzle/schema.js';
-import { eq, desc, isNull, and } from 'drizzle-orm';
+import { eq, desc, isNull, and, gt } from 'drizzle-orm';
 import { handleError } from './utils.js';
 
 export async function verify(username, password, cb) {
@@ -14,13 +14,18 @@ export async function verify(username, password, cb) {
             lastName: employees.lastName,
             email: employees.email,
             password: employees.password,
-            role: roles.roleName
+            role: roles.roleName,
+            isActive: employees.isActive
         })
             .from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
             .where(eq(employees.email, username))
         if (!employeeRecord) {
             return cb(null, false, { message: 'Invalid email or password' })
         };
+
+        if (!employeeRecord.isActive) {
+            return cb(null, false, { message: 'Account is not active. Please check your email for activation instructions.' })
+        }
         employeeRecord.fullName = `${employeeRecord.firstName} ${employeeRecord.lastName}`;
         const isPasswordCorrect = await bcrypt.compare(password, employeeRecord.password);
         if (isPasswordCorrect) {
@@ -106,3 +111,31 @@ export async function getEmployeeRecords(employeeId) {
         return handleError('Error getting employee records', error);
     }
 };
+
+export async function activateAccount(token) {
+    try {
+        const [result] = await db.select({
+            employeeId: employees.employeeId,
+            activationToken: employees.activationToken,
+            activationTokenExpires: employees.activationTokenExpires,
+            isActive: employees.isActive
+        }).from(employees)
+            .where(and(eq(employees.activationToken, token), gt(employees.activationTokenExpires, Date.now())));
+
+        if (!result) {
+            throw new Error('Invalid or expired token');
+        }
+
+        if (result.isActive) {
+            throw new Error('Account is already active');
+        }
+
+        await db.update(employees).set({
+            isActive: true
+        })
+            .where(eq(result.employeeId, employees.employeeId));
+        return { ok: true };
+    } catch (error) {
+        return handleError('Error activating account:', error);
+    }
+}

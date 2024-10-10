@@ -105,10 +105,12 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
                         body: JSON.stringify(updatedEmployee)
                     });
                     if (result.ok) {
-                        handleMessage('Employee Info Updated!', 'success');
+                        const message = 'Employee Info Updated!';
+                        handleMessage(message, 'success');
+                        const duration = Math.max(3000, message.length * 100);
                         setTimeout(() => {
                             changePage('Employees');
-                        }, 4000);
+                        }, duration);
                     }
                 } catch {
                     handleMessage('Error Updating Employee', 'error');

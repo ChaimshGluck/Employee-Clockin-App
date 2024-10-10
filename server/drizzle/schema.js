@@ -1,4 +1,4 @@
-import { pgTable, pgSchema, unique, serial, varchar, foreignKey, integer, date, timestamp, numeric } from "drizzle-orm/pg-core"
+import { pgTable, pgSchema, unique, serial, varchar, foreignKey, integer, date, bigint, boolean, timestamp } from "drizzle-orm/pg-core"
   import { sql } from "drizzle-orm"
 
 export const timesheet = pgSchema("timesheet");
@@ -23,6 +23,10 @@ export const employees = timesheet.table("employees", {
 	password: varchar("password", { length: 255 }).notNull(),
 	roleId: integer("role_id"),
 	dateHired: date("date_hired").notNull(),
+	activationToken: varchar("activation_token", { length: 255 }),
+	// You can use { mode: "bigint" } if numbers are exceeding js number limitations
+	activationTokenExpires: bigint("activation_token_expires", { mode: "number" }),
+	isActive: boolean("is_active").default(false),
 },
 (table) => {
 	return {
@@ -38,9 +42,9 @@ export const employees = timesheet.table("employees", {
 export const timeentries = timesheet.table("timeentries", {
 	entryId: serial("entry_id").primaryKey().notNull(),
 	employeeId: integer("employee_id"),
-	clockIn: timestamp("clock_in", { mode: 'string' }).notNull(),
-	clockOut: timestamp("clock_out", { mode: 'string' }),
-	totalHours: numeric("total_hours", { precision: 5, scale:  2 }).generatedAlwaysAs(sql`(EXTRACT(epoch FROM (clock_out - clock_in)) / (3600)::numeric)`),
+	clockIn: timestamp("clock_in", { withTimezone: true, mode: 'string' }).notNull(),
+	clockOut: timestamp("clock_out", { withTimezone: true, mode: 'string' }),
+	totalHours: varchar("total_hours").generatedAlwaysAs(sql`(((floor((EXTRACT(epoch FROM (clock_out - clock_in)) / (3600)::numeric)) || ' hours '::text) || floor(((EXTRACT(epoch FROM (clock_out - clock_in)) % (3600)::numeric) / (60)::numeric))) || ' minutes'::text)`),
 	entryDate: date("entry_date").default(sql`CURRENT_DATE`).notNull(),
 },
 (table) => {

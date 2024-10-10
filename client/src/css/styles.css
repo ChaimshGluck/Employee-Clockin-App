@@ -19,6 +19,8 @@ body {
 
 /* Wrapper container for centering and styling app content */
 .container {
+  align-items: center;
+  justify-content: center;
   width: 100%;
   max-width: 450px;
   margin: 60px auto;
@@ -50,9 +52,10 @@ h2 {
 
 h3 {
   text-align: center;
+  margin-top: 30px;
   margin-bottom: 30px;
   /* Space below description */
-  color: #555;
+  /* color: #555; */
   /* Softer color for secondary text */
   font-size: 1.1em;
   /* Slightly increase size for readability */
@@ -473,6 +476,44 @@ label[for="employee-dropdown"] {
   height: 100vh;
   /* This ensures it takes up the full view height*/
   flex-direction: column;
+}
+
+.page-title {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.message-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+  gap: 10px;
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  /* margin-bottom: 20px; */
+  width: 80%;
+  max-width: 600px;
+}
+
+.message-box.success {
+  background-color: #e6ffed;
+  color: #28a745;
+  border: 2px solid #28a745;
+}
+
+.message-box.error {
+  background-color: #ffe6e6;
+  color: #dc3545;
+  border: 2px solid #dc3545;
+}
+
+.activation-icon {
+  font-size: 45px;
 }
 
 @media (min-width: 768px) {

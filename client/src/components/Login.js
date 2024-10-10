@@ -45,7 +45,7 @@ function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole, handleMe
   };
 
   if (isLoading) {
-    return <LoadingSpinner isLoading={isLoading} message={"Logging in..."}/>
+    return <LoadingSpinner isLoading={isLoading} message={"Logging in..."} />
   }
 
   return (

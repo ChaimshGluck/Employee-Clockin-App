@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Record from "./Record";
 import LoadingSpinner from "./LoadingSpinner";
-import { FaArrowLeft, FaFilter } from 'react-icons/fa'; // Import back arrow icon
+import { FaArrowLeft, FaFilter } from 'react-icons/fa';
 const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole, handleMessage }) => {
@@ -65,7 +65,7 @@ const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole, 
         <>
             <div className="toggle-link">
                 <button className="back-button" onClick={() => changePage('ClockInOut')}>
-                    <FaArrowLeft className="back-icon" /> Back to Clock In/Out Page
+                    <FaArrowLeft className="back-icon" />Back to Clock In/Out Page
                 </button>
             </div>
             <h2>Employee Clock-In Records</h2>

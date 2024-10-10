@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { employeeClockin, employeeClockout, getEmployeeRecords } from '../controllers/employee.js';
+import { activateAccount, employeeClockin, employeeClockout, getEmployeeRecords } from '../controllers/employee.js';
 import passport, { authenticateCookie } from '../auth/auth.js';
 const router = express.Router();
 export default router;
@@ -18,7 +18,7 @@ router.post('/login', (req, res) => {
 
         if (!user) {
             console.log('Error logging in:', info.message);
-            return res.status(401).json({ ok: false, message: 'Invalid email or password' });
+            return res.status(401).json({ ok: false, message: info.message });
         }
 
         const token = jwt.sign({ user: { id: user.employeeId, email: user.email, role: user.role } }, process.env.JWT_SECRET, { expiresIn: '1h' });
@@ -50,3 +50,8 @@ router.get('/records', async (req, res) => {
     const result = await getEmployeeRecords(req.user.id);
     res.json(result);
 });
+
+router.get('/activate/:token', async (req, res) => {
+    const result = await activateAccount(req.params.token);
+    res.json(result);
+  });

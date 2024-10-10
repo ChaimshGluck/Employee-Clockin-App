@@ -1,5 +1,5 @@
 import React from 'react';
-import './css/styles.css'; // Import styles
+import './css/styles.css';
 import App from './App';
 
 import { createRoot } from 'react-dom/client';

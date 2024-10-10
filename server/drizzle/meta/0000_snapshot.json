@@ -79,6 +79,25 @@
           "type": "date",
           "primaryKey": false,
           "notNull": true
+        },
+        "activation_token": {
+          "name": "activation_token",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "activation_token_expires": {
+          "name": "activation_token_expires",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         }
       },
       "indexes": {},
@@ -127,23 +146,23 @@
         },
         "clock_in": {
           "name": "clock_in",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true
         },
         "clock_out": {
           "name": "clock_out",
-          "type": "timestamp",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
         },
         "total_hours": {
           "name": "total_hours",
-          "type": "numeric(5, 2)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false,
           "generated": {
-            "as": "(EXTRACT(epoch FROM (clock_out - clock_in)) / (3600)::numeric)",
+            "as": "(((floor((EXTRACT(epoch FROM (clock_out - clock_in)) / (3600)::numeric)) || ' hours '::text) || floor(((EXTRACT(epoch FROM (clock_out - clock_in)) % (3600)::numeric) / (60)::numeric))) || ' minutes'::text)",
             "type": "stored"
           }
         },

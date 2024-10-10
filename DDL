@@ -13,8 +13,10 @@ CREATE TABLE
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role_id INT REFERENCES Roles(role_id),
-    date_hired DATE NOT NULL
-  );
+    date_hired DATE NOT NULL activation_token VARCHAR(255),
+    activation_token_expires TIMESTAMPTZ,
+    is_active BOOLEAN DEFAULT false;
+);
 
 
 CREATE TABLE
@@ -30,7 +32,7 @@ CREATE TABLE
           FROM
             clock_out - clock_in
         ) / 3600
-      ) || ' hours ' || FLOOR(
+      ) | | ' hours ' | | FLOOR(
         (
           EXTRACT(
             EPOCH
@@ -38,7 +40,7 @@ CREATE TABLE
               clock_out - clock_in
           ) % 3600
         ) / 60
-      ) || ' minutes'
+      ) | | ' minutes'
     ) STORED,
     entry_date DATE NOT NULL DEFAULT CURRENT_DATE
   );

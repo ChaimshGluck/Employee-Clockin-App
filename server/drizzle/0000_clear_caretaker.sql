@@ -17,15 +17,18 @@ CREATE TABLE IF NOT EXISTS "timesheet"."employees" (
 	"password" varchar(255) NOT NULL,
 	"role_id" integer,
 	"date_hired" date NOT NULL,
+	"activation_token" varchar(255),
+	"activation_token_expires" bigint,
+	"is_active" boolean DEFAULT false,
 	CONSTRAINT "employees_email_key" UNIQUE("email")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "timesheet"."timeentries" (
 	"entry_id" serial PRIMARY KEY NOT NULL,
 	"employee_id" integer,
-	"clock_in" timestamp NOT NULL,
-	"clock_out" timestamp,
-	"total_hours" numeric(5, 2) GENERATED ALWAYS AS ((EXTRACT(epoch FROM (clock_out - clock_in)) / (3600)::numeric)) STORED,
+	"clock_in" timestamp with time zone NOT NULL,
+	"clock_out" timestamp with time zone,
+	"total_hours" varchar GENERATED ALWAYS AS ((((floor((EXTRACT(epoch FROM (clock_out - clock_in)) / (3600)::numeric)) || ' hours '::text) || floor(((EXTRACT(epoch FROM (clock_out - clock_in)) % (3600)::numeric) / (60)::numeric))) || ' minutes'::text)) STORED,
 	"entry_date" date DEFAULT CURRENT_DATE NOT NULL
 );
 --> statement-breakpoint

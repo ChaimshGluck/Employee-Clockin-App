@@ -3,6 +3,7 @@ import 'dotenv/config';
 import pkg from 'pg-connection-string';
 const { parse } = pkg;
 const { host, port, database, user, password } = parse(process.env.DATABASE_URL || '');
+const ssl = process.env.SSL === 'true';
 
 export default defineConfig({
     dialect: 'postgresql',
@@ -12,7 +13,7 @@ export default defineConfig({
         database,
         user,
         password,
-        ssl: true
+        ssl: ssl ? { rejectUnauthorized: false } : false
     },
     out: './drizzle',
     schema: ['timesheet'],

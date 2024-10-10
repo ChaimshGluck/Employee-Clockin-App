@@ -19,10 +19,12 @@ const DeleteWarning = ({ changePage, setShowDeleteBox, handleMessage }) => {
             const result = await response.json();
             setShowDeleteBox(false);
             if (result.ok) {
-                handleMessage('Employee Deleted', 'success');
+                const message = 'Employee Deleted';
+                handleMessage(message, 'success');
+                const duration = Math.max(3000, message.length * 100);
                 setTimeout(() => {
                     changePage('Employees')
-                }, 4000);
+                }, duration);
             } else {
                 handleMessage(result.error, 'error');
             }
