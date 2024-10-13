@@ -90,7 +90,7 @@ export async function getAllRecords() {
         })
             .from(timeentries).leftJoin(employees, eq(timeentries.employeeId, employees.employeeId))
             .orderBy(desc(timeentries.clockIn))
-        return { ok: true, employeesRecords: result };
+        return { ok: true, employeeRecords: result };
 
     } catch (error) {
         return handleError('Error getting all clockin records:', error);
@@ -134,7 +134,7 @@ export async function getEmployee(employeeIdToUpdate) {
 }
 
 export async function updateEmployee(employee) {
-    console.log('incoming employee:', employee)
+    console.log('incoming employee to update:', employee)
     try {
         const roleName = employee.isHr ? 'HR' : 'employee';
         const role = await getRole(roleName);
@@ -158,7 +158,7 @@ export async function updateEmployee(employee) {
                 lastName: employees.lastName,
             })
         console.log(`updated employee ${result.firstName} ${result.lastName}`)
-        return { ok: true }
+        return { ok: true, employeeId: employee.employeeId };
     } catch (error) {
         if (error.code === '23505') {
             return handleError('Error updating employee:', 'Email already in use.')
@@ -171,7 +171,7 @@ export async function deleteEmployee(employeeId) {
     try {
         await db.delete(employees).where(eq(employees.employeeId, employeeId));
         console.log(`deleted employee ${employeeId}`);
-        return { ok: true };
+        return { ok: true, employeeId: employeeId };
     } catch (error) {
         return handleError('Error deleting employee:', error);
     }

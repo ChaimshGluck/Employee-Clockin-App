@@ -6,8 +6,7 @@ import DeleteWarning from "./DeleteWarning";
 import LoadingSpinner from "./LoadingSpinner";
 import ValidationMessage from "./ValidationMessage";
 import { FaArrowLeft } from "react-icons/fa";
-
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+import { fetchFromBackend } from "../utils/api";
 
 const UpdateEmployee = ({ changePage, handleMessage }) => {
     const employeeId = useContext(EmployeeContext);
@@ -28,23 +27,24 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
     useEffect(() => {
         const getEmployee = async () => {
             try {
-                const response = await fetch(`${backendUrl}/hr/employee?employeeIdToUpdate=${employeeId}`, {
-                    headers: { "Content-Type": "application/json" },
-                    credentials: 'include'
-                });
-                const { fetchedEmployee } = await response.json();
+                const { fetchedEmployee } = await fetchFromBackend(`/hr/employee?employeeIdToUpdate=${employeeId}`, 'include');
+                // if (!response.ok) {
+                //     throw new Error(response.message);
+                // }
                 setEmployee(fetchedEmployee);
-                setIsLoading(false);
             } catch (error) {
+                console.error('Error getting employee info:', error);
                 handleMessage('Failed to load employee data', 'error');
+                changePage('Employees');
+            } finally {
                 setIsLoading(false);
             }
         };
         getEmployee();
-    }, [employeeId, handleMessage]);
+    }, [employeeId, handleMessage, changePage]);
 
     if (isLoading || !employee) {
-        return <LoadingSpinner isLoading={isLoading} message={"Loading employee data..."} />
+        return <LoadingSpinner message={"Loading employee data..."} />
     }
 
     const EmployeeSchema = Yup.object({
@@ -96,23 +96,23 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
                 }
 
                 try {
-                    const result = await fetch(`${backendUrl}/hr/update`, {
-                        method: 'PATCH',
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        credentials: 'include',
-                        body: JSON.stringify(updatedEmployee)
-                    });
-                    if (result.ok) {
-                        const message = 'Employee Info Updated!';
-                        handleMessage(message, 'success');
-                        const duration = Math.max(3000, message.length * 100);
-                        setTimeout(() => {
-                            changePage('Employees');
-                        }, duration);
+                    const response = await fetchFromBackend('/hr/update', 'include', 'PATCH', updatedEmployee);
+                    if (!response.ok) {
+                        if (response.message === 'Email already in use') {
+                            handleMessage('Email already in use. Please enter a different email address.', 'error');
+                            return;
+                        } else {
+                            throw new Error(response.message);
+                        }
                     }
-                } catch {
+                    const message = 'Employee Info Updated!';
+                    handleMessage(message, 'success');
+                    const duration = Math.max(3000, message.length * 100);
+                    setTimeout(() => {
+                        changePage('Employees');
+                    }, duration);
+                } catch (error) {
+                    console.error('Error updating employee:', error);
                     handleMessage('Error Updating Employee', 'error');
                 }
             }}
@@ -241,7 +241,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
                     }
                 </div>
             )}
-        </Formik>
+        </Formik >
     );
 };
 

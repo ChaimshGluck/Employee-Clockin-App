@@ -1,32 +1,41 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AiOutlineCheckCircle, AiOutlineWarning } from 'react-icons/ai';
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+import LoadingSpinner from "./LoadingSpinner";
+import { fetchFromBackend } from "../utils/api";
 
 const ActivateAccount = () => {
     const { token } = useParams();
     const [message, setMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         const activateAccount = async () => {
+            setIsLoading(true);
             try {
-                const response = await fetch(`${backendUrl}/employee/activate/${token}`);
-                const accountActivated = await response.json();
-                if (!accountActivated.ok) {
-                    throw new Error(accountActivated.error);
+                const response = await fetchFromBackend(`/employee/activate/${token}`);
+                if (!response.ok) {
+                    throw new Error(response.message);
                 }
                 setMessage('Account activated successfully!');
                 setIsSuccess(true);
+                setIsLoading(false);
             } catch (error) {
+                console.error('Error activating account:', error);
                 setMessage(error.message);
                 setIsSuccess(false);
+                setIsLoading(false);
             }
         };
 
         activateAccount();
     }, [token]);
+
+    if (isLoading) {
+        return <LoadingSpinner message={"Activating your account..."} />
+    }
 
     return (
         <div>

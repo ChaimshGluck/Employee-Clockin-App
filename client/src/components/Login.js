@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+import { fetchFromBackend } from '../utils/api';
 
 function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole, handleMessage }) {
   const [email, setEmail] = useState('');
@@ -12,40 +12,38 @@ function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole, handleMe
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch(`${backendUrl}/employee/login`, {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          username: email,
-          password: password
-        })
-      })
+      const response = await fetchFromBackend('/employee/login', 'include', 'POST', {
+        username: email,
+        password: password
+      });
 
-      if (response.status === 401) {
-        setIsLoading(false);
-        const { message } = await response.json();
-        handleMessage(message, 'error');
-        return
+      if (!response.ok) {
+        if (response.message === 'Invalid email or password' || response.message === 'Account is not active. Please check your email for activation instructions.') {
+          handleMessage(response.message, 'error');
+          setIsLoading(false);
+          return;
+        } else {
+          console.error('Error logging in:')
+          throw new Error(response.message);
+        }
       }
-      const data = await response.json();
-      setIsLoading(false);
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('employee', JSON.stringify(data.employee));
-      setEmployeeId(data.employee.employeeId);
-      setFullName(data.employee.fullName);
+
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('employee', JSON.stringify(response.employee));
+      setEmployeeId(response.employee.employeeId);
+      setFullName(response.employee.fullName);
       fetchUserRole();
       changePage('ClockInOut');
-    } catch (e) {
-      setIsLoading(false);
+    } catch (error) {
+      console.error('Error logging in:', error);
       handleMessage('An error occurred while logging in. Please try again later.', 'error');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   if (isLoading) {
-    return <LoadingSpinner isLoading={isLoading} message={"Logging in..."} />
+    return <LoadingSpinner message={"Logging in..."} />
   }
 
   return (

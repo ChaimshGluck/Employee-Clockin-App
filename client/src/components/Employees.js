@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import Employee from "./Employee";
 import LoadingSpinner from "./LoadingSpinner";
 import { FaArrowLeft } from 'react-icons/fa';
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
-
+import { fetchFromBackend } from "../utils/api";
 const Employees = ({ changePage, handleMessage }) => {
     const [employees, setEmployees] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -13,23 +12,24 @@ const Employees = ({ changePage, handleMessage }) => {
         const getAllEmployees = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(`${backendUrl}/hr/employees`, {
-                    headers: { "Content-Type": "application/json" },
-                    credentials: 'include'
-                })
-                const responseEmployees = await response.json();
-                setEmployees(responseEmployees.employees);
+                const response = await fetchFromBackend(`/hr/employees`, 'include')
+                if (!response.ok) {
+                    throw new Error(response.message);
+                }
+                setEmployees(response.employees);
+            } catch (error) {
+                console.error('Error getting employees:', error);
+                handleMessage('Error getting employees', 'error');
+                changePage('ClockInOut');
+            } finally {
                 setIsLoading(false);
-            } catch (e) {
-                setIsLoading(false);
-                handleMessage(e, 'error');
             }
         }
         getAllEmployees()
-    }, [handleMessage])
+    }, [handleMessage, changePage])
 
     if (isLoading) {
-        return <LoadingSpinner isLoading={isLoading} message={"Getting Employees..."} />
+        return <LoadingSpinner message={"Getting Employees..."} />
     }
 
     return (

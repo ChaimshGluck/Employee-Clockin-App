@@ -1,6 +1,5 @@
-import React, { useState, createContext, useEffect, useRef } from 'react';
+import { useState, createContext, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ReactDOMServer from 'react-dom/server';
 import LogIn from './components/Login';
 import Register from './components/Register';
 import ClockInOut from './components/ClockInOut';
@@ -8,8 +7,9 @@ import Records from './components/Records';
 import Employees from './components/Employees';
 import UpdateEmployee from './components/UpdateEmployee';
 import ActivateAccount from './components/ActivateAccount';
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
-
+import useMessage from './utils/useMessage';
+import { tokenIsValid } from './utils/utils';
+import { fetchFromBackend } from './utils/api';
 export const EmployeeContext = createContext();
 
 function App() {
@@ -31,41 +31,7 @@ function App() {
   const [employeeIdToUpdate, setEmployeeIdToUpdate] = useState(() => {
     return localStorage.getItem('employeeIdToUpdate') || null
   });
-  const [message, setMessage] = useState(null);
-  const [messageType, setMessageType] = useState(null);
-  const [persistMessage, setPersistMessage] = useState(false);
-  const timeoutRef = useRef(null);
-
-  const tokenIsValid = () => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      return false
-    };
-
-    try {
-      const decodedToken = JSON.parse(atob(token.split('.')[1]));
-      const currentTime = Math.floor(Date.now() / 1000);
-      return decodedToken.exp > currentTime;
-    } catch (error) {
-      console.error('Error decoding token:', error);
-      return false;
-    }
-  };
-
-  const fetchUserRole = async () => {
-    try {
-      const response = await fetch(`${backendUrl}/hr/user-role`, { credentials: 'include' });
-      if (response.ok) {
-        setIsHr(true);
-        localStorage.setItem('isHr', true);
-      } else {
-        setIsHr(false);
-        localStorage.setItem('isHr', false);
-      }
-    } catch (error) {
-      console.error('Error fetching user role:', error);
-    }
-  };
+  const { message, messageType, handleMessage } = useMessage();
 
   useEffect(() => {
     if (!tokenIsValid()) {
@@ -73,49 +39,6 @@ function App() {
       setCurrentPage('LogIn');
     }
   }, []);
-
-  const convertJSXToString = (jsx) => {
-    return ReactDOMServer.renderToStaticMarkup(jsx).replace(/<[^>]+>/g, '');
-  }
-
-  useEffect(() => {
-    if (message) {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-
-      const getDurationForMessage = (message) => {
-        if (React.isValidElement(message)) {
-          message = convertJSXToString(message);
-        }
-        return Math.max(3000, message.length * 100);
-      }
-
-      const duration = getDurationForMessage(message);
-      timeoutRef.current = setTimeout(() => {
-        setMessage(null);
-        timeoutRef.current = null;
-      }, duration)
-
-      return () => {
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-        }
-      }
-    }
-  }, [message])
-
-  useEffect(() => {
-    if (!persistMessage) {
-      setMessage(null);
-    }
-  }, [currentPage, persistMessage]);
-
-  const handleMessage = (message, type, persist = false) => {
-    setMessage(message);
-    setMessageType(type);
-    setPersistMessage(persist);
-  }
 
   const changePage = (page) => {
     if (tokenIsValid()) {
@@ -126,6 +49,22 @@ function App() {
       setCurrentPage('LogIn');
     }
   }
+
+  const fetchUserRole = async () => {
+    try {
+      const response = await fetchFromBackend(`/hr/user-role`, 'include');
+      if (!response.ok) {
+        setIsHr(false);
+        localStorage.setItem('isHr', false);
+        throw new Error(response.error);
+      } else {
+        setIsHr(true);
+        localStorage.setItem('isHr', true);
+      }
+    } catch (error) {
+      console.error('Error fetching user role:', error);
+    }
+  };
 
   return (
     <Router>
@@ -167,7 +106,6 @@ function App() {
                 <Register
                   changePage={changePage}
                   handleMessage={handleMessage}
-                  convertJSXToString={convertJSXToString}
                 />
               }
 

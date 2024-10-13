@@ -26,6 +26,7 @@ export async function verify(username, password, cb) {
         if (!employeeRecord.isActive) {
             return cb(null, false, { message: 'Account is not active. Please check your email for activation instructions.' })
         }
+
         employeeRecord.fullName = `${employeeRecord.firstName} ${employeeRecord.lastName}`;
         const isPasswordCorrect = await bcrypt.compare(password, employeeRecord.password);
         if (isPasswordCorrect) {
@@ -63,12 +64,14 @@ export async function employeeClockin(employeeId) {
         }
 
         const timestamp = new Date().toLocaleString();
-        await db.insert(timeentries).values({
+        const [clockinRecord] = await db.insert(timeentries).values({
             employeeId: employeeId,
             clockIn: timestamp
         })
-        console.log(`employee ${employeeId} clocked in at ${timestamp}`);
-        return { ok: true };
+            .returning({ entryId: timeentries.entryId });
+        console.log(clockinRecord)
+        console.log(`employee ${employeeId} clocked in at ${timestamp}, entryId ${clockinRecord.entryId}`);
+        return { ok: true, entryId: clockinRecord.entryId };
 
     } catch (error) {
         return handleError('Error clocking in:', error.message);
@@ -87,8 +90,8 @@ export async function employeeClockout(employeeId) {
         const timestamp = new Date().toLocaleString();
         await db.update(timeentries).set({ clockOut: timestamp })
             .where(eq(entryExists.entryId, timeentries.entryId))
-        console.log(`employee ${employeeId} clocked out at ${timestamp}`);
-        return { ok: true };
+        console.log(`employee ${employeeId} clocked out at ${timestamp}, entryId ${entryExists.entryId}`);
+        return { ok: true, entryId: entryExists.entryId };
 
     } catch (error) {
         return handleError('Error clocking in:', error.message);
@@ -123,7 +126,7 @@ export async function activateAccount(token) {
             .where(and(eq(employees.activationToken, token), gt(employees.activationTokenExpires, Date.now())));
 
         if (!result) {
-            throw new Error('Invalid or expired token');
+            throw new Error('Your activation token has expired or is invalid');
         }
 
         if (result.isActive) {

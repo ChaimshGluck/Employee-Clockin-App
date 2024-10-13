@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import Logout from "./Logout";
-
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+import { fetchFromBackend } from "../utils/api";
 
 function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, setShowAllRecords, handleMessage }) {
 
@@ -13,40 +12,24 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
     return <p>Loading employee data...</p>;
   }
 
-  const handleClockIn = async () => {
+  const handleClock = async (inOrOut) => {
     try {
-      const response = await fetch(`${backendUrl}/employee/clockin?employeeId=${employeeId}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include'
-      });
+      const response = await fetchFromBackend(`/employee/clock${inOrOut}?employeeId=${employeeId}`, 'include', inOrOut === 'in' ? 'POST' : 'PATCH');
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message);
+        if (response.message.startsWith('You are')) {
+          console.log(response.message);
+          handleMessage(response.message, 'error');
+          return;
+        }
+        throw new Error(response.message);
+
+      } else {
+        handleMessage(`Clocked ${inOrOut === 'in' ? 'In' : 'Out'}!`, 'info');
       }
-
-      handleMessage('Clocked In!', 'info');
     } catch (error) {
-      handleMessage(error.message, 'error');
-    }
-  };
-
-  const handleClockOut = async () => {
-    try {
-      const response = await fetch(`${backendUrl}/employee/clockout?employeeId=${employeeId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include'
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message);
-      }
-      handleMessage('Clocked Out!', 'info');
-    } catch (error) {
-      handleMessage(error.message, 'error');
+      console.log(error);
+      handleMessage(`Error clocking ${inOrOut}`, 'error');
     }
   };
 
@@ -59,8 +42,8 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
     <div>
       <h2>Welcome, {fullName}</h2>
       <h2>Clock In / Clock Out</h2>
-      <button onClick={handleClockIn}>Clock In</button>
-      <button onClick={handleClockOut}>Clock Out</button>
+      <button onClick={() => handleClock('in')}>Clock In</button>
+      <button onClick={() => handleClock('out')}>Clock Out</button>
       <p className="toggle-link"><button onClick={() => { changePage('Records'); handleShowAllRecords(false) }}>View your clock-in records</button></p>
       {isHr && <div className="toggle-link">
         <p><button onClick={() => changePage('Register')}>Register a new employee</button></p>

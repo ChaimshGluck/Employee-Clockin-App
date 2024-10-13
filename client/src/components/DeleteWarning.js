@@ -1,35 +1,33 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { EmployeeContext } from "../App";
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
-
+import LoadingSpinner from "./LoadingSpinner";
+import { fetchFromBackend } from "../utils/api";
 
 const DeleteWarning = ({ changePage, setShowDeleteBox, handleMessage }) => {
     const employeeId = useContext(EmployeeContext);
+    const [isLoading, setIsLoading] = useState(false);
 
     const confirmDelete = async () => {
         setShowDeleteBox(false);
+        setIsLoading(true);
         try {
-            const response = await fetch(`${backendUrl}/hr/delete?employeeIdToDelete=${employeeId}`, {
-                method: 'DELETE',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                credentials: 'include'
-            })
-            const result = await response.json();
+            const response = await fetchFromBackend(`/hr/delete?employeeIdToDelete=${employeeId}`, 'include', 'DELETE');
             setShowDeleteBox(false);
-            if (result.ok) {
-                const message = 'Employee Deleted';
-                handleMessage(message, 'success');
-                const duration = Math.max(3000, message.length * 100);
-                setTimeout(() => {
-                    changePage('Employees')
-                }, duration);
-            } else {
-                handleMessage(result.error, 'error');
+
+            if (!response.ok) {
+                throw new Error(response.message);
             }
+            const message = 'Employee Deleted';
+            handleMessage(message, 'success');
+            const duration = Math.max(3000, message.length * 100);
+            setTimeout(() => {
+                changePage('Employees')
+            }, duration);
         } catch (error) {
+            console.error('Error deleting employee:', error);
             handleMessage('Error deleting employee', 'error');
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -37,7 +35,9 @@ const DeleteWarning = ({ changePage, setShowDeleteBox, handleMessage }) => {
         setShowDeleteBox(false);
     }
 
-
+    if (isLoading) {
+        return <LoadingSpinner message={"Activating your account..."} />
+    }
 
     return (
         <div id="deleteBox" >

@@ -1,11 +1,10 @@
 import BeatLoader from "react-spinners/BeatLoader";
 
-function LoadingSpinner({isLoading, message}) {
+function LoadingSpinner({ message }) {
     return (
         <div className="loader-container">
             <BeatLoader
                 color={"green"}
-                // loading={isLoading}
                 cssOverride={{
                     display: "block",
                     margin: "0 auto",

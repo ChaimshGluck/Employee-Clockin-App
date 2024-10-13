@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Record from "./Record";
 import LoadingSpinner from "./LoadingSpinner";
 import { FaArrowLeft, FaFilter } from 'react-icons/fa';
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+import { fetchFromBackend } from "../utils/api";
 
 const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole, handleMessage }) => {
     const [records, setRecords] = useState([]);
@@ -14,51 +14,34 @@ const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole, 
     }, [fetchUserRole, isHr]);
 
     useEffect(() => {
-        const getRecords = async () => {
+        const getRecords = async (endpoint) => {
             setIsLoading(true);
             try {
-                const response = await fetch(`${backendUrl}/employee/records?employeeId=${employeeId}`, {
-                    headers: { "Content-Type": "application/json" },
-                    credentials: 'include'
-                });
-                const responseRecords = await response.json();
-                setRecords(responseRecords.employeeRecords);
-            } catch (e) {
-                handleMessage(e, 'error');
+                const response = await fetchFromBackend(endpoint, 'include');
+
+                if (!response.ok) {
+                    throw new Error(response.message);
+                }
+                setRecords(response.employeeRecords);
+            } catch (error) {
+                console.error('Error getting clock-in records:', error);
+                handleMessage('Error getting clock-in records', 'error');
+                changePage('ClockInOut');
             } finally {
                 setIsLoading(false);
             }
         };
 
-        const getAllRecords = async () => {
-            setIsLoading(true);
-            try {
-                const response = await fetch(`${backendUrl}/hr/all-records`, {
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include",
-                });
-                const responseRecords = await response.json();
-                setRecords(responseRecords.employeesRecords);
-            } catch (e) {
-                handleMessage(e, 'error');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        if (isHr && showAllRecords) {
-            getAllRecords();
-        } else {
-            getRecords();
-        }
-    }, [employeeId, showAllRecords, isHr, handleMessage]);
+        const endpoint = isHr && showAllRecords ? '/hr/all-records' : `/employee/records?employeeId=${employeeId}`;
+        getRecords(endpoint);
+    }, [employeeId, showAllRecords, isHr, handleMessage, changePage]);
 
     const handleFilter = (e) => {
         setEmployeeIdToFilter(e.target.value);
     };
 
     if (isLoading) {
-        return <LoadingSpinner isLoading={isLoading} message={"Getting Records..."} />;
+        return <LoadingSpinner message={"Getting Records..."} />;
     }
 
     return (

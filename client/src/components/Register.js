@@ -3,11 +3,13 @@ import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import ValidationMessage from './ValidationMessage.js';
 import { FaArrowLeft } from 'react-icons/fa';
-const backendUrl = process.env.REACT_APP_BACKEND_URL;
+import LoadingSpinner from './LoadingSpinner.js';
+import { fetchFromBackend } from '../utils/api.js';
 
-function Register({ changePage, handleMessage, convertJSXToString }) {
+function Register({ changePage, handleMessage }) {
 
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const EmployeeSchema = Yup.object({
     firstName: Yup.string()
@@ -28,6 +30,10 @@ function Register({ changePage, handleMessage, convertJSXToString }) {
       .oneOf([Yup.ref('password'), null], 'Passwords do not match. Please confirm your password.')
   })
 
+  if (isLoading) {
+    return <LoadingSpinner message={"Registering New Employee..."} />
+  }
+
   return (
     <Formik
       initialValues={{
@@ -40,35 +46,36 @@ function Register({ changePage, handleMessage, convertJSXToString }) {
       }}
       validationSchema={EmployeeSchema}
       onSubmit={async (values) => {
+        setIsLoading(true);
         try {
-          const response = await fetch(`${backendUrl}/hr/register`, {
-            method: 'POST',
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              firstName: values.firstName,
-              lastName: values.lastName,
-              email: values.email,
-              password: values.password,
-              isHr: values.hrPermission
-            })
+          const response = await fetchFromBackend(`/hr/register`, 'same-origin', 'POST', {
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email,
+            password: values.password,
+            isHr: values.hrPermission
           })
-          const result = await response.json();
-          if (result.ok) {
-            const jsxMessage = (
-              <div>
-                <h3>Employee Registered!</h3>
-                <p>An activation link has been sent to the employee's email. They must activate their account before logging in.</p>
-              </div>
-            )
-            handleMessage(jsxMessage, 'info', true);
-            changePage('ClockInOut');
-          } else {
-            handleMessage(result.error, 'error')
+          if (!response.ok) {
+            if (response.message === 'Email already in use') {
+              handleMessage('Email already in use. Please enter a different email address.', 'error');
+              return;
+            } else {
+              throw new Error(response.message);
+            }
           }
+          const jsxMessage = (
+            <div>
+              <h3>Employee Registered!</h3>
+              <p>An activation link has been sent to the employee's email. They must activate their account before logging in.</p>
+            </div>
+          )
+          handleMessage(jsxMessage, 'info', true);
+          changePage('ClockInOut');
         } catch (error) {
+          console.error('Error Registering Employee:', error);
           handleMessage('Error Registering Employee', 'error');
+        } finally {
+          setIsLoading(false);
         }
       }}
     >
