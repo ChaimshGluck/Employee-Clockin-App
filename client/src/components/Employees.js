@@ -3,6 +3,7 @@ import Employee from "./Employee";
 import LoadingSpinner from "./LoadingSpinner";
 import { FaArrowLeft } from 'react-icons/fa';
 import { fetchFromBackend } from "../utils/api";
+import AppTitle from "./AppTitle";
 const Employees = ({ changePage, handleMessage }) => {
     const [employees, setEmployees] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +35,7 @@ const Employees = ({ changePage, handleMessage }) => {
 
     return (
         <>
+            <AppTitle />
             <div className="toggle-link">
                 <button className="back-button" onClick={() => changePage('ClockInOut')}>
                     <FaArrowLeft className="back-icon" /> Back to Clock In/Out Page

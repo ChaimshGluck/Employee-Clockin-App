@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Logout from "./Logout";
 import { fetchFromBackend } from "../utils/api";
+import AppTitle from "./AppTitle";
 
 function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, setShowAllRecords, handleMessage }) {
 
@@ -40,12 +41,14 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
 
   return (
     <div>
+      <AppTitle />
       <h2>Welcome, {fullName}</h2>
       <h2>Clock In / Clock Out</h2>
       <button onClick={() => handleClock('in')}>Clock In</button>
       <button onClick={() => handleClock('out')}>Clock Out</button>
       <p className="toggle-link"><button onClick={() => { changePage('Records'); handleShowAllRecords(false) }}>View your clock-in records</button></p>
       {isHr && <div className="toggle-link">
+        <hr className="divider" />
         <p><button onClick={() => changePage('Register')}>Register a new employee</button></p>
         <p><button onClick={() => { changePage('Records'); handleShowAllRecords(true) }}>View all clock-in records</button></p>
         <p><button onClick={() => changePage('Employees')}>View all employees</button></p>
