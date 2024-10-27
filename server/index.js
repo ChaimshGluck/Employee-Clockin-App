@@ -21,10 +21,6 @@ app.use(cookieParser(process.env.JWT_SECRET));
 app.use('/hr', hrRoutes);
 app.use('/employee', employeeRoutes);
 
-app.get('/hello', (req, res) => {
-    res.send('Hello!')
-})
-
 app.listen(port, () => {
     console.log(`server is running on port ${port}...`);
 })

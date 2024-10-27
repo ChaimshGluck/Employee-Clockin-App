@@ -119,6 +119,7 @@ function Register({ changePage, handleMessage }) {
               type="email"
               id='register-email'
               name='email'
+              placeholder='e.g., name@example.com'
               className={errors.email && touched.email ? 'invalid' : ''}
             />
             {errors.email && touched.email && (

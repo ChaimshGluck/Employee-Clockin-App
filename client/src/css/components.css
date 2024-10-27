@@ -164,13 +164,6 @@ label[for="employee-dropdown"] {
     position: relative;
 }
 
-hr.divider {
-    border: none;
-    border-top: 1px solid #ddd;
-    width: 100%;
-    margin: 20px 0;
-  }
-
 .toggle-link button {
     background: none;
     border: none;
@@ -184,6 +177,13 @@ hr.divider {
     background: none;
     text-decoration: underline;
     color: #0e702b;
+}
+
+hr.divider {
+    border: none;
+    border-top: 1px solid #ddd;
+    width: 100%;
+    margin: 20px 0;
 }
 
 /* Snackbar Message Box*/
