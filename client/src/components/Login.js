@@ -28,6 +28,7 @@ function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole, handleMe
         }
       }
 
+      // Save token and employee data to local storage
       localStorage.setItem('token', response.token);
       localStorage.setItem('employee', JSON.stringify(response.employee));
       setEmployeeId(response.employee.employeeId);

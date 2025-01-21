@@ -12,13 +12,6 @@ export async function registerEmployee(employee) {
     const activationToken = crypto.randomBytes(20).toString('hex');
 
     try {
-        const emailResponse = await sendActivationEmail(employee.email, activationToken);
-        console.log('emailResponse:', emailResponse);
-    } catch (error) {
-        return handleError('error sending email:', error.message)
-    }
-
-    try {
         const passhash = await bcrypt.hash(employee.password, 10);
         const roleName = employee.isHr ? 'HR' : 'employee';
         const role = await getRole(roleName);
@@ -40,10 +33,18 @@ export async function registerEmployee(employee) {
             })
 
         console.log(`registered ${role.roleName == 'HR' ? 'HR ' : ''}employee ${result.firstName} ${result.lastName}, id is ${result.employeeId}`)
+        
+        try {
+            const emailResponse = await sendActivationEmail(employee.email, activationToken);
+            console.log('emailResponse:', emailResponse);
+        } catch (error) {
+            return handleError('error sending email:', error.message)
+        }
+
         return { ok: true, employeeId: result.employeeId }
 
     } catch (error) {
-        if (error.code === '23505') {
+        if (error.code === '23505') {   ``
             return handleError('Error registering employee:', 'Email already in use')
         }
         return handleError('Error registering employee:', error);
