@@ -11,12 +11,14 @@ const useMessage = () => {
         return ReactDOMServer.renderToStaticMarkup(jsx).replace(/<[^>]+>/g, '');
     }
 
+    // Set timeout to clear message
     useEffect(() => {
         if (message) {
             if (timeoutRef.current) {
                 clearTimeout(timeoutRef.current)
             }
 
+            // Calculate duration based on message length
             const getDurationForMessage = (message) => {
                 if (React.isValidElement(message)) {
                     message = convertJSXToString(message);
@@ -26,11 +28,13 @@ const useMessage = () => {
 
             const duration = getDurationForMessage(message);
 
+            // Clear message after duration
             timeoutRef.current = setTimeout(() => {
                 setMessage(null);
                 timeoutRef.current = null;
             }, duration)
 
+            // Clear timeout on unmount
             return () => {
                 if (timeoutRef.current) {
                     clearTimeout(timeoutRef.current);
@@ -39,6 +43,7 @@ const useMessage = () => {
         }
     }, [message])
 
+    // Clear message if persistMessage is false
     useEffect(() => {
         if (!persistMessage) {
             setMessage(null);

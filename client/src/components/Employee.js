@@ -36,7 +36,7 @@ const Employee = ({ employee, changePage }) => {
                 <p className="record-detail">
                     <FaCalendarAlt className="record-icon" />
                     <span className="record-label">Date Hired:</span>
-                    <span className="record-value">{new Date(employee.dateHired).toLocaleDateString()}</span>
+                    <span className="record-value">{new Date(employee.dateHired + 'T00:00:00').toLocaleDateString()}</span>
                 </p>
             <button
                 className="action-button"

@@ -33,6 +33,7 @@ function App() {
   });
   const { message, messageType, handleMessage } = useMessage();
 
+  // Check if token is valid and if not, clear local storage and redirect to login page
   useEffect(() => {
     if (!tokenIsValid()) {
       localStorage.clear();
@@ -40,6 +41,7 @@ function App() {
     }
   }, []);
 
+  // Change page and save it to local storage
   const changePage = (page) => {
     if (tokenIsValid()) {
       localStorage.setItem('currentPage', page);
@@ -50,6 +52,7 @@ function App() {
     }
   }
 
+  // Fetch user role from backend and set isHr state
   const fetchUserRole = async () => {
     try {
       const response = await fetchFromBackend(`/hr/user-role`, 'include');

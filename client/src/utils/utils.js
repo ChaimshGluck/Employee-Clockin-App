@@ -4,6 +4,7 @@ export const tokenIsValid = () => {
         return false
     };
 
+    // Decode token and check if it's expired
     try {
         const decodedToken = JSON.parse(atob(token.split('.')[1]));
         const currentTime = Math.floor(Date.now() / 1000);
