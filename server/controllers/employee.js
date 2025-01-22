@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import db from '../db.js';
 import { employees, roles, timeentries } from '../drizzle/schema.js';
-import { eq, desc, isNull, and, gt, exists } from 'drizzle-orm';
+import { eq, desc, isNull, and, gt } from 'drizzle-orm';
 import { handleError } from './utils.js';
 
 export async function verify(username, password, cb) {
@@ -16,6 +16,7 @@ export async function verify(username, password, cb) {
             password: employees.password,
             role: roles.roleName,
             isActive: employees.isActive,
+            dateHired: employees.dateHired
         })
             .from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
             .where(eq(employees.email, username))
@@ -113,6 +114,26 @@ export async function getEmployeeRecords(employeeId) {
         return handleError('Error getting employee records', error);
     }
 };
+
+export async function getEmployee(employeeId) {
+    console.log('employeeId:', employeeId)
+    try {
+        const [result] = await db.select({
+            firstName: employees.firstName,
+            lastName: employees.lastName,
+            email: employees.email,
+            hrPermission: roles.roleName,
+        })
+            .from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
+            .where(eq(employees.employeeId, employeeId))
+        if (result) {
+            result.hrPermission = result.hrPermission === 'HR';
+            return { ok: true, fetchedEmployee: result };
+        } else throw new Error('Employee ID not found')
+    } catch (error) {
+        return handleError('Error getting employee info:', error)
+    }
+}
 
 export async function activateAccount(token) {
     try {

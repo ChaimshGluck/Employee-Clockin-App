@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerEmployee, updateEmployee, deleteEmployee, getAllRecords, getAllEmployees, getEmployee } from '../controllers/hr.js';
+import { registerEmployee, updateEmployee, deleteEmployee, getAllRecords, getAllEmployees } from '../controllers/hr.js';
 import { authenticateCookie, checkHR } from '../auth/auth.js';
 const router = express.Router();
 export default router;
@@ -18,11 +18,6 @@ router.get('/all-records', async (req, res) => {
 
 router.get('/employees', async (req, res) => {
     const result = await getAllEmployees();
-    res.json(result);
-})
-
-router.get('/employee', async (req, res) => {
-    const result = await getEmployee(req.query.employeeIdToUpdate);
     res.json(result);
 })
 

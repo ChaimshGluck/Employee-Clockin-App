@@ -2,7 +2,7 @@ import { useState } from 'react';
 import LoadingSpinner from './LoadingSpinner';
 import { fetchFromBackend } from '../utils/api';
 
-function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole, handleMessage, setIsClockedIn, setClockInTime }) {
+function LogIn({ changePage, setCurrentUser, fetchUserRole, handleMessage, setIsClockedIn, setClockInTime }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -30,11 +30,10 @@ function LogIn({ changePage, setEmployeeId, setFullName, fetchUserRole, handleMe
 
       // Save token and employee data to local storage
       localStorage.setItem('token', response.token);
-      localStorage.setItem('employee', JSON.stringify(response.employee));
+      localStorage.setItem('currentUser', JSON.stringify(response.employee));
       localStorage.setItem('isClockedIn', response.employee.isClockedIn);
       localStorage.setItem('clockInTime', JSON.stringify(response.employee.clockInTime));
-      setEmployeeId(response.employee.employeeId);
-      setFullName(response.employee.fullName);
+      setCurrentUser(response.employee);
       setIsClockedIn(response.employee.isClockedIn);
       setClockInTime(response.employee.clockInTime);
       fetchUserRole();

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LogIn from './components/Login';
 import Register from './components/Register';
 import ClockInOut from './components/ClockInOut';
+import Profile from './components/Profile';
 import Records from './components/Records';
 import Employees from './components/Employees';
 import UpdateEmployee from './components/UpdateEmployee';
@@ -16,11 +17,8 @@ function App() {
   const [currentPage, setCurrentPage] = useState(() => {
     return localStorage.getItem('currentPage') || 'LogIn'
   });
-  const [employeeId, setEmployeeId] = useState(() => {
-    return JSON.parse(localStorage.getItem('employee'))?.employeeId || null
-  });
-  const [fullName, setFullName] = useState(() => {
-    return JSON.parse(localStorage.getItem('employee'))?.fullName || ''
+  const [currentUser, setCurrentUser] = useState(() => {
+    return JSON.parse(localStorage.getItem('currentUser')) || null
   });
   const [isHr, setIsHr] = useState(() => {
     return JSON.parse(localStorage.getItem('isHr')) || false
@@ -28,8 +26,8 @@ function App() {
   const [showAllRecords, setShowAllRecords] = useState(() => {
     return localStorage.getItem('showAllRecords') === 'true' || false
   });
-  const [employeeIdToUpdate, setEmployeeIdToUpdate] = useState(() => {
-    return localStorage.getItem('employeeIdToUpdate') || null
+  const [employeeToUpdate, setEmployeeToUpdate] = useState(() => {
+    return JSON.parse(localStorage.getItem('employeeToUpdate')) || null
   });
   const [isClockedIn, setIsClockedIn] = useState(() => {
     return JSON.parse(localStorage.getItem('isClockedIn')) || false
@@ -37,7 +35,11 @@ function App() {
   const [clockInTime, setClockInTime] = useState(() => {
     return localStorage.getItem('clockInTime') || null
   });
+  const [updateType, setUpdateType] = useState(() => {
+    return localStorage.getItem('updateType') || ''
+  });
   const { message, messageType, handleMessage } = useMessage();
+
 
   // Check if token is valid and if not, clear local storage and redirect to login page
   useEffect(() => {
@@ -84,9 +86,8 @@ function App() {
             <>
               {currentPage === 'LogIn' && <LogIn
                 changePage={changePage}
+                setCurrentUser={setCurrentUser}
                 setIsHr={setIsHr}
-                setEmployeeId={setEmployeeId}
-                setFullName={setFullName}
                 fetchUserRole={fetchUserRole}
                 handleMessage={handleMessage}
                 setIsClockedIn={setIsClockedIn}
@@ -95,9 +96,8 @@ function App() {
 
               {currentPage === 'ClockInOut' && <ClockInOut
                 changePage={changePage}
+                currentUser={currentUser}
                 isHr={isHr}
-                employeeId={employeeId}
-                fullName={fullName}
                 setShowAllRecords={setShowAllRecords}
                 fetchUserRole={fetchUserRole}
                 handleMessage={handleMessage}
@@ -110,12 +110,22 @@ function App() {
               {currentPage === 'Records' &&
                 <Records
                   changePage={changePage}
-                  employeeId={employeeId}
+                  currentUser={currentUser}
                   isHr={isHr}
                   showAllRecords={showAllRecords}
                   fetchUserRole={fetchUserRole}
                   handleMessage={handleMessage}
                 />}
+
+              {currentPage === 'Profile' &&
+                <EmployeeContext.Provider value={setEmployeeToUpdate}>
+                  <Profile
+                    changePage={changePage}
+                    currentUser={currentUser}
+                    setUpdateType={setUpdateType}
+                  />
+                </EmployeeContext.Provider>
+              }
 
               {currentPage === 'Register' &&
                 <Register
@@ -125,18 +135,20 @@ function App() {
               }
 
               {currentPage === 'Employees' &&
-                <EmployeeContext.Provider value={setEmployeeIdToUpdate}>
+                <EmployeeContext.Provider value={setEmployeeToUpdate}>
                   <Employees
                     changePage={changePage}
                     handleMessage={handleMessage}
+                    setUpdateType={setUpdateType}
                   />
                 </EmployeeContext.Provider>}
 
               {currentPage === 'UpdateEmployee' &&
-                <EmployeeContext.Provider value={employeeIdToUpdate}>
+                <EmployeeContext.Provider value={employeeToUpdate}>
                   <UpdateEmployee
                     changePage={changePage}
                     handleMessage={handleMessage}
+                    updateType={updateType}
                   />
                 </EmployeeContext.Provider>}
 

@@ -5,7 +5,7 @@ import { FaArrowLeft, FaFilter } from 'react-icons/fa';
 import { fetchFromBackend } from "../utils/api";
 import AppTitle from "./AppTitle";
 
-const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole, handleMessage }) => {
+const Records = ({ isHr, changePage, currentUser, showAllRecords, fetchUserRole, handleMessage }) => {
     const [records, setRecords] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [employeeIdToFilter, setEmployeeIdToFilter] = useState('');
@@ -33,9 +33,9 @@ const Records = ({ isHr, changePage, employeeId, showAllRecords, fetchUserRole, 
             }
         };
 
-        const endpoint = isHr && showAllRecords ? '/hr/all-records' : `/employee/records?employeeId=${employeeId}`;
+        const endpoint = isHr && showAllRecords ? '/hr/all-records' : `/employee/records?employeeId=${currentUser.employeeId}`;
         getRecords(endpoint);
-    }, [employeeId, showAllRecords, isHr, handleMessage, changePage]);
+    }, [currentUser, showAllRecords, isHr, handleMessage, changePage]);
 
     const handleFilter = (e) => {
         setEmployeeIdToFilter(e.target.value);

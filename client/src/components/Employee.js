@@ -2,8 +2,9 @@ import { useContext } from "react";
 import { EmployeeContext } from "../App";
 import { FaUser, FaEnvelope, FaBriefcase, FaCalendarAlt, FaEdit } from 'react-icons/fa';
 
-const Employee = ({ employee, changePage }) => {
-    const setEmployeeIdToUpdate = useContext(EmployeeContext);
+const Employee = ({ employee, changePage, employees }) => {
+    const setEmployeeToUpdate = useContext(EmployeeContext);
+    const updateType = localStorage.getItem('updateType');
 
     return (
         <div className="record-card">
@@ -42,11 +43,12 @@ const Employee = ({ employee, changePage }) => {
                 className="action-button"
                 onClick={() => {
                     changePage('UpdateEmployee');
-                    setEmployeeIdToUpdate(employee.employeeId);
-                    localStorage.setItem('employeeIdToUpdate', employee.employeeId);
+                    const employeeToUpdate = employees ? employees.filter(emp => emp.employeeId === employee.employeeId)[0] : employee;
+                    setEmployeeToUpdate(employeeToUpdate);
+                    localStorage.setItem('employeeToUpdate', JSON.stringify(employeeToUpdate));
                 }}
             >
-                <FaEdit className="icon" /> Update Employee Info
+                <FaEdit className="icon" /> Update {updateType === 'employee' ? 'Employee Info' : 'Profile'}
             </button>
         </div>
     );

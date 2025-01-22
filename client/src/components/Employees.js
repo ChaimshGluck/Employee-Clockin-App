@@ -4,12 +4,12 @@ import LoadingSpinner from "./LoadingSpinner";
 import { FaArrowLeft } from 'react-icons/fa';
 import { fetchFromBackend } from "../utils/api";
 import AppTitle from "./AppTitle";
-const Employees = ({ changePage, handleMessage }) => {
+
+const Employees = ({ changePage, handleMessage, setUpdateType }) => {
     const [employees, setEmployees] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-
         const getAllEmployees = async () => {
             setIsLoading(true);
             try {
@@ -27,17 +27,28 @@ const Employees = ({ changePage, handleMessage }) => {
             }
         }
         getAllEmployees()
-    }, [handleMessage, changePage])
+    }, [handleMessage, changePage]);
+
+    useEffect(() => {
+        setUpdateType('employee');
+        localStorage.setItem('updateType', 'employee');
+    }, [setUpdateType]);
 
     if (isLoading) {
         return <LoadingSpinner message={"Getting Employees..."} />
+    }
+
+    const handleBack = () => {
+        changePage('ClockInOut');
+        setUpdateType('');
+        localStorage.removeItem('updateType');
     }
 
     return (
         <>
             <AppTitle />
             <div className="toggle-link">
-                <button className="back-button" onClick={() => changePage('ClockInOut')}>
+                <button className="back-button" onClick={handleBack}>
                     <FaArrowLeft className="back-icon" /> Back to Clock In/Out Page
                 </button>
             </div>
@@ -48,7 +59,7 @@ const Employees = ({ changePage, handleMessage }) => {
                 ) : (
                     employees.map((employee) => (
                         <li key={employee.employeeId} className="list-item">
-                            <Employee employee={employee} changePage={changePage} />
+                            <Employee employee={employee} changePage={changePage} employees={employees} />
                         </li>
                     ))
                 )}

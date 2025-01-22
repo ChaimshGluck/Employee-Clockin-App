@@ -3,7 +3,7 @@ import Logout from "./Logout";
 import { fetchFromBackend } from "../utils/api";
 import AppTitle from "./AppTitle";
 
-function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, setShowAllRecords, handleMessage, isClockedIn, setIsClockedIn, clockInTime, setClockInTime }) {
+function ClockInOut({ currentUser, isHr, fetchUserRole, changePage, setShowAllRecords, handleMessage, isClockedIn, setIsClockedIn, clockInTime, setClockInTime }) {
 
   const getClockInDuration = useCallback(() => {
     if (!clockInTime) {
@@ -42,13 +42,13 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
     }
   }, [isClockedIn, clockInTime, getClockInDuration]);
 
-  if (!employeeId || !fullName || isHr === null) {
+  if (!currentUser || isHr === null) {
     return <p>Loading employee data...</p>;
   }
 
   const handleClock = async (inOrOut) => {
     try {
-      const response = await fetchFromBackend(`/employee/clock${inOrOut}?employeeId=${employeeId}`, 'include', inOrOut === 'in' ? 'POST' : 'PATCH');
+      const response = await fetchFromBackend(`/employee/clock${inOrOut}?employeeId=${currentUser.employeeId}`, 'include', inOrOut === 'in' ? 'POST' : 'PATCH');
 
       if (!response.ok) {
         throw new Error(response.message);
@@ -83,7 +83,7 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
   return (
     <div>
       <AppTitle />
-      <h2>Welcome, {fullName}</h2>
+      <h2>Welcome, {currentUser.fullName}</h2>
       {isClockedIn ?
         <div>
           <h3>You are currently clocked in.</h3>
@@ -98,7 +98,7 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
 
       <div className="toggle-link">
         <p><button onClick={() => { changePage('Records'); handleShowAllRecords(false) }}>View your clock-in records</button></p>
-        {/* <p><button onClick={() => changePage('UpdateEmployee')}>View your profile</button></p> */}
+        <p><button onClick={() => changePage('Profile')}>View your profile</button></p>
       </div>
 
       {isHr && <div className="toggle-link hr-section">

@@ -5,7 +5,7 @@ import 'dotenv/config';
 import nodemailer from 'nodemailer';
 import { sql } from 'drizzle-orm';
 import { employees, roles, timeentries } from '../drizzle/schema.js';
-import { asc, desc, eq } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { handleError } from './utils.js';
 
 export async function registerEmployee(employee) {
@@ -112,26 +112,6 @@ export async function getAllEmployees() {
         return { ok: true, employees: result };
     } catch (error) {
         return handleError('Error getting all employees:', error)
-    }
-}
-
-export async function getEmployee(employeeId) {
-    console.log('employeeId:', employeeId)
-    try {
-        const [result] = await db.select({
-            firstName: employees.firstName,
-            lastName: employees.lastName,
-            email: employees.email,
-            hrPermission: roles.roleName,
-        })
-            .from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
-            .where(eq(employees.employeeId, employeeId))
-        if (result) {
-            result.hrPermission = result.hrPermission === 'HR';
-            return { ok: true, fetchedEmployee: result };
-        } else throw new Error('Employee ID not found')
-    } catch (error) {
-        return handleError('Error getting employee info:', error)
     }
 }
 

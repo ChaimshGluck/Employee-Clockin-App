@@ -3,16 +3,13 @@ import { Field, Form, Formik, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 import { EmployeeContext } from "../App";
 import DeleteWarning from "./DeleteWarning";
-import LoadingSpinner from "./LoadingSpinner";
 import ValidationMessage from "./ValidationMessage";
 import { FaArrowLeft } from "react-icons/fa";
 import { fetchFromBackend } from "../utils/api";
 import AppTitle from "./AppTitle";
 
-const UpdateEmployee = ({ changePage, handleMessage }) => {
-    const employeeId = useContext(EmployeeContext);
-    const [isLoading, setIsLoading] = useState(true);
-    const [employee, setEmployee] = useState(null);
+const UpdateEmployee = ({ changePage, handleMessage, updateType }) => {
+    const employeeToUpdate = useContext(EmployeeContext);
     const [showPasswordFields, setShowPasswordFields] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showDeleteBox, setShowDeleteBox] = useState(false);
@@ -24,26 +21,6 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
         }, [validationSchema, validateForm]);
         return null;
     };
-
-    useEffect(() => {
-        const getEmployee = async () => {
-            try {
-                const { fetchedEmployee } = await fetchFromBackend(`/hr/employee?employeeIdToUpdate=${employeeId}`, 'include');
-                setEmployee(fetchedEmployee);
-            } catch (error) {
-                console.error('Error getting employee info:', error);
-                handleMessage('Failed to load employee data', 'error');
-                changePage('Employees');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        getEmployee();
-    }, [employeeId, handleMessage, changePage]);
-
-    if (isLoading || !employee) {
-        return <LoadingSpinner message={"Loading employee data..."} />
-    }
 
     const EmployeeSchema = Yup.object({
         firstName: Yup.string()
@@ -67,15 +44,20 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
             .oneOf([Yup.ref('newPassword'), null], 'Passwords do not match. Please confirm your password.')
     })
 
+    const handleBack = () => {
+        changePage(updateType === 'employee' ? 'Employees' : 'Profile');
+        localStorage.removeItem('employeeToUpdate');
+    }
+
     return (
         <Formik
             initialValues={{
-                firstName: employee.firstName || '',
-                lastName: employee.lastName || '',
-                email: employee.email || '',
+                firstName: employeeToUpdate.firstName || '',
+                lastName: employeeToUpdate.lastName || '',
+                email: employeeToUpdate.email || '',
                 newPassword: '',
                 confirmPassword: '',
-                hrPermission: employee.hrPermission || false,
+                hrPermission: employeeToUpdate.role === 'HR' || false,
             }}
             validationSchema={showPasswordFields ? EmployeeSchemaWithPass : EmployeeSchema}
             validateOnMount={true}
@@ -86,7 +68,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
                     lastName: values.lastName,
                     email: values.email,
                     isHr: values.hrPermission,
-                    employeeId: employeeId
+                    employeeId: employeeToUpdate.employeeId
                 };
 
                 if (showPasswordFields && values.newPassword) {
@@ -107,7 +89,7 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
                     handleMessage(message, 'success');
                     const duration = Math.max(3000, message.length * 100);
                     setTimeout(() => {
-                        changePage('Employees');
+                        changePage(updateType === 'employee' ? 'Employees' : 'Profile');
                     }, duration);
                 } catch (error) {
                     console.error('Error updating employee:', error);
@@ -119,12 +101,12 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
                 <div>
                     <AppTitle/>
                     <div className="toggle-link">
-                        <button className="back-button" onClick={() => changePage('ClockInOut')}>
-                            <FaArrowLeft className="back-icon" /> Back to Employees Page
+                        <button className="back-button" onClick={handleBack}>
+                            <FaArrowLeft className="back-icon" /> Back to {updateType === 'employee' ? 'Employees' : 'Profile'} Page
                         </button>
                     </div>
 
-                    <h2>Update Employee Info</h2>
+                    <h2>Update {updateType === 'employee' ? 'Employee Info' : 'Profile'}</h2>
                     <Form >
                         <RevalidateOnSchemaChange validationSchema={showPasswordFields ? EmployeeSchemaWithPass : EmployeeSchema} />
                         <label htmlFor="update-firstName">First Name:<span className="required">*</span></label>

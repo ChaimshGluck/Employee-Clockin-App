@@ -55,6 +55,10 @@ label[for="employee-dropdown"] {
     border-radius: 8px;
 }
 
+.clock:hover {
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
 /* Icons */
 .icon {
     color: #28a745;
@@ -202,6 +206,10 @@ hr.divider {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 8px;
+}
+
+.hr-section:hover {
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Snackbar Message Box*/

@@ -1,8 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { activateAccount, employeeClockin, employeeClockout, getEmployeeRecords } from '../controllers/employee.js';
-import { getEmployee } from '../controllers/hr.js';
+import { activateAccount, employeeClockin, employeeClockout, getEmployee, getEmployeeRecords } from '../controllers/employee.js';
 import passport, { authenticateCookie } from '../auth/auth.js';
 const router = express.Router();
 export default router;
@@ -25,7 +24,6 @@ router.post('/login', (req, res) => {
         const token = jwt.sign({ user: { id: user.employeeId, email: user.email, role: user.role } }, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log('token:', token);
         res.cookie('project2024-token', token, { httpOnly: true, secure: false, path: '/', maxAge: 3600000 });
-        delete user.role;
         return res.json({ ok: true, token, employee: user });
     })(req, res)
 })
