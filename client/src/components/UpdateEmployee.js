@@ -99,7 +99,7 @@ const UpdateEmployee = ({ changePage, handleMessage, updateType }) => {
         >
             {({ errors, isValid, touched, values, handleChange, handleBlur, setFieldValue, setTouched }) => (
                 <div>
-                    <AppTitle/>
+                    <AppTitle />
                     <div className="toggle-link">
                         <button className="back-button" onClick={handleBack}>
                             <FaArrowLeft className="back-icon" /> Back to {updateType === 'employee' ? 'Employees' : 'Profile'} Page
@@ -142,18 +142,20 @@ const UpdateEmployee = ({ changePage, handleMessage, updateType }) => {
                             <ValidationMessage message={errors.email} />
                         )}
 
-                        <div className="checkbox-container">
-                            <label htmlFor='update-hrPermission'>Grant HR Permissions</label>
-                            <Field
-                                type='checkbox'
-                                id="update-hrPermission"
-                                name='hrPermission'
-                                className='checkbox'
-                                checked={values.hrPermission}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                            />
-                        </div>
+                        {updateType === 'employee' && (
+                            <div className="checkbox-container">
+                                <label htmlFor='update-hrPermission'>Grant HR Permissions</label>
+                                <Field
+                                    type='checkbox'
+                                    id="update-hrPermission"
+                                    name='hrPermission'
+                                    className='checkbox'
+                                    checked={values.hrPermission}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                />
+                            </div>
+                        )}
 
                         <div className='toggle-link'>
                             <button type="button" onClick={() => {
