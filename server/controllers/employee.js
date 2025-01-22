@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import db from '../db.js';
 import { employees, roles, timeentries } from '../drizzle/schema.js';
-import { eq, desc, isNull, and, gt } from 'drizzle-orm';
+import { eq, desc, isNull, and, gt, exists } from 'drizzle-orm';
 import { handleError } from './utils.js';
 
 export async function verify(username, password, cb) {
@@ -15,7 +15,7 @@ export async function verify(username, password, cb) {
             email: employees.email,
             password: employees.password,
             role: roles.roleName,
-            isActive: employees.isActive
+            isActive: employees.isActive,
         })
             .from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
             .where(eq(employees.email, username))
@@ -25,6 +25,14 @@ export async function verify(username, password, cb) {
 
         if (!employeeRecord.isActive) {
             return cb(null, false, { message: 'Account is not active. Please check your email for activation instructions.' })
+        }
+
+        const [clockInTime] = await db.select({ clockIn: timeentries.clockIn })
+            .from(timeentries).where(and(eq(timeentries.employeeId, employeeRecord.employeeId), isNull(timeentries.clockOut)))
+        
+        employeeRecord.isClockedIn = !!clockInTime;
+        if (clockInTime) {
+            employeeRecord.clockInTime = clockInTime.clockIn;
         }
 
         employeeRecord.fullName = `${employeeRecord.firstName} ${employeeRecord.lastName}`;
@@ -57,11 +65,11 @@ export function verifyCookie(token, done) {
 
 export async function employeeClockin(employeeId) {
     try {
-        const [currentlyClockedIn] = await db.select({ entryId: timeentries.entryId })
-            .from(timeentries).where(and(eq(timeentries.employeeId, employeeId), isNull(timeentries.clockOut)))
-        if (currentlyClockedIn) {
-            throw new Error('You are currently clocked in');
-        }
+        // const [currentlyClockedIn] = await db.select({ entryId: timeentries.entryId })
+        //     .from(timeentries).where(and(eq(timeentries.employeeId, employeeId), isNull(timeentries.clockOut)))
+        // if (currentlyClockedIn) {
+        //     throw new Error('You are currently clocked in');
+        // }
 
         const timestamp = new Date().toLocaleString();
         const [clockinRecord] = await db.insert(timeentries).values({
@@ -83,9 +91,9 @@ export async function employeeClockout(employeeId) {
         const [entryExists] = await db.select({ entryId: timeentries.entryId }).from(timeentries)
             .where(and(eq(timeentries.employeeId, employeeId), isNull(timeentries.clockOut)));
         console.log(entryExists)
-        if (!entryExists) {
-            throw new Error('You are not clocked in')
-        }
+        // if (!entryExists) {
+        //     throw new Error('You are not clocked in')
+        // }
 
         const timestamp = new Date().toLocaleString();
         await db.update(timeentries).set({ clockOut: timestamp })

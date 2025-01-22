@@ -1,13 +1,46 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Logout from "./Logout";
 import { fetchFromBackend } from "../utils/api";
 import AppTitle from "./AppTitle";
 
-function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, setShowAllRecords, handleMessage }) {
+function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, setShowAllRecords, handleMessage, isClockedIn, setIsClockedIn, clockInTime, setClockInTime }) {
+
+  const getClockInDuration = useCallback(() => {
+    if (!clockInTime) {
+      return null;
+    }
+
+    const clockInDate = new Date(clockInTime);
+    if (isNaN(clockInDate)) {
+      console.error("Invalid date format:", clockInTime);
+      return null;
+    }
+
+    const now = new Date();
+    const duration = now - clockInDate;
+
+    const hours = Math.floor(duration / (1000 * 60 * 60));
+    const minutes = Math.floor((duration / (1000 * 60)) % 60);
+    const seconds = Math.floor((duration / 1000) % 60);
+
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }, [clockInTime]);
+
+  const [duration, setDuration] = useState(getClockInDuration());
 
   useEffect(() => {
     fetchUserRole();
   }, [fetchUserRole, isHr]);
+
+  useEffect(() => {
+    if (isClockedIn) {
+      const intervalId = setInterval(() => {
+        setDuration(getClockInDuration());
+      }, 1000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [isClockedIn, clockInTime, getClockInDuration]);
 
   if (!employeeId || !fullName || isHr === null) {
     return <p>Loading employee data...</p>;
@@ -18,14 +51,22 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
       const response = await fetchFromBackend(`/employee/clock${inOrOut}?employeeId=${employeeId}`, 'include', inOrOut === 'in' ? 'POST' : 'PATCH');
 
       if (!response.ok) {
-        if (response.message.startsWith('You are')) {
-          console.log(response.message);
-          handleMessage(response.message, 'error');
-          return;
-        }
         throw new Error(response.message);
 
       } else {
+        localStorage.setItem('isClockedIn', !isClockedIn);
+        setIsClockedIn(!isClockedIn);
+
+        if (inOrOut === 'in') {
+          localStorage.setItem('clockInTime', new Date().toLocaleString());
+          setClockInTime(new Date().toLocaleString());
+          setDuration('00:00:00');
+        } else {
+          localStorage.removeItem('clockInTime');
+          setClockInTime(null);
+          setDuration(null);
+        }
+
         handleMessage(`Clocked ${inOrOut === 'in' ? 'In' : 'Out'}!`, 'info');
       }
     } catch (error) {
@@ -43,9 +84,18 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
     <div>
       <AppTitle />
       <h2>Welcome, {fullName}</h2>
-      <h2>Clock In / Clock Out</h2>
-      <button onClick={() => handleClock('in')}>Clock In</button>
-      <button onClick={() => handleClock('out')}>Clock Out</button>
+      {isClockedIn ?
+        <div>
+          <h3>You are currently clocked in.</h3>
+          <h2 className="clock" >{duration}</h2>
+          <button onClick={() => handleClock('out')}>Clock Out</button>
+        </div> :
+        <div>
+          <h3>You are currently clocked out.</h3>
+          <button onClick={() => handleClock('in')}>Clock In</button>
+        </div>
+      }
+
       <p className="toggle-link"><button onClick={() => { changePage('Records'); handleShowAllRecords(false) }}>View your clock-in records</button></p>
       {isHr && <div className="toggle-link">
         <hr className="divider" />

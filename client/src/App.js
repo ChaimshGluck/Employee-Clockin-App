@@ -31,6 +31,12 @@ function App() {
   const [employeeIdToUpdate, setEmployeeIdToUpdate] = useState(() => {
     return localStorage.getItem('employeeIdToUpdate') || null
   });
+  const [isClockedIn, setIsClockedIn] = useState(() => {
+    return JSON.parse(localStorage.getItem('isClockedIn')) || false
+  });
+  const [clockInTime, setClockInTime] = useState(() => {
+    return localStorage.getItem('clockInTime') || null
+  });
   const { message, messageType, handleMessage } = useMessage();
 
   // Check if token is valid and if not, clear local storage and redirect to login page
@@ -83,6 +89,8 @@ function App() {
                 setFullName={setFullName}
                 fetchUserRole={fetchUserRole}
                 handleMessage={handleMessage}
+                setIsClockedIn={setIsClockedIn}
+                setClockInTime={setClockInTime}
               />}
 
               {currentPage === 'ClockInOut' && <ClockInOut
@@ -93,6 +101,10 @@ function App() {
                 setShowAllRecords={setShowAllRecords}
                 fetchUserRole={fetchUserRole}
                 handleMessage={handleMessage}
+                isClockedIn={isClockedIn}
+                setIsClockedIn={setIsClockedIn}
+                clockInTime={clockInTime}
+                setClockInTime={setClockInTime}
               />}
 
               {currentPage === 'Records' &&
