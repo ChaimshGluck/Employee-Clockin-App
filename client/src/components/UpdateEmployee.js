@@ -29,9 +29,6 @@ const UpdateEmployee = ({ changePage, handleMessage }) => {
         const getEmployee = async () => {
             try {
                 const { fetchedEmployee } = await fetchFromBackend(`/hr/employee?employeeIdToUpdate=${employeeId}`, 'include');
-                // if (!response.ok) {
-                //     throw new Error(response.message);
-                // }
                 setEmployee(fetchedEmployee);
             } catch (error) {
                 console.error('Error getting employee info:', error);

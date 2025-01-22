@@ -96,9 +96,13 @@ function ClockInOut({ isHr, fetchUserRole, changePage, employeeId, fullName, set
         </div>
       }
 
-      <p className="toggle-link"><button onClick={() => { changePage('Records'); handleShowAllRecords(false) }}>View your clock-in records</button></p>
-      {isHr && <div className="toggle-link">
-        <hr className="divider" />
+      <div className="toggle-link">
+        <p><button onClick={() => { changePage('Records'); handleShowAllRecords(false) }}>View your clock-in records</button></p>
+        {/* <p><button onClick={() => changePage('UpdateEmployee')}>View your profile</button></p> */}
+      </div>
+
+      {isHr && <div className="toggle-link hr-section">
+        <h2>HR Section</h2>
         <p><button onClick={() => changePage('Register')}>Register a new employee</button></p>
         <p><button onClick={() => { changePage('Records'); handleShowAllRecords(true) }}>View all clock-in records</button></p>
         <p><button onClick={() => changePage('Employees')}>View all employees</button></p>

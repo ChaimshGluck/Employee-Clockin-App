@@ -58,7 +58,6 @@ label[for="employee-dropdown"] {
 /* Icons */
 .icon {
     color: #28a745;
-    ;
     margin-right: 10px;
 }
 
@@ -195,6 +194,14 @@ hr.divider {
     border-top: 1px solid #ddd;
     width: 100%;
     margin: 20px 0;
+}
+
+.hr-section {
+    padding: 15px;
+    margin: 20px 0;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
 }
 
 /* Snackbar Message Box*/

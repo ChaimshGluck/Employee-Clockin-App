@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import { activateAccount, employeeClockin, employeeClockout, getEmployeeRecords } from '../controllers/employee.js';
+import { getEmployee } from '../controllers/hr.js';
 import passport, { authenticateCookie } from '../auth/auth.js';
 const router = express.Router();
 export default router;
@@ -52,7 +53,13 @@ router.get('/records', async (req, res) => {
     res.json(result);
 });
 
+router.get('/profile', async (req, res) => {
+    console.log('Authenticated user:', req.user);
+    const result = await getEmployee(req.user.id);
+    res.json(result);
+});
+
 router.get('/activate/:token', async (req, res) => {
     const result = await activateAccount(req.params.token);
     res.json(result);
-  });
+});

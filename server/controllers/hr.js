@@ -115,7 +115,8 @@ export async function getAllEmployees() {
     }
 }
 
-export async function getEmployee(employeeIdToUpdate) {
+export async function getEmployee(employeeId) {
+    console.log('employeeId:', employeeId)
     try {
         const [result] = await db.select({
             firstName: employees.firstName,
@@ -124,11 +125,11 @@ export async function getEmployee(employeeIdToUpdate) {
             hrPermission: roles.roleName,
         })
             .from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
-            .where(eq(employees.employeeId, employeeIdToUpdate))
+            .where(eq(employees.employeeId, employeeId))
         if (result) {
             result.hrPermission = result.hrPermission === 'HR';
             return { ok: true, fetchedEmployee: result };
-        } else throw new Error('Employee ID doesn\'t exist')
+        } else throw new Error('Employee ID not found')
     } catch (error) {
         return handleError('Error getting employee info:', error)
     }

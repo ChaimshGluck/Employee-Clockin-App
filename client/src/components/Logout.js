@@ -5,7 +5,7 @@ function Logout() {
     }
 
     return (
-        <p><button onClick={handleLogout}>Log out</button></p>
+        <p><button onClick={handleLogout}>Log Out</button></p>
     )
 }
 

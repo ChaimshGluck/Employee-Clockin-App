@@ -65,11 +65,6 @@ export function verifyCookie(token, done) {
 
 export async function employeeClockin(employeeId) {
     try {
-        // const [currentlyClockedIn] = await db.select({ entryId: timeentries.entryId })
-        //     .from(timeentries).where(and(eq(timeentries.employeeId, employeeId), isNull(timeentries.clockOut)))
-        // if (currentlyClockedIn) {
-        //     throw new Error('You are currently clocked in');
-        // }
 
         const timestamp = new Date().toLocaleString();
         const [clockinRecord] = await db.insert(timeentries).values({
@@ -90,10 +85,6 @@ export async function employeeClockout(employeeId) {
     try {
         const [entryExists] = await db.select({ entryId: timeentries.entryId }).from(timeentries)
             .where(and(eq(timeentries.employeeId, employeeId), isNull(timeentries.clockOut)));
-        console.log(entryExists)
-        // if (!entryExists) {
-        //     throw new Error('You are not clocked in')
-        // }
 
         const timestamp = new Date().toLocaleString();
         await db.update(timeentries).set({ clockOut: timestamp })
