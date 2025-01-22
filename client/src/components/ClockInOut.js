@@ -12,7 +12,6 @@ function ClockInOut({ currentUser, isHr, fetchUserRole, changePage, setShowAllRe
 
     const clockInDate = new Date(clockInTime);
     if (isNaN(clockInDate)) {
-      console.error("Invalid date format:", clockInTime);
       return null;
     }
 

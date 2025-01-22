@@ -3,11 +3,12 @@ import { EmployeeContext } from "../App";
 import LoadingSpinner from "./LoadingSpinner";
 import { fetchFromBackend } from "../utils/api";
 
-const DeleteWarning = ({ changePage, setShowDeleteBox, handleMessage }) => {
-    const employeeId = useContext(EmployeeContext);
+const DeleteWarning = ({ changePage, setShowDeleteBox, handleMessage, updateType }) => {
+    const employeeId = useContext(EmployeeContext).employeeId;
     const [isLoading, setIsLoading] = useState(false);
 
     const confirmDelete = async () => {
+        const deleteType = updateType === 'employee' ? 'Employee' : 'Account';
         setShowDeleteBox(false);
         setIsLoading(true);
         try {
@@ -17,15 +18,20 @@ const DeleteWarning = ({ changePage, setShowDeleteBox, handleMessage }) => {
             if (!response.ok) {
                 throw new Error(response.message);
             }
-            const message = 'Employee Deleted';
+            const message = `${deleteType} Deleted`;
             handleMessage(message, 'success');
             const duration = Math.max(3000, message.length * 100);
             setTimeout(() => {
-                changePage('Employees')
+                if (updateType === 'profile') {
+                    localStorage.clear();
+                    changePage('Login');
+                    return;
+                }
+                changePage('Employees');
             }, duration);
         } catch (error) {
-            console.error('Error deleting employee:', error);
-            handleMessage('Error deleting employee', 'error');
+            console.error(`Error deleting ${deleteType}:`, error);
+            handleMessage(`Error deleting ${deleteType}`, 'error');
         } finally {
             setIsLoading(false);
         }
@@ -36,13 +42,13 @@ const DeleteWarning = ({ changePage, setShowDeleteBox, handleMessage }) => {
     }
 
     if (isLoading) {
-        return <LoadingSpinner message={"Activating your account..."} />
+        return <LoadingSpinner message={`Deleting ${updateType === 'employee' ? 'employee' : 'your account'}...`} />
     }
 
     return (
         <div id="deleteBox" >
             <div id="deleteAlert">
-                <p>Are you sure you want to delete this Employee?</p>
+                <p>Are you sure you want to delete {updateType === 'employee' ? 'this employee' : 'your account'}?</p>
                 <div className="delete-button-container">
                     <button onClick={confirmDelete}>Yes</button>
                     <button onClick={cancelDelete}>No</button>

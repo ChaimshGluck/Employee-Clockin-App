@@ -214,13 +214,14 @@ const UpdateEmployee = ({ changePage, handleMessage, updateType }) => {
                     </Form>
                     <hr className="divider" />
                     <div className="toggle-link">
-                        <p><button onClick={() => setShowDeleteBox(true)}>Delete Employee</button></p>
+                        <p><button onClick={() => setShowDeleteBox(true)}>Delete {updateType === 'employee' ? 'Employee' : 'Account'}</button></p>
                     </div>
                     {showDeleteBox &&
                         <DeleteWarning
                             setShowDeleteBox={setShowDeleteBox}
                             changePage={changePage}
                             handleMessage={handleMessage}
+                            updateType={updateType}
                         />
                     }
                 </div>
