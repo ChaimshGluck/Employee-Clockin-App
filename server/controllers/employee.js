@@ -30,7 +30,7 @@ export async function verify(username, password, cb) {
 
         const [clockInTime] = await db.select({ clockIn: timeentries.clockIn })
             .from(timeentries).where(and(eq(timeentries.employeeId, employeeRecord.employeeId), isNull(timeentries.clockOut)))
-        
+
         employeeRecord.isClockedIn = !!clockInTime;
         if (clockInTime) {
             employeeRecord.clockInTime = clockInTime.clockIn;
@@ -136,6 +136,7 @@ export async function getEmployee(employeeId) {
 }
 
 export async function activateAccount(token) {
+    console.log('activating account with token:', token);
     try {
         const [result] = await db.select({
             employeeId: employees.employeeId,

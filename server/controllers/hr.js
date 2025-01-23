@@ -9,7 +9,7 @@ import { desc, eq } from 'drizzle-orm';
 import { handleError } from './utils.js';
 
 export async function registerEmployee(employee) {
-    const activationToken = crypto.randomBytes(20).toString('hex');
+    const activationToken = crypto.randomBytes(20).toString('hex'); // generate random token for email activation
 
     try {
         const passhash = await bcrypt.hash(employee.password, 10);
@@ -22,7 +22,7 @@ export async function registerEmployee(employee) {
             email: employee.email,
             password: passhash,
             roleId: role.roleId,
-            dateHired: new Date().toISOString().split('T')[0],
+            dateHired: new Date().toLocaleDateString().split('T')[0],
             activationToken: activationToken,
             activationTokenExpires: Date.now() + (60 * 60 * 1000)
         })
@@ -33,25 +33,22 @@ export async function registerEmployee(employee) {
             })
 
         console.log(`registered ${role.roleName == 'HR' ? 'HR ' : ''}employee ${result.firstName} ${result.lastName}, id is ${result.employeeId}`)
-        
-        try {
-            const emailResponse = await sendActivationEmail(employee.email, activationToken);
-            console.log('emailResponse:', emailResponse);
-        } catch (error) {
-            return handleError('error sending email:', error.message)
-        }
+
+        sendActivationEmail(employee.email, activationToken, 'new');
 
         return { ok: true, employeeId: result.employeeId }
 
     } catch (error) {
-        if (error.code === '23505') {   ``
+        if (error.code === '23505') {
+            ``
             return handleError('Error registering employee:', 'Email already in use')
         }
         return handleError('Error registering employee:', error);
     }
 };
 
-export async function sendActivationEmail(email, activationToken) {
+export async function sendActivationEmail(email, activationToken, type) {
+    console.log('activationToken:', activationToken);
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -60,12 +57,14 @@ export async function sendActivationEmail(email, activationToken) {
         },
     });
 
+    const typeText = type === 'new' ? 'Activate' : 'Update';
+
     const mailOptions = {
         from: 'chaimshglick@gmail.com',
         to: email,
-        subject: 'Activate Your Account',
-        html: `<p>Click the following link to activate your account:</p>
-           <a href="${process.env.FE_URL}/employee/activate/${activationToken}">Activate Account</a>`,
+        subject: `${typeText} Your Account`,
+        html: `<p>Click the following link to ${typeText.toLowerCase()} your account:</p>
+           <a href="${process.env.FE_URL}/employee/activate/${activationToken}">${typeText} Account</a>`
     };
 
     try {
@@ -120,16 +119,30 @@ export async function updateEmployee(employee) {
     try {
         const roleName = employee.isHr ? 'HR' : 'employee';
         const role = await getRole(roleName);
+        console.log('role:', role)
 
         const updatedEmployee = {
             firstName: employee.firstName,
             lastName: employee.lastName,
             email: employee.email,
-            roleId: role.roleId,
+            roleId: role.roleId
         }
 
         if (employee.password) {
             updatedEmployee.password = await bcrypt.hash(employee.password, 10);
+        }
+
+        console.log('updatedEmployee:', updatedEmployee)
+
+        // Check in database if email was updated
+        const [employeeInDb] = await db.select({email: employees.email})
+            .from(employees).where(eq(employees.employeeId, employee.employeeId))
+        console.log('employeeInDb:', employeeInDb)
+        
+        if (employeeInDb.email !== employee.email) {
+            updatedEmployee.isActive = false;
+            updatedEmployee.activationToken = crypto.randomBytes(20).toString('hex');
+            updatedEmployee.activationTokenExpires = Date.now() + (60 * 60 * 1000);
         }
 
         const [result] = await db.update(employees)
@@ -140,6 +153,8 @@ export async function updateEmployee(employee) {
                 lastName: employees.lastName,
             })
         console.log(`updated employee ${result.firstName} ${result.lastName}`)
+
+        sendActivationEmail(employee.email, updatedEmployee.activationToken, 'update');
         return { ok: true, employeeId: employee.employeeId };
     } catch (error) {
         if (error.code === '23505') {

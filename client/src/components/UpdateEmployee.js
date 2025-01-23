@@ -85,11 +85,30 @@ const UpdateEmployee = ({ changePage, handleMessage, updateType, setCurrentUser 
                             throw new Error(response.message);
                         }
                     }
-                    const message = 'Employee Info Updated!';
                     setCurrentUser({ ...employeeToUpdate, ...updatedEmployee, fullName: `${updatedEmployee.firstName} ${updatedEmployee.lastName}` });
                     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
                     const updatedUser = { ...currentUser, ...updatedEmployee, fullName: `${updatedEmployee.firstName} ${updatedEmployee.lastName}` };
                     localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
+                    const message = `${updateType === 'employee' ? 'Employee Info' : 'Profile'} Updated!`;
+
+                    // Check if email was changed
+                    if (employeeToUpdate.email !== updatedEmployee.email) {
+                        const jsxMessage = (
+                            <div>
+                                <h3>{message}</h3>
+                                {updateType === 'employee' ?
+                                    <p>An activation link has been sent to the employee's new email. They must activate their account before logging in.</p> :
+                                    <p>An activation link has been sent to your new email. You must activate your account before logging in.</p>}
+                            </div>
+                        )
+                        handleMessage(jsxMessage, 'info', true);
+                        if (updateType === 'profile') {
+                            localStorage.clear();
+                        }
+                        changePage(updateType === 'employee' ? 'Employees' : 'LogIn');
+                        return;
+                    }
 
                     handleMessage(message, 'success');
                     const duration = Math.max(3000, message.length * 100);
