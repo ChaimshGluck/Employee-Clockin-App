@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import Logout from "./Logout";
 import { fetchFromBackend } from "../utils/api";
 import AppTitle from "./AppTitle";
+import { tokenIsValid } from "../utils/utils";
 
 function ClockInOut({ currentUser, isHr, fetchUserRole, changePage, setShowAllRecords, handleMessage, isClockedIn, setIsClockedIn, clockInTime, setClockInTime }) {
 
@@ -46,31 +47,37 @@ function ClockInOut({ currentUser, isHr, fetchUserRole, changePage, setShowAllRe
   }
 
   const handleClock = async (inOrOut) => {
-    try {
-      const response = await fetchFromBackend(`/employee/clock${inOrOut}?employeeId=${currentUser.employeeId}`, 'include', inOrOut === 'in' ? 'POST' : 'PATCH');
+    if (tokenIsValid()) {
+      try {
+        const response = await fetchFromBackend(`/employee/clock${inOrOut}?employeeId=${currentUser.employeeId}`, 'include', inOrOut === 'in' ? 'POST' : 'PATCH');
 
-      if (!response.ok) {
-        throw new Error(response.message);
+        if (!response.ok) {
+          throw new Error(response.message);
 
-      } else {
-        localStorage.setItem('isClockedIn', !isClockedIn);
-        setIsClockedIn(!isClockedIn);
-
-        if (inOrOut === 'in') {
-          localStorage.setItem('clockInTime', new Date().toLocaleString());
-          setClockInTime(new Date().toLocaleString());
-          setDuration('00:00:00');
         } else {
-          localStorage.removeItem('clockInTime');
-          setClockInTime(null);
-          setDuration(null);
-        }
+          localStorage.setItem('isClockedIn', !isClockedIn);
+          setIsClockedIn(!isClockedIn);
 
-        handleMessage(`Clocked ${inOrOut === 'in' ? 'In' : 'Out'}!`, 'info');
+          if (inOrOut === 'in') {
+            localStorage.setItem('clockInTime', new Date().toLocaleString());
+            setClockInTime(new Date().toLocaleString());
+            setDuration('00:00:00');
+          } else {
+            localStorage.removeItem('clockInTime');
+            setClockInTime(null);
+            setDuration(null);
+          }
+
+          handleMessage(`Clocked ${inOrOut === 'in' ? 'In' : 'Out'}!`, 'info');
+        }
+      } catch (error) {
+        console.log(error);
+        handleMessage(`Error clocking ${inOrOut}`, 'error');
       }
-    } catch (error) {
-      console.log(error);
-      handleMessage(`Error clocking ${inOrOut}`, 'error');
+    } else {
+      localStorage.clear();
+      handleMessage('Session expired. Please log in again.', 'error');
+      changePage('LogIn');
     }
   };
 

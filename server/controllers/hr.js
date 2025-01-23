@@ -40,7 +40,6 @@ export async function registerEmployee(employee) {
 
     } catch (error) {
         if (error.code === '23505') {
-            ``
             return handleError('Error registering employee:', 'Email already in use')
         }
         return handleError('Error registering employee:', error);
@@ -135,14 +134,15 @@ export async function updateEmployee(employee) {
         console.log('updatedEmployee:', updatedEmployee)
 
         // Check in database if email was updated
-        const [employeeInDb] = await db.select({email: employees.email})
+        const [employeeInDb] = await db.select({ email: employees.email })
             .from(employees).where(eq(employees.employeeId, employee.employeeId))
         console.log('employeeInDb:', employeeInDb)
-        
+
         if (employeeInDb.email !== employee.email) {
             updatedEmployee.isActive = false;
             updatedEmployee.activationToken = crypto.randomBytes(20).toString('hex');
             updatedEmployee.activationTokenExpires = Date.now() + (60 * 60 * 1000);
+            sendActivationEmail(employee.email, updatedEmployee.activationToken, 'update');
         }
 
         const [result] = await db.update(employees)
@@ -154,7 +154,6 @@ export async function updateEmployee(employee) {
             })
         console.log(`updated employee ${result.firstName} ${result.lastName}`)
 
-        sendActivationEmail(employee.email, updatedEmployee.activationToken, 'update');
         return { ok: true, employeeId: employee.employeeId };
     } catch (error) {
         if (error.code === '23505') {

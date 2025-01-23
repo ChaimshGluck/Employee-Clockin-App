@@ -78,7 +78,7 @@ const UpdateEmployee = ({ changePage, handleMessage, updateType, setCurrentUser 
                 try {
                     const response = await fetchFromBackend('/hr/update', 'include', 'PATCH', updatedEmployee);
                     if (!response.ok) {
-                        if (response.message === 'Email already in use') {
+                        if (response.message === 'Email already in use.') {
                             handleMessage('Email already in use. Please enter a different email address.', 'error');
                             return;
                         } else {

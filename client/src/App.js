@@ -45,6 +45,9 @@ function App() {
   useEffect(() => {
     if (!tokenIsValid()) {
       localStorage.clear();
+      if (currentPage !== 'LogIn') {
+        handleMessage('Session expired. Please log in again.', 'error');
+      }
       setCurrentPage('LogIn');
     }
   }, []);
@@ -56,6 +59,9 @@ function App() {
       setCurrentPage(page);
     } else {
       localStorage.clear();
+      if (currentPage !== 'LogIn') {
+        handleMessage('Session expired. Please log in again.', 'error');
+      }
       setCurrentPage('LogIn');
     }
   }

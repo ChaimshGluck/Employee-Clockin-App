@@ -27,21 +27,10 @@ CREATE TABLE
     clock_in TIMESTAMPTZ NOT NULL,
     clock_out TIMESTAMPTZ,
     total_hours VARCHAR GENERATED ALWAYS AS (
-      FLOOR(
-        EXTRACT(
-          EPOCH
-          FROM
-            clock_out - clock_in
-        ) / 3600
-      ) | | ' hours ' | | FLOOR(
-        (
-          EXTRACT(
-            EPOCH
-            FROM
-              clock_out - clock_in
-          ) % 3600
-        ) / 60
-      ) | | ' minutes'
+      FLOOR(EXTRACT(EPOCH FROM clock_out - clock_in) / 3600)
+      || ' hours '
+      || FLOOR((EXTRACT(EPOCHFROM clock_out - clock_in) % 3600) / 60) 
+      || ' minutes'
     ) STORED,
     entry_date DATE NOT NULL DEFAULT CURRENT_DATE
   );
