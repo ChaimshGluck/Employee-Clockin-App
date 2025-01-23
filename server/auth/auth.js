@@ -47,8 +47,7 @@ export function checkHR(req, res, next) {
     console.log('Incoming checkHR request path:', req.path);
     if (
         req.path === '/register' ||
-        (req.path === '/update' && req.body.employeeId === req.user.id) ||
-        (req.path === '/delete' && req.query.employeeIdToDelete === req.user.id)
+        (req.path === '/update' && req.body.employeeId === req.user.id) || (req.path === '/delete' && req.query.employeeIdToDelete == req.user.id)
     ) return next();
 
     const userRole = req.user.role;

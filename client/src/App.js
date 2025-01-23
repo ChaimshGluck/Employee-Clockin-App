@@ -147,6 +147,7 @@ function App() {
                 <EmployeeContext.Provider value={employeeToUpdate}>
                   <UpdateEmployee
                     changePage={changePage}
+                    setCurrentUser={setCurrentUser}
                     handleMessage={handleMessage}
                     updateType={updateType}
                   />

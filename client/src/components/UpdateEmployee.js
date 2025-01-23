@@ -8,7 +8,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { fetchFromBackend } from "../utils/api";
 import AppTitle from "./AppTitle";
 
-const UpdateEmployee = ({ changePage, handleMessage, updateType }) => {
+const UpdateEmployee = ({ changePage, handleMessage, updateType, setCurrentUser }) => {
     const employeeToUpdate = useContext(EmployeeContext);
     const [showPasswordFields, setShowPasswordFields] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -86,6 +86,11 @@ const UpdateEmployee = ({ changePage, handleMessage, updateType }) => {
                         }
                     }
                     const message = 'Employee Info Updated!';
+                    setCurrentUser({ ...employeeToUpdate, ...updatedEmployee, fullName: `${updatedEmployee.firstName} ${updatedEmployee.lastName}` });
+                    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                    const updatedUser = { ...currentUser, ...updatedEmployee, fullName: `${updatedEmployee.firstName} ${updatedEmployee.lastName}` };
+                    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+
                     handleMessage(message, 'success');
                     const duration = Math.max(3000, message.length * 100);
                     setTimeout(() => {
