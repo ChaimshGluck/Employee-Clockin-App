@@ -47,37 +47,31 @@ function ClockInOut({ currentUser, isHr, fetchUserRole, changePage, setShowAllRe
   }
 
   const handleClock = async (inOrOut) => {
-    if (tokenIsValid()) {
-      try {
-        const response = await fetchFromBackend(`/employee/clock${inOrOut}?employeeId=${currentUser.employeeId}`, 'include', inOrOut === 'in' ? 'POST' : 'PATCH');
+    try {
+      const response = await fetchFromBackend(`/employee/clock${inOrOut}?employeeId=${currentUser.employeeId}`, 'include', inOrOut === 'in' ? 'POST' : 'PATCH');
 
-        if (!response.ok) {
-          throw new Error(response.message);
+      if (!response.ok) {
+        throw new Error(response.message);
 
+      } else {
+        localStorage.setItem('isClockedIn', !isClockedIn);
+        setIsClockedIn(!isClockedIn);
+
+        if (inOrOut === 'in') {
+          localStorage.setItem('clockInTime', new Date().toLocaleString());
+          setClockInTime(new Date().toLocaleString());
+          setDuration('00:00:00');
         } else {
-          localStorage.setItem('isClockedIn', !isClockedIn);
-          setIsClockedIn(!isClockedIn);
-
-          if (inOrOut === 'in') {
-            localStorage.setItem('clockInTime', new Date().toLocaleString());
-            setClockInTime(new Date().toLocaleString());
-            setDuration('00:00:00');
-          } else {
-            localStorage.removeItem('clockInTime');
-            setClockInTime(null);
-            setDuration(null);
-          }
-
-          handleMessage(`Clocked ${inOrOut === 'in' ? 'In' : 'Out'}!`, 'info');
+          localStorage.removeItem('clockInTime');
+          setClockInTime(null);
+          setDuration(null);
         }
-      } catch (error) {
-        console.log(error);
-        handleMessage(`Error clocking ${inOrOut}`, 'error');
+
+        handleMessage(`Clocked ${inOrOut === 'in' ? 'In' : 'Out'}!`, 'info');
       }
-    } else {
-      localStorage.clear();
-      handleMessage('Session expired. Please log in again.', 'error');
-      changePage('LogIn');
+    } catch (error) {
+      console.log(error);
+      handleMessage(`Error clocking ${inOrOut}`, 'error');
     }
   };
 
