@@ -85,10 +85,12 @@ const UpdateEmployee = ({ changePage, handleMessage, updateType, setCurrentUser 
                             throw new Error(response.message);
                         }
                     }
-                    setCurrentUser({ ...employeeToUpdate, ...updatedEmployee, fullName: `${updatedEmployee.firstName} ${updatedEmployee.lastName}` });
-                    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                    const updatedUser = { ...currentUser, ...updatedEmployee, fullName: `${updatedEmployee.firstName} ${updatedEmployee.lastName}` };
-                    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                    if (updateType === 'profile') {
+                        setCurrentUser({ ...employeeToUpdate, ...updatedEmployee, fullName: `${updatedEmployee.firstName} ${updatedEmployee.lastName}` });
+                        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                        const updatedUser = { ...currentUser, ...updatedEmployee, fullName: `${updatedEmployee.firstName} ${updatedEmployee.lastName}` };
+                        localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+                    }
 
                     const message = `${updateType === 'employee' ? 'Employee Info' : 'Profile'} Updated!`;
 
