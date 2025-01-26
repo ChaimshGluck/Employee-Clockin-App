@@ -56,7 +56,7 @@ const useMessage = () => {
         setPersistMessage(persist);
     }
 
-    return { message, messageType, handleMessage };
+    return { message, messageType, handleMessage, setMessage };
 }
 
 export default useMessage;

@@ -1,10 +1,8 @@
 import BeatLoader from "react-spinners/BeatLoader";
-import AppTitle from "./AppTitle";
 
 function LoadingSpinner({ message }) {
     return (
         <div className="loader-container">
-            <AppTitle/>
             <BeatLoader
                 color={"green"}
                 cssOverride={{

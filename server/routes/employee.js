@@ -10,6 +10,7 @@ router.use(authenticateCookie);
 
 router.post('/login', (req, res) => {
 
+    // Passport's local strategy will authenticate the user
     passport.authenticate('local', { session: false }, (err, user, info) => {
         if (err) {
             console.error('Error logging in:', err);

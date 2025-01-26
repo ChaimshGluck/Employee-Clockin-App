@@ -39,7 +39,7 @@ export async function registerEmployee(employee) {
         return { ok: true, employeeId: result.employeeId }
 
     } catch (error) {
-        if (error.code === '23505') {
+        if (error.code === '23505') { // unique constraint violation
             return handleError('Error registering employee:', 'Email already in use')
         }
         return handleError('Error registering employee:', error);
@@ -138,7 +138,7 @@ export async function updateEmployee(employee) {
             .from(employees).where(eq(employees.employeeId, employee.employeeId))
         console.log('employeeInDb:', employeeInDb)
 
-        if (employeeInDb.email !== employee.email) {
+        if (employeeInDb.email.toLowerCase() !== employee.email.toLowerCase()) {
             updatedEmployee.isActive = false;
             updatedEmployee.activationToken = crypto.randomBytes(20).toString('hex');
             updatedEmployee.activationTokenExpires = Date.now() + (60 * 60 * 1000);
@@ -150,7 +150,7 @@ export async function updateEmployee(employee) {
             .where(eq(employees.employeeId, employee.employeeId))
             .returning({
                 firstName: employees.firstName,
-                lastName: employees.lastName,
+                lastName: employees.lastName
             })
         console.log(`updated employee ${result.firstName} ${result.lastName}`)
 

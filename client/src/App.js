@@ -11,6 +11,7 @@ import ActivateAccount from './components/ActivateAccount';
 import useMessage from './utils/useMessage';
 import { tokenIsValid } from './utils/utils';
 import { fetchFromBackend } from './utils/api';
+import AppTitle from './components/AppTitle';
 export const EmployeeContext = createContext();
 
 function App() {
@@ -38,7 +39,7 @@ function App() {
   const [updateType, setUpdateType] = useState(() => {
     return localStorage.getItem('updateType') || ''
   });
-  const { message, messageType, handleMessage } = useMessage();
+  const { message, messageType, handleMessage, setMessage } = useMessage();
 
 
   // Check if token is valid and if not, clear local storage and redirect to login page
@@ -77,9 +78,15 @@ function App() {
     }
   };
 
+  // set message to null when clicked anywhere on screen
+  window.addEventListener('click', () => {
+    setMessage(null);
+  });
+
   return (
     <Router>
       <div className="container">
+        <AppTitle />
         <Routes>
           <Route path='/employee/activate/:token' element={<ActivateAccount />} />
           <Route path='/' element={
@@ -154,6 +161,12 @@ function App() {
                 </EmployeeContext.Provider>}
 
               {message && <div className={`snackbar show ${messageType}`}>{message}</div>}
+              {/* {message && (
+                <div className={`snackbar show ${messageType}`}>
+                  {message}
+                  <button className="dismiss-btn" onClick={() => setMessage(null)}>X</button>
+                </div>
+              )} */}
             </>
           } />
         </Routes>

@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import Logout from "./Logout";
 import { fetchFromBackend } from "../utils/api";
-import AppTitle from "./AppTitle";
-import { tokenIsValid } from "../utils/utils";
 
 function ClockInOut({ currentUser, isHr, fetchUserRole, changePage, setShowAllRecords, handleMessage, isClockedIn, setIsClockedIn, clockInTime, setClockInTime }) {
 
@@ -82,7 +80,6 @@ function ClockInOut({ currentUser, isHr, fetchUserRole, changePage, setShowAllRe
 
   return (
     <div>
-      <AppTitle />
       <h2>Welcome, {currentUser.fullName}</h2>
       {isClockedIn ?
         <div>

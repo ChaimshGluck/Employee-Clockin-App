@@ -3,11 +3,12 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import db from '../db.js';
 import { employees, roles, timeentries } from '../drizzle/schema.js';
-import { eq, desc, isNull, and, gt } from 'drizzle-orm';
+import { eq, desc, isNull, and, gt, sql } from 'drizzle-orm';
 import { handleError } from './utils.js';
 
 export async function verify(username, password, cb) {
     try {
+        const lowerEmail = username.toLowerCase();
         const [employeeRecord] = await db.select({
             employeeId: employees.employeeId,
             firstName: employees.firstName,
@@ -19,7 +20,7 @@ export async function verify(username, password, cb) {
             dateHired: employees.dateHired
         })
             .from(employees).leftJoin(roles, eq(employees.roleId, roles.roleId))
-            .where(eq(employees.email, username))
+            .where(eq(sql`LOWER(${employees.email})`, lowerEmail.toLowerCase()));
         if (!employeeRecord) {
             return cb(null, false, { message: 'Invalid email or password' })
         };

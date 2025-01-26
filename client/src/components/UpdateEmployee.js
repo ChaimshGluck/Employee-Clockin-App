@@ -6,7 +6,6 @@ import DeleteWarning from "./DeleteWarning";
 import ValidationMessage from "./ValidationMessage";
 import { FaArrowLeft } from "react-icons/fa";
 import { fetchFromBackend } from "../utils/api";
-import AppTitle from "./AppTitle";
 
 const UpdateEmployee = ({ changePage, handleMessage, updateType, setCurrentUser }) => {
     const employeeToUpdate = useContext(EmployeeContext);
@@ -125,7 +124,6 @@ const UpdateEmployee = ({ changePage, handleMessage, updateType, setCurrentUser 
         >
             {({ errors, isValid, touched, values, handleChange, handleBlur, setFieldValue, setTouched }) => (
                 <div>
-                    <AppTitle />
                     <div className="toggle-link">
                         <button className="back-button" onClick={handleBack}>
                             <FaArrowLeft className="back-icon" /> Back to {updateType === 'employee' ? 'Employees' : 'Profile'} Page

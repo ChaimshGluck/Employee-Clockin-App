@@ -43,3 +43,12 @@ button:disabled {
     cursor: not-allowed;
     opacity: 0.6;
 }
+
+/* .dismiss-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    margin-left: 10px;
+    cursor: pointer;
+} */

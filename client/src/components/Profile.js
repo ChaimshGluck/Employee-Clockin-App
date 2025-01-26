@@ -1,5 +1,4 @@
 import { FaArrowLeft } from "react-icons/fa";
-import AppTitle from "./AppTitle";
 import Employee from "./Employee";
 import { useEffect } from "react";
 
@@ -19,7 +18,6 @@ const Profile = ({ changePage, currentUser, setUpdateType }) => {
 
     return (
         <div>
-            <AppTitle />
             <div className="toggle-link">
                 <button className="back-button" onClick={handleBack}>
                     <FaArrowLeft className="back-icon" />Back to Clock In/Out Page

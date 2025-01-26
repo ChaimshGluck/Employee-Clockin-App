@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { AiOutlineCheckCircle, AiOutlineWarning } from 'react-icons/ai';
 import LoadingSpinner from "./LoadingSpinner";
 import { fetchFromBackend } from "../utils/api";
-import AppTitle from "./AppTitle";
 
 const ActivateAccount = () => {
     const { token } = useParams();
@@ -40,7 +39,6 @@ const ActivateAccount = () => {
 
     return (
         <div>
-            <AppTitle />
             <div className={`message-box ${isSuccess ? 'success' : 'error'}`}>
                 {isSuccess ? <AiOutlineCheckCircle className="activation-icon" /> : <AiOutlineWarning className="activation-icon" />}
                 <h3>{message}</h3>

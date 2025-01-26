@@ -5,7 +5,6 @@ import ValidationMessage from './ValidationMessage.js';
 import { FaArrowLeft } from 'react-icons/fa';
 import LoadingSpinner from './LoadingSpinner.js';
 import { fetchFromBackend } from '../utils/api.js';
-import AppTitle from './AppTitle.js';
 
 function Register({ changePage, handleMessage }) {
 
@@ -82,7 +81,6 @@ function Register({ changePage, handleMessage }) {
     >
       {({ errors, touched, isValid, dirty }) => (
         <div>
-          <AppTitle />
           <div className="toggle-link">
             <button className="back-button" onClick={() => changePage('ClockInOut')}>
               <FaArrowLeft className="back-icon" /> Back to Clock In/Out Page
